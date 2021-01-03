@@ -11,11 +11,12 @@ let langFiles = [];
 class Item {
   #isStackable;
 
-  constructor(identifier, texture, maxStackSize) {
+  constructor(identifier, texture, maxStackSize, itemGroup) {
     this.identifier = identifier;
     this.texture = texture;
     this.maxStackSize = maxStackSize;
     this.#isStackable = maxStackSize === 1 ? false : true;
+    this.itemGroup = itemGroup;
   }
 
   get isStackable() {
@@ -24,89 +25,120 @@ class Item {
 }
 
 const RegistryItems = [
-  new Item('acacia_boat','assets/minecraft/textures/item/acacia_boat.png', 1),
-  new Item('acacia_door','assets/minecraft/textures/item/acacia_door.png', 64),
-  new Item('acacia_sign','assets/minecraft/textures/item/acacia_sign.png', 16),
-  new Item('apple','assets/minecraft/textures/item/apple.png', 64),
-  new Item('armor_stand','assets/minecraft/textures/item/armor_stand.png', 64),
-  new Item('arrow','assets/minecraft/textures/item/arrow.png', 64),
-  new Item('baked_potato','assets/minecraft/textures/item/baked_potato.png', 64),
-  new Item('bamboo','assets/minecraft/textures/item/bamboo.png', 64),
-  new Item('barrier','assets/minecraft/textures/item/barrier.png', 64),
-  new Item('beef','assets/minecraft/textures/item/beef.png', 64),
-  new Item('beetroot','assets/minecraft/textures/item/beetroot.png', 64),
-  new Item('beetroot_seeds','assets/minecraft/textures/item/beetroot_seeds.png', 64),
-  new Item('beetroot_soup','assets/minecraft/textures/item/beetroot_soup.png', 1),
-  new Item('bell','assets/minecraft/textures/item/bell.png', 64),
-  new Item('birch_boat','assets/minecraft/textures/item/birch_boat.png', 1),
-  new Item('birch_door','assets/minecraft/textures/item/birch_door.png', 64),
-  new Item('birch_sign','assets/minecraft/textures/item/birch_sign.png', 64),
-  new Item('black_dye','assets/minecraft/textures/item/black_dye.png', 64),
-  new Item('blaze_powder','assets/minecraft/textures/item/blaze_powder.png', 64),
-  new Item('blaze_rod','assets/minecraft/textures/item/blaze_rod.png', 64),
-  new Item('blue_dye','assets/minecraft/textures/item/blue_dye.png', 64),
-  new Item('bone','assets/minecraft/textures/item/bone.png', 64),
-  new Item('bone_meal','assets/minecraft/textures/item/bone_meal.png', 64),
-  new Item('book','assets/minecraft/textures/item/book.png', 64),
-  new Item('bow','assets/minecraft/textures/item/bow.png', 1),
-  new Item('bowl','assets/minecraft/textures/item/bowl.png', 64),
-  new Item('bread','assets/minecraft/textures/item/bread.png', 64),
-  new Item('brewing_stand','assets/minecraft/textures/item/brewing_stand.png', 64),
-  new Item('brick','assets/minecraft/textures/item/brick.png', 64),
-  new Item('brown_dye','assets/minecraft/textures/item/brown_dye.png', 64),
-  new Item('bucket','assets/minecraft/textures/item/bucket.png', 64),
-  new Item('cake','assets/minecraft/textures/item/cake.png', 64),
-  new Item('campfire','assets/minecraft/textures/item/campfire.png', 64),
-  new Item('carrot','assets/minecraft/textures/item/carrot.png', 64),
-  new Item('chainmail_boots','assets/minecraft/textures/item/chainmail_boots.png', 1),
-  new Item('chainmail_chestplate','assets/minecraft/textures/item/chainmail_chestplate.png', 1),
-  new Item('chainmail_helmet','assets/minecraft/textures/item/chainmail_helmet.png', 1),
-  new Item('chainmail_leggings','assets/minecraft/textures/item/chainmail_leggings.png', 1),
-  new Item('charcoal', 'assets/minecraft/textures/item/charcoal.png', 64),
-  new Item('chest_minecart', 'assets/minecraft/textures/item/chest_minecart.png', 1),
-  new Item('chicken', 'assets/minecraft/textures/item/chicken.png', 64),
-  new Item('chorus_fruit', 'assets/minecraft/textures/item/chorus_fruit.png', 64),
-  new Item('clay_ball', 'assets/minecraft/textures/item/clay_ball.png', 64),
-  new Item('clock', 'assets/minecraft/textures/item/clock.png', 64),
-  new Item('coal', 'assets/minecraft/textures/item/coal.png', 64),
-  new Item('cocoa_beans', 'assets/minecraft/textures/item/cocoa_beans.png', 64),
-  new Item('cod', 'assets/minecraft/textures/item/cod.png', 64),
-  new Item('comparator', 'assets/minecraft/textures/item/comparator.png', 64),
-  new Item('compass', 'assets/minecraft/textures/item/compass.png', 64),
-  new Item('cooked_beef', 'assets/minecraft/textures/item/cooked_beef.png', 64),
-  new Item('cooked_chicken', 'assets/minecraft/textures/item/cooked_chicken.png', 64),
-  new Item('cooked_cod', 'assets/minecraft/textures/item/cooked_cod.png', 64),
-  new Item('cooked_mutton', 'assets/minecraft/textures/item/cooked_mutton.png', 64),
-  new Item('cooked_porkchop', 'assets/minecraft/textures/item/cooked_porkchop.png', 64),
-  new Item('cooked_rabbit', 'assets/minecraft/textures/item/cooked_rabbit.png', 64),
-  new Item('cooked_salmon', 'assets/minecraft/textures/item/cooked_salmon.png', 64),
-  new Item('cookie', 'assets/minecraft/textures/item/cookie.png', 64),
-  new Item('crimson_door', 'assets/minecraft/textures/item/crimson_door.png', 64),
-  new Item('crimson_sign', 'assets/minecraft/textures/item/crimson_sign.png', 64),
-  new Item('crossbow_standby', 'assets/minecraft/textures/item/crossbow_standby.png', 64),
-  new Item('cyan_dye', 'assets/minecraft/textures/item/cyan_dye.png', 64),
-  new Item('dark_oak_boat', 'assets/minecraft/textures/item/dark_oak_boat.png', 64),
-  new Item('dark_oak_door', 'assets/minecraft/textures/item/dark_oak_door.png', 64),
-  new Item('dark_oak_sign', 'assets/minecraft/textures/item/dark_oak_sign.png', 64),
-  new Item('diamond','assets/minecraft/textures/item/diamond.png', 64),
-  new Item('diamond_sword', 'assets/minecraft/textures/item/diamond_sword.png', 1),
-  new Item('feather','assets/minecraft/textures/item/feather.png', 64),
-  new Item('flint','assets/minecraft/textures/item/flint.png', 64),
-  new Item('gold_ingot', 'assets/minecraft/textures/item/gold_ingot.png', 64),
-  new Item('golden_apple', 'assets/minecraft/textures/item/golden_apple.png', 64),
-  new Item('golden_sword', 'assets/minecraft/textures/item/golden_sword.png', 1),
-  new Item('iron_door', 'assets/minecraft/textures/item/iron_door.png', 64),
-  new Item('iron_ingot', 'assets/minecraft/textures/item/iron_ingot.png', 64),
-  new Item('iron_sword', 'assets/minecraft/textures/item/iron_sword.png', 1),
-  new Item('leather','assets/minecraft/textures/item/leather.png', 1),
-  new Item('paper','assets/minecraft/textures/item/paper.png', 64),
-  new Item('shears','assets/minecraft/textures/item/shears.png', 1),
-  new Item('stick','assets/minecraft/textures/item/stick.png', 64),
-  new Item('snowball','assets/minecraft/textures/item/snowball.png', 16),
-  new Item('string','assets/minecraft/textures/item/string.png', 64),
-  new Item('sugar_cane','assets/minecraft/textures/item/sugar_cane.png', 64),
-  new Item('wheat','assets/minecraft/textures/item/wheat.png', 64),
-  new Item('cookie','assets/minecraft/textures/item/cookie.png', 64)
+  new Item('acacia_boat','assets/minecraft/textures/item/acacia_boat.png', 1, 'misc'),
+  new Item('acacia_door','assets/minecraft/textures/item/acacia_door.png', 64, 'misc'),
+  new Item('acacia_sign','assets/minecraft/textures/item/acacia_sign.png', 16, 'misc'),
+  new Item('apple','assets/minecraft/textures/item/apple.png', 64, 'foodstuffs'),
+  new Item('armor_stand','assets/minecraft/textures/item/armor_stand.png', 64, 'misc'),
+  new Item('arrow','assets/minecraft/textures/item/arrow.png', 64, 'misc'),
+  new Item('baked_potato','assets/minecraft/textures/item/baked_potato.png', 64, 'foodstuffs'),
+  new Item('bamboo','assets/minecraft/textures/item/bamboo.png', 64, 'misc'),
+  new Item('barrier','assets/minecraft/textures/item/barrier.png', 64, 'misc'),
+  new Item('beef','assets/minecraft/textures/item/beef.png', 64, 'foodstuffs'),
+  new Item('beetroot','assets/minecraft/textures/item/beetroot.png', 64, 'foodstuffs'),
+  new Item('beetroot_seeds','assets/minecraft/textures/item/beetroot_seeds.png', 64, 'misc'),
+  new Item('beetroot_soup','assets/minecraft/textures/item/beetroot_soup.png', 1, 'foodstuffs'),
+  new Item('bell','assets/minecraft/textures/item/bell.png', 64, 'misc'),
+  new Item('birch_boat','assets/minecraft/textures/item/birch_boat.png', 1, 'misc'),
+  new Item('birch_door','assets/minecraft/textures/item/birch_door.png', 64, 'misc'),
+  new Item('birch_sign','assets/minecraft/textures/item/birch_sign.png', 64, 'misc'),
+  new Item('black_dye','assets/minecraft/textures/item/black_dye.png', 64, 'misc'),
+  new Item('blaze_powder','assets/minecraft/textures/item/blaze_powder.png', 64, 'misc'),
+  new Item('blaze_rod','assets/minecraft/textures/item/blaze_rod.png', 64, 'misc'),
+  new Item('blue_dye','assets/minecraft/textures/item/blue_dye.png', 64, 'misc'),
+  new Item('bone','assets/minecraft/textures/item/bone.png', 64, 'misc'),
+  new Item('bone_meal','assets/minecraft/textures/item/bone_meal.png', 64, 'misc'),
+  new Item('book','assets/minecraft/textures/item/book.png', 64, 'misc'),
+  new Item('bow','assets/minecraft/textures/item/bow.png', 1, 'tools'),
+  new Item('bowl','assets/minecraft/textures/item/bowl.png', 64, 'misc'),
+  new Item('bread','assets/minecraft/textures/item/bread.png', 64, 'foodstuffs'),
+  new Item('brewing_stand','assets/minecraft/textures/item/brewing_stand.png', 64, 'misc'),
+  new Item('brick','assets/minecraft/textures/item/brick.png', 64, 'misc'),
+  new Item('brown_dye','assets/minecraft/textures/item/brown_dye.png', 64, 'misc'),
+  new Item('bucket','assets/minecraft/textures/item/bucket.png', 64, 'misc'),
+  new Item('cake','assets/minecraft/textures/item/cake.png', 64, 'foodstuffs'),
+  new Item('campfire','assets/minecraft/textures/item/campfire.png', 64, 'misc'),
+  new Item('carrot','assets/minecraft/textures/item/carrot.png', 64, 'foodstuffs'),
+  new Item('chainmail_boots','assets/minecraft/textures/item/chainmail_boots.png', 1, 'equipment'),
+  new Item('chainmail_chestplate','assets/minecraft/textures/item/chainmail_chestplate.png', 1, 'equipment'),
+  new Item('chainmail_helmet','assets/minecraft/textures/item/chainmail_helmet.png', 1, 'equipment'),
+  new Item('chainmail_leggings','assets/minecraft/textures/item/chainmail_leggings.png', 1, 'equipment'),
+  new Item('charcoal', 'assets/minecraft/textures/item/charcoal.png', 64, 'misc'),
+  new Item('chest_minecart', 'assets/minecraft/textures/item/chest_minecart.png', 1, 'misc'),
+  new Item('chicken', 'assets/minecraft/textures/item/chicken.png', 64, 'misc'),
+  new Item('chorus_fruit', 'assets/minecraft/textures/item/chorus_fruit.png', 64, 'foodstuffs'),
+  new Item('clay_ball', 'assets/minecraft/textures/item/clay_ball.png', 64, 'misc'),
+  new Item('clock', 'assets/minecraft/textures/item/clock.png', 64, 'tools'),
+  new Item('coal', 'assets/minecraft/textures/item/coal.png', 64, 'misc'),
+  new Item('cocoa_beans', 'assets/minecraft/textures/item/cocoa_beans.png', 64, 'misc'),
+  new Item('cod', 'assets/minecraft/textures/item/cod.png', 64, 'foodstuffs'),
+  new Item('comparator', 'assets/minecraft/textures/item/comparator.png', 64, 'misc'),
+  new Item('compass', 'assets/minecraft/textures/item/compass.png', 64, 'tools'),
+  new Item('cooked_beef', 'assets/minecraft/textures/item/cooked_beef.png', 64, 'foodstuffs'),
+  new Item('cooked_chicken', 'assets/minecraft/textures/item/cooked_chicken.png', 64, 'foodstuffs'),
+  new Item('cooked_cod', 'assets/minecraft/textures/item/cooked_cod.png', 64, 'foodstuffs'),
+  new Item('cooked_mutton', 'assets/minecraft/textures/item/cooked_mutton.png', 64, 'foodstuffs'),
+  new Item('cooked_porkchop', 'assets/minecraft/textures/item/cooked_porkchop.png', 64, 'foodstuffs'),
+  new Item('cooked_rabbit', 'assets/minecraft/textures/item/cooked_rabbit.png', 64, 'foodstuffs'),
+  new Item('cooked_salmon', 'assets/minecraft/textures/item/cooked_salmon.png', 64, 'foodstuffs'),
+  new Item('crimson_door', 'assets/minecraft/textures/item/crimson_door.png', 64, 'misc'),
+  new Item('crimson_sign', 'assets/minecraft/textures/item/crimson_sign.png', 64, 'misc'),
+  new Item('crossbow_standby', 'assets/minecraft/textures/item/crossbow_standby.png', 64, 'equipment'),
+  new Item('cyan_dye', 'assets/minecraft/textures/item/cyan_dye.png', 64, 'misc'),
+  new Item('dark_oak_boat', 'assets/minecraft/textures/item/dark_oak_boat.png', 64, 'misc'),
+  new Item('dark_oak_door', 'assets/minecraft/textures/item/dark_oak_door.png', 64, 'misc'),
+  new Item('dark_oak_sign', 'assets/minecraft/textures/item/dark_oak_sign.png', 64, 'misc'),
+  new Item('diamond','assets/minecraft/textures/item/diamond.png', 64, 'misc'),
+  new Item('diamond_axe', 'assets/minecraft/textures/item/diamond_axe.png', 1, 'tools'),
+  new Item('diamond_boots', 'assets/minecraft/textures/item/diamond_boots.png', 1, 'equipment'),
+  new Item('diamond_chestplate', 'assets/minecraft/textures/item/diamond_chestplate.png', 1, 'equipment'),
+  new Item('diamond_helmet', 'assets/minecraft/textures/item/diamond_helmet.png', 1, 'equipment'),
+  new Item('diamond_hoe', 'assets/minecraft/textures/item/diamond_hoe.png', 1, 'tools'),
+  new Item('diamond_horse_armor', 'assets/minecraft/textures/item/diamond_horse_armor.png', 1, 'tools'),
+  new Item('diamond_leggings', 'assets/minecraft/textures/item/diamond_leggings.png', 1, 'equipment'),
+  new Item('diamond_pickaxe', 'assets/minecraft/textures/item/diamond_pickaxe.png', 1, 'tools'),
+  new Item('diamond_shovel', 'assets/minecraft/textures/item/diamond_shovel.png', 1, 'tools'),
+  new Item('diamond_sword', 'assets/minecraft/textures/item/diamond_sword.png', 1, 'equipment'),
+  new Item('dragon_breath', 'assets/minecraft/textures/item/dragon_breath.png', 64, 'misc'),
+  new Item('dried_kelp', 'assets/minecraft/textures/item/dried_kelp.png', 64, 'foodstuffs'),
+  new Item('egg', 'assets/minecraft/textures/item/egg.png', 16, 'misc'),
+  new Item('emerald', 'assets/minecraft/textures/item/emerald.png', 64, 'misc'),
+  new Item('end_crystal', 'assets/minecraft/textures/item/end_crystal.png', 64, 'misc'),
+  new Item('ender_eye', 'assets/minecraft/textures/item/ender_eye.png', 16, 'misc'),
+  new Item('ender_pearl', 'assets/minecraft/textures/item/ender_pearl.png', 16, 'misc'),
+  new Item('experience_bottle', 'assets/minecraft/textures/item/experience_bottle.png', 64, 'misc'),
+  new Item('feather','assets/minecraft/textures/item/feather.png', 64, 'misc'),
+  new Item('fermented_spider_eye','assets/minecraft/textures/item/fermented_spider_eye.png', 64, 'foodstuffs'),
+  new Item('fire_charge','assets/minecraft/textures/item/fire_charge.png', 64, 'misc'),
+  new Item('firework_rocket','assets/minecraft/textures/item/firework_rocket.png', 64, 'misc'),
+  new Item('fishing_rod','assets/minecraft/textures/item/fishing_rod.png', 64, 'tools'),
+  new Item('flint','assets/minecraft/textures/item/flint.png', 64, 'misc'),
+  new Item('flint_and_steel','assets/minecraft/textures/item/flint_and_steel.png', 1, 'tools'),
+  new Item('flower_pot','assets/minecraft/textures/item/flower_pot.png', 64, 'misc'),
+  new Item('furnace_minecart','assets/minecraft/textures/item/furnace_minecart.png', 64, 'misc'),
+  new Item('ghast_tear','assets/minecraft/textures/item/ghast_tear.png', 64, 'misc'),
+  new Item('glass_bottle','assets/minecraft/textures/item/glass_bottle.png', 64, 'misc'),
+  new Item('glistering_melon_slice','assets/minecraft/textures/item/glistering_melon_slice.png', 64, 'misc'),
+  new Item('glowstone_dust','assets/minecraft/textures/item/glowstone_dust.png', 64, 'misc'),
+  new Item('gold_ingot', 'assets/minecraft/textures/item/gold_ingot.png', 64, 'misc'),
+  new Item('gold_nugget', 'assets/minecraft/textures/item/gold_nugget.png', 64, 'misc'),
+  new Item('golden_apple', 'assets/minecraft/textures/item/golden_apple.png', 64, 'foodstuffs'),
+  new Item('golden_axe', 'assets/minecraft/textures/item/golden_axe.png', 64, 'tools'),
+  new Item('golden_boots', 'assets/minecraft/textures/item/golden_boots.png', 64, 'equipment'),
+  new Item('golden_carrot', 'assets/minecraft/textures/item/golden_carrot.png', 64, 'foodstuffs'),
+  new Item('golden_sword', 'assets/minecraft/textures/item/golden_sword.png', 1, 'equipment'),
+  new Item('iron_door', 'assets/minecraft/textures/item/iron_door.png', 64, 'misc'),
+  new Item('iron_ingot', 'assets/minecraft/textures/item/iron_ingot.png', 64, 'misc'),
+  new Item('iron_sword', 'assets/minecraft/textures/item/iron_sword.png', 1, 'equipment'),
+  new Item('leather','assets/minecraft/textures/item/leather.png', 1, 'misc'),
+  new Item('paper','assets/minecraft/textures/item/paper.png', 64, 'misc'),
+  new Item('shears','assets/minecraft/textures/item/shears.png', 1, 'tools'),
+  new Item('stick','assets/minecraft/textures/item/stick.png', 64, 'misc'),
+  new Item('snowball','assets/minecraft/textures/item/snowball.png', 16, 'misc'),
+  new Item('string','assets/minecraft/textures/item/string.png', 64, 'misc'),
+  new Item('sugar_cane','assets/minecraft/textures/item/sugar_cane.png', 64, 'misc'),
+  new Item('wheat','assets/minecraft/textures/item/wheat.png', 64, 'misc'),
+  new Item('cookie','assets/minecraft/textures/item/cookie.png', 64, 'foodstuffs')
 ];
 
 class PlayerInventory {
@@ -263,71 +295,83 @@ function removeFlyingItem() {
 function drawAllItems() {
   allItemsEl.innerHTML = '';
   
-  RegistryItems.forEach(invSlot => {
-    const itemID = invSlot.identifier;
-    const itemName = invSlot.name;
-    const itemTexture = invSlot.texture;
-    const itemMaxStackSize = invSlot.maxStackSize;
-
-    const slotEl = document.createElement('div');
-    slotEl.classList.add('slot');
-    slotEl.tabIndex = '0';
-
-    slotEl.setAttribute('data-tooltip', translateKey(`item.${itemID}.name`));
-
-    // console.log(langFiles[langFiles.findIndex(file => file[langFiles.id] === displayLang)]);
-   /*  slotEl.addEventListener('mouseenter', () => {
-      slotEl.focus();
-    });
-
-    slotEl.addEventListener('mouseleave', () => {6
-      slotEl.blur();
-    }); */
-
-    slotEl.addEventListener('keydown', (e) => {
-
-      if(e.key === '1' || e.key === '2' || e.key === '3' || e.key === '4' || e.key === '5' || e.key === '6' || e.key === '7' || e.key === '8' || e.key === '9') {
-
-        playerHotbar[playerHotbar.findIndex(slot => slot.Slot === Number(e.key) - 1)].Item = itemID;
-        playerHotbar[playerHotbar.findIndex(slot => slot.Slot === Number(e.key) - 1)].Count = itemMaxStackSize;
-
-        drawHotbar();
+  function drawGroupItems(itemGroup) {
+    RegistryItems.forEach(invSlot => {
+      if(invSlot.itemGroup === itemGroup) {
+      const itemID = invSlot.identifier;
+      const itemName = invSlot.name;
+      const itemTexture = invSlot.texture;
+      const itemMaxStackSize = invSlot.maxStackSize;
+  
+      const slotEl = document.createElement('div');
+      slotEl.classList.add('slot');
+      slotEl.tabIndex = '0';
+  
+      slotEl.setAttribute('data-tooltip', translateKey(`item.${itemID}.name`));
+  
+      // console.log(langFiles[langFiles.findIndex(file => file[langFiles.id] === displayLang)]);
+     /*  slotEl.addEventListener('mouseenter', () => {
+        slotEl.focus();
+      });
+  
+      slotEl.addEventListener('mouseleave', () => {6
         slotEl.blur();
-
-      }
-    });
-
-    slotEl.addEventListener('mousedown', (e) => {
-      if(e.button === 2) {
-
-        if(selectedItem.Count < itemMaxStackSize) {
-          selectedItem.set(itemID, e.shiftKey ? itemMaxStackSize : selectedItem.getCount() + 1);
+      }); */
+  
+      slotEl.addEventListener('keydown', (e) => {
+  
+        if(e.key === '1' || e.key === '2' || e.key === '3' || e.key === '4' || e.key === '5' || e.key === '6' || e.key === '7' || e.key === '8' || e.key === '9') {
+  
+          playerHotbar[playerHotbar.findIndex(slot => slot.Slot === Number(e.key) - 1)].Item = itemID;
+          playerHotbar[playerHotbar.findIndex(slot => slot.Slot === Number(e.key) - 1)].Count = itemMaxStackSize;
+  
+          drawHotbar();
+          slotEl.blur();
+  
         }
-
-        drawFlyingItem(e);
-      } else if(e.button === 1) {
-        selectedItem.set(itemID, itemMaxStackSize);
-
-        drawFlyingItem(e);
+      });
+  
+      slotEl.addEventListener('mousedown', (e) => {
+        if(e.button === 2) {
+  
+          if(selectedItem.Count < itemMaxStackSize) {
+            selectedItem.set(itemID, e.shiftKey ? itemMaxStackSize : selectedItem.getCount() + 1);
+          }
+  
+          drawFlyingItem(e);
+        } else if(e.button === 1) {
+          selectedItem.set(itemID, itemMaxStackSize);
+  
+          drawFlyingItem(e);
+        }
+      })
+  
+      slotEl.addEventListener('click', (e) => {
+        if(selectedItem.Item === '') {
+          selectedItem.set(itemID, e.shiftKey ? itemMaxStackSize : 1);
+          drawFlyingItem(e);
+        } else if(selectedItem.Item !== '') {
+          selectedItem.reset();
+          removeFlyingItem();
+        }
+      });
+  
+      const img = document.createElement('img');
+      img.src = itemTexture;
+      slotEl.appendChild(img);
+  
+      allItemsEl.appendChild(slotEl);
       }
-    })
 
-    slotEl.addEventListener('click', (e) => {
-      if(selectedItem.Item === '') {
-        selectedItem.set(itemID, e.shiftKey ? itemMaxStackSize : 1);
-        drawFlyingItem(e);
-      } else if(selectedItem.Item !== '') {
-        selectedItem.reset();
-        removeFlyingItem();
-      }
-    });
-
-    const img = document.createElement('img');
-    img.src = itemTexture;
-    slotEl.appendChild(img);
-
-    allItemsEl.appendChild(slotEl);
+  
   });
+}
+
+  drawGroupItems('foodstuffs');
+  drawGroupItems('equipment');
+  drawGroupItems('tools');
+  drawGroupItems('misc');
+
 }
 
 

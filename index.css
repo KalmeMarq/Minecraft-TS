@@ -33,6 +33,9 @@ img {
   height: calc(16px * var(--guiScale));
   position: absolute;
   cursor: none;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   pointer-events: none;
 }
 
@@ -54,16 +57,21 @@ canvas {
 
 .slot, #flyingItem {
   position: relative;
-  width: calc(16px * var(--guiScale));
-  height: calc(16px * var(--guiScale));
+  width: calc(18px * var(--guiScale));
+  height: calc(18px * var(--guiScale));
 }
 
 .slot {
   outline: none;
-  border-width: calc(1px * var(--guiScale));
-  background: grey;
-  border-style: solid;
-  border-color: #1a1a1a white white #1a1a1a;
+  image-rendering: auto;
+  image-rendering: crisp-edges;
+  image-rendering: pixelated;
+  /* border-width: calc(1px * var(--guiScale)); */
+  /* border-style: solid; */
+  /* border-color: transparent; */
+  background: url('./assets/minecraft/textures/gui/slot.png');
+  background-size: 100%;
+  background-repeat: no-repeat;
 }
 
 .slot::after {
@@ -72,10 +80,11 @@ canvas {
   content: '';
   display: block;
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: calc(16px * var(--guiScale));
+  height: calc(16px * var(--guiScale));
   z-index: 20;
 }
 
@@ -126,8 +135,8 @@ canvas {
 .stack-size {
   font-weight: 100;
   position: absolute;
-  bottom: calc(-2.5px * var(--guiScale));
-  right: calc(-1px * var(--guiScale));
+  bottom: calc(-1px * var(--guiScale));
+  right: 0;
   cursor: none;
   pointer-events: none;
   font-size: calc(8px * var(--guiScale));
