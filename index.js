@@ -24,17 +24,72 @@ class Item {
 }
 
 const RegistryItems = [
+  new Item('acacia_boat','assets/minecraft/textures/item/acacia_boat.png', 1),
+  new Item('acacia_door','assets/minecraft/textures/item/acacia_door.png', 64),
+  new Item('acacia_sign','assets/minecraft/textures/item/acacia_sign.png', 16),
   new Item('apple','assets/minecraft/textures/item/apple.png', 64),
+  new Item('armor_stand','assets/minecraft/textures/item/armor_stand.png', 64),
   new Item('arrow','assets/minecraft/textures/item/arrow.png', 64),
+  new Item('baked_potato','assets/minecraft/textures/item/baked_potato.png', 64),
+  new Item('bamboo','assets/minecraft/textures/item/bamboo.png', 64),
+  new Item('barrier','assets/minecraft/textures/item/barrier.png', 64),
+  new Item('beef','assets/minecraft/textures/item/beef.png', 64),
+  new Item('beetroot','assets/minecraft/textures/item/beetroot.png', 64),
+  new Item('beetroot_seeds','assets/minecraft/textures/item/beetroot_seeds.png', 64),
+  new Item('beetroot_soup','assets/minecraft/textures/item/beetroot_soup.png', 1),
+  new Item('bell','assets/minecraft/textures/item/bell.png', 64),
+  new Item('birch_boat','assets/minecraft/textures/item/birch_boat.png', 1),
+  new Item('birch_door','assets/minecraft/textures/item/birch_door.png', 64),
+  new Item('birch_sign','assets/minecraft/textures/item/birch_sign.png', 64),
+  new Item('black_dye','assets/minecraft/textures/item/black_dye.png', 64),
+  new Item('blaze_powder','assets/minecraft/textures/item/blaze_powder.png', 64),
+  new Item('blaze_rod','assets/minecraft/textures/item/blaze_rod.png', 64),
+  new Item('blue_dye','assets/minecraft/textures/item/blue_dye.png', 64),
   new Item('bone','assets/minecraft/textures/item/bone.png', 64),
+  new Item('bone_meal','assets/minecraft/textures/item/bone_meal.png', 64),
   new Item('book','assets/minecraft/textures/item/book.png', 64),
   new Item('bow','assets/minecraft/textures/item/bow.png', 1),
+  new Item('bowl','assets/minecraft/textures/item/bowl.png', 64),
   new Item('bread','assets/minecraft/textures/item/bread.png', 64),
+  new Item('brewing_stand','assets/minecraft/textures/item/brewing_stand.png', 64),
   new Item('brick','assets/minecraft/textures/item/brick.png', 64),
+  new Item('brown_dye','assets/minecraft/textures/item/brown_dye.png', 64),
   new Item('bucket','assets/minecraft/textures/item/bucket.png', 64),
-  new Item('diamond_sword', 'assets/minecraft/textures/item/diamond_sword.png', 1),
+  new Item('cake','assets/minecraft/textures/item/cake.png', 64),
+  new Item('campfire','assets/minecraft/textures/item/campfire.png', 64),
+  new Item('carrot','assets/minecraft/textures/item/carrot.png', 64),
+  new Item('chainmail_boots','assets/minecraft/textures/item/chainmail_boots.png', 1),
+  new Item('chainmail_chestplate','assets/minecraft/textures/item/chainmail_chestplate.png', 1),
+  new Item('chainmail_helmet','assets/minecraft/textures/item/chainmail_helmet.png', 1),
+  new Item('chainmail_leggings','assets/minecraft/textures/item/chainmail_leggings.png', 1),
+  new Item('charcoal', 'assets/minecraft/textures/item/charcoal.png', 64),
+  new Item('chest_minecart', 'assets/minecraft/textures/item/chest_minecart.png', 1),
+  new Item('chicken', 'assets/minecraft/textures/item/chicken.png', 64),
+  new Item('chorus_fruit', 'assets/minecraft/textures/item/chorus_fruit.png', 64),
+  new Item('clay_ball', 'assets/minecraft/textures/item/clay_ball.png', 64),
+  new Item('clock', 'assets/minecraft/textures/item/clock.png', 64),
+  new Item('coal', 'assets/minecraft/textures/item/coal.png', 64),
+  new Item('cocoa_beans', 'assets/minecraft/textures/item/cocoa_beans.png', 64),
+  new Item('cod', 'assets/minecraft/textures/item/cod.png', 64),
+  new Item('comparator', 'assets/minecraft/textures/item/comparator.png', 64),
+  new Item('compass', 'assets/minecraft/textures/item/compass.png', 64),
+  new Item('cooked_beef', 'assets/minecraft/textures/item/cooked_beef.png', 64),
+  new Item('cooked_chicken', 'assets/minecraft/textures/item/cooked_chicken.png', 64),
+  new Item('cooked_cod', 'assets/minecraft/textures/item/cooked_cod.png', 64),
+  new Item('cooked_mutton', 'assets/minecraft/textures/item/cooked_mutton.png', 64),
+  new Item('cooked_porkchop', 'assets/minecraft/textures/item/cooked_porkchop.png', 64),
+  new Item('cooked_rabbit', 'assets/minecraft/textures/item/cooked_rabbit.png', 64),
+  new Item('cooked_salmon', 'assets/minecraft/textures/item/cooked_salmon.png', 64),
+  new Item('cookie', 'assets/minecraft/textures/item/cookie.png', 64),
+  new Item('crimson_door', 'assets/minecraft/textures/item/crimson_door.png', 64),
+  new Item('crimson_sign', 'assets/minecraft/textures/item/crimson_sign.png', 64),
+  new Item('crossbow_standby', 'assets/minecraft/textures/item/crossbow_standby.png', 64),
+  new Item('cyan_dye', 'assets/minecraft/textures/item/cyan_dye.png', 64),
+  new Item('dark_oak_boat', 'assets/minecraft/textures/item/dark_oak_boat.png', 64),
+  new Item('dark_oak_door', 'assets/minecraft/textures/item/dark_oak_door.png', 64),
+  new Item('dark_oak_sign', 'assets/minecraft/textures/item/dark_oak_sign.png', 64),
   new Item('diamond','assets/minecraft/textures/item/diamond.png', 64),
-  new Item('dye_brown','assets/minecraft/textures/item/dye_brown.png', 64),
+  new Item('diamond_sword', 'assets/minecraft/textures/item/diamond_sword.png', 1),
   new Item('feather','assets/minecraft/textures/item/feather.png', 64),
   new Item('flint','assets/minecraft/textures/item/flint.png', 64),
   new Item('gold_ingot', 'assets/minecraft/textures/item/gold_ingot.png', 64),
@@ -49,7 +104,7 @@ const RegistryItems = [
   new Item('stick','assets/minecraft/textures/item/stick.png', 64),
   new Item('snowball','assets/minecraft/textures/item/snowball.png', 16),
   new Item('string','assets/minecraft/textures/item/string.png', 64),
-  new Item('sugarcane','assets/minecraft/textures/item/sugarcane.png', 64),
+  new Item('sugar_cane','assets/minecraft/textures/item/sugar_cane.png', 64),
   new Item('wheat','assets/minecraft/textures/item/wheat.png', 64),
   new Item('cookie','assets/minecraft/textures/item/cookie.png', 64)
 ];
@@ -192,7 +247,7 @@ function drawFlyingItem(e) {
       slotItem.appendChild(stackSpan);
     }
 
-    slotItem.style.top = e.clientY - (8 * guiScale) + 'px';
+    slotItem.style.top = e.pageY - (8 * guiScale) + 'px';
     slotItem.style.left = e.clientX - (8 * guiScale) + 'px';
 
     root.appendChild(slotItem);
@@ -983,11 +1038,11 @@ const tooltip = document.getElementById('tooltip');
 
 window.addEventListener('mousemove', (e) => {
   if(document.getElementById('flyingItem')) {
-    document.getElementById('flyingItem').style.top = e.clientY - (8 * guiScale) + 'px';
+    document.getElementById('flyingItem').style.top = e.pageY - (8 * guiScale) + 'px';
     document.getElementById('flyingItem').style.left = e.clientX - (8 * guiScale) + 'px';
   }
 
-  tooltip.style.top = e.clientY - 15 + 'px';
+  tooltip.style.top = e.pageY - 15 + 'px';
   tooltip.style.left = e.clientX + 10 + 'px';
 });
 
@@ -1003,7 +1058,7 @@ window.addEventListener('mouseover', (e) => {
     tooltip.style.background = 'rgba(16, 0, 16, 0.90)';
     tooltip.style.boxShadow = `inset ${0.5 * guiScale}px ${0.5 * guiScale}px 0px 1px rgba(48, 0, 160, 0.45), inset -${0.5 * guiScale}px -${0.5 * guiScale}px 0px 1px rgba(48, 0, 160, 0.45)`;
     tooltip.style.color = 'white';
-    tooltip.style.top = e.clientY - 15 + 'px';
+    tooltip.style.top = e.pageY - 15 + 'px';
     tooltip.style.left = e.clientX + 10 + 'px';
   } else {
     tooltip.innerHTML = '';
