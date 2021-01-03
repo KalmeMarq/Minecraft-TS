@@ -1238,7 +1238,7 @@ window.addEventListener('mousemove', (e) => {
 });
 
 window.addEventListener('mouseover', (e) => {
-  if(e.target.dataset.tooltip && e.target.dataset.tooltip !== 'empty') {
+  if((e.target.dataset.tooltip && e.target.dataset.tooltip !== 'empty')) {
     tooltip.innerHTML = e.target.dataset.tooltip;
     tooltip.style.position = 'absolute';
     tooltip.style.zIndex = '200';

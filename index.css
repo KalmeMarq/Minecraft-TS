@@ -18,8 +18,8 @@
 
 body {
   height: 100vh;
-  /* overflow: hidden; */
-  background-color: darkblue;
+  overflow-x: hidden;
+  background-color: rgb(75, 75, 105);
 }
 
 img {
@@ -120,16 +120,30 @@ canvas {
   background: rgba(255, 255, 255, 0.4);
 }
 
-#inventory, #hotbar, #allitems  {
+hr {
+  width: 100%;
+}
+
+#inventory, #hotbar,#allitems  {
   display: grid;
   grid-template-columns: repeat(9, 1fr);
   width: fit-content;
 }
 
+.centerer {
+  width: calc(162px * var(--guiScale));
+  margin: 0 auto;
+}
+
+.centerer button {
+  padding: 0.2rem 1rem;
+  width: 100%;
+}
+
 #craftinggrid  {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  width: fit-content;
+  width: calc(54px * var(--guiScale));
 }
 
 .stack-size {

@@ -14,33 +14,48 @@
       <option value="pt_pt">Português (Portugal)</option>
       <option value="pv_pv">Porvet (Custom)</option>
     </select>
+    <br>
+    <br>
+    <br>
+    <hr>
+    <br>
     <div class="wrapper">
-      <div class="left-panel">
-        <div id="allitems"></div>
+      <div class="centerer">
+        <button id="showAllItems">All Items</button>
         <br>
+        <br>
+        <div id="allitems" style="display: none;"></div>
+        <br></br>
+        <button id="showInventory">Player Inventory</button>
         <div class="wrapper">
           <div class="left-panel">
-            <div id="armor"></div>
+            <div id="armor" style="display: none;"></div>
           </div>
           <div class="right-panel">
-            <div id="offhand"></div>
+            <div id="offhand" style="display: none;"></div>
           </div>
         </div>
         <br>
-        <div id="inventory"></div>
-        <br></br>
-        <div id="hotbar"></div>
+        <div id="inventory" style="display: none;"></div>
+        <br>
+        <div id="hotbar" style="display: none;"></div>
       </div>
-      <div class="right-panel">
-        <div id="craftingtable">
+      <div class="centerer">
+        <button id="showCraftingTable">Crafting Table</button>
+        <br>
+        <br>
+        <div id="craftingtable" style="display: flex; flex-direction: row; width: 100%;">
           <div id="craftinggrid"></div>
           <br>
           <br>
           <div id="resultSlot"></div>
         </div>
-        <br>
-        <br>
-        <div id="furnace">
+      </div>
+    </div>
+    
+    <div class="wrapper">
+      <div class="left-panel">
+        <div id="furnace" style="display: none;">
           <div class="wrapper">
             <div class="left-panel">
               <div id="furnaceinput"></div>
@@ -53,11 +68,85 @@
             </div>
           </div>
         </div>
+        <div id="chest"></div>
       </div>
     </div>
   </div>
 
   <script src="NinePatch.js"></script>
   <script src="index.js"></script>
+
+  <script>
+
+    let showAllItems = false;
+    let showInventory = false;
+    let showCraftingTable = false;
+
+    if(!showCraftingTable) {
+        document.getElementById('craftingtable').style.display = 'grid';
+        showCraftingTable = true;
+      } else {
+        document.getElementById('craftingtable').style.display = 'none';
+        showCraftingTable = false;
+      }
+
+    if(!showAllItems) {
+        document.getElementById('allitems').style.display = 'grid';
+        showAllItems = true;
+      } else {
+        document.getElementById('allitems').style.display = 'none';
+        showAllItems = false;
+      }
+
+      if(!showInventory) {
+        document.getElementById('armor').style.display = 'grid';
+        document.getElementById('offhand').style.display = 'grid';
+        document.getElementById('inventory').style.display = 'grid';
+        document.getElementById('hotbar').style.display = 'grid';
+        showInventory = true;
+      } else {
+        document.getElementById('armor').style.display = 'none';
+        document.getElementById('offhand').style.display = 'none';
+        document.getElementById('inventory').style.display = 'none';
+        document.getElementById('hotbar').style.display = 'none';
+        showInventory = false;
+      }
+
+    document.getElementById('showAllItems').addEventListener('click', (e) => {
+      if(!showAllItems) {
+        document.getElementById('allitems').style.display = 'grid';
+        showAllItems = true;
+      } else {
+        document.getElementById('allitems').style.display = 'none';
+        showAllItems = false;
+      }
+    });
+    document.getElementById('showCraftingTable').addEventListener('click', (e) => {
+      if(!showCraftingTable) {
+        document.getElementById('craftingtable').style.display = 'grid';
+        showCraftingTable = true;
+      } else {
+        document.getElementById('craftingtable').style.display = 'none';
+        showCraftingTable = false;
+      }
+    });
+
+    document.getElementById('showInventory').addEventListener('click', (e) => {
+      if(!showInventory) {
+        document.getElementById('armor').style.display = 'grid';
+        document.getElementById('offhand').style.display = 'grid';
+        document.getElementById('inventory').style.display = 'grid';
+        document.getElementById('hotbar').style.display = 'grid';
+        showInventory = true;
+      } else {
+        document.getElementById('armor').style.display = 'none';
+        document.getElementById('offhand').style.display = 'none';
+        document.getElementById('inventory').style.display = 'none';
+        document.getElementById('hotbar').style.display = 'none';
+        showInventory = false;
+      }
+    })
+
+  </script>
 </body>
 </html>
