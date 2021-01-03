@@ -14,6 +14,7 @@
       <option value="pt_pt">Português (Portugal)</option>
       <option value="pv_pv">Porvet (Custom)</option>
     </select>
+    <button id="clearInvsBtn">Clear Everything</button>
     <br>
     <br>
     <br>
@@ -21,34 +22,29 @@
     <br>
     <div class="wrapper">
       <div class="centerer">
-        <button id="showAllItems">All Items</button>
-        <br>
-        <br>
-        <div id="allitems" style="display: none;"></div>
+        <div id="allitems"></div>
         <br></br>
-        <button id="showInventory">Player Inventory</button>
+        
+      </div>
+      <div class="centerer">
         <div class="wrapper">
           <div class="left-panel">
-            <div id="armor" style="display: none;"></div>
+            <div id="armor"></div>
           </div>
           <div class="right-panel">
-            <div id="offhand" style="display: none;"></div>
+            <div id="offhand"></div>
           </div>
         </div>
         <br>
-        <div id="inventory" style="display: none;"></div>
+        <div id="inventory"></div>
         <br>
-        <div id="hotbar" style="display: none;"></div>
-      </div>
-      <div class="centerer">
-        <button id="showCraftingTable">Crafting Table</button>
+        <div id="hotbar"></div>
         <br>
         <br>
-        <div id="craftingtable" style="display: flex; flex-direction: row; width: 100%;">
+        <br>
+        <div id="craftingtable" style="position: relative; display: flex; flex-direction: row; gap: 20px; width: 100%;">
           <div id="craftinggrid"></div>
-          <br>
-          <br>
-          <div id="resultSlot"></div>
+          <div id="resultSlot" style="position: absolute; top: 50%; left: 50%; transform: translate(0, -50%);"></div>
         </div>
       </div>
     </div>
@@ -73,80 +69,6 @@
     </div>
   </div>
 
-  <script src="NinePatch.js"></script>
   <script src="index.js"></script>
-
-  <script>
-
-    let showAllItems = false;
-    let showInventory = false;
-    let showCraftingTable = false;
-
-    if(!showCraftingTable) {
-        document.getElementById('craftingtable').style.display = 'grid';
-        showCraftingTable = true;
-      } else {
-        document.getElementById('craftingtable').style.display = 'none';
-        showCraftingTable = false;
-      }
-
-    if(!showAllItems) {
-        document.getElementById('allitems').style.display = 'grid';
-        showAllItems = true;
-      } else {
-        document.getElementById('allitems').style.display = 'none';
-        showAllItems = false;
-      }
-
-      if(!showInventory) {
-        document.getElementById('armor').style.display = 'grid';
-        document.getElementById('offhand').style.display = 'grid';
-        document.getElementById('inventory').style.display = 'grid';
-        document.getElementById('hotbar').style.display = 'grid';
-        showInventory = true;
-      } else {
-        document.getElementById('armor').style.display = 'none';
-        document.getElementById('offhand').style.display = 'none';
-        document.getElementById('inventory').style.display = 'none';
-        document.getElementById('hotbar').style.display = 'none';
-        showInventory = false;
-      }
-
-    document.getElementById('showAllItems').addEventListener('click', (e) => {
-      if(!showAllItems) {
-        document.getElementById('allitems').style.display = 'grid';
-        showAllItems = true;
-      } else {
-        document.getElementById('allitems').style.display = 'none';
-        showAllItems = false;
-      }
-    });
-    document.getElementById('showCraftingTable').addEventListener('click', (e) => {
-      if(!showCraftingTable) {
-        document.getElementById('craftingtable').style.display = 'grid';
-        showCraftingTable = true;
-      } else {
-        document.getElementById('craftingtable').style.display = 'none';
-        showCraftingTable = false;
-      }
-    });
-
-    document.getElementById('showInventory').addEventListener('click', (e) => {
-      if(!showInventory) {
-        document.getElementById('armor').style.display = 'grid';
-        document.getElementById('offhand').style.display = 'grid';
-        document.getElementById('inventory').style.display = 'grid';
-        document.getElementById('hotbar').style.display = 'grid';
-        showInventory = true;
-      } else {
-        document.getElementById('armor').style.display = 'none';
-        document.getElementById('offhand').style.display = 'none';
-        document.getElementById('inventory').style.display = 'none';
-        document.getElementById('hotbar').style.display = 'none';
-        showInventory = false;
-      }
-    })
-
-  </script>
 </body>
 </html>
