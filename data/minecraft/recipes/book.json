@@ -1,0 +1,10 @@
+{
+  "type": "crafting_table",
+  "grid": [
+    "paper", "", "",
+    "paper", "leather", "",
+    "paper", "", ""
+  ],
+  "result": "book",
+  "count": 1
+}

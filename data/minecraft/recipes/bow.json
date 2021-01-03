@@ -1,0 +1,10 @@
+{
+  "type": "crafting_table",
+  "grid": [
+    "", "stick", "string",
+    "stick", "", "string",
+    "", "stick", "string"
+  ],
+  "result": "bow",
+  "count": 1
+}

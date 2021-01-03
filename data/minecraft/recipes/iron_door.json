@@ -1,0 +1,10 @@
+{
+  "type": "crafting_table",
+  "grid": [
+    "iron_ingot", "iron_ingot", "",
+    "iron_ingot", "iron_ingot", "",
+    "iron_ingot", "iron_ingot", ""
+  ],
+  "result": "iron_door",
+  "count": 3
+}

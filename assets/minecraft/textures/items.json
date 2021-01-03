@@ -1,0 +1,14 @@
+{
+  "apple": {
+    "texture": "assets/minecraft/textures/item/apple.png"
+  },
+  "stick": {
+    "texture": "assets/minecraft/textures/item/stick.png"
+  },
+  "diamond": {
+    "texture": "assets/minecraft/textures/item/diamond.png"
+  },
+  "diamond_sword": {
+    "texture": "assets/minecraft/textures/item/diamond_sword.png"
+  }
+}

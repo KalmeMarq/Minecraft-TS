@@ -1,0 +1,10 @@
+{
+  "type": "crafting_table",
+  "grid": [
+    "gold_ingot", "", "",
+    "gold_ingot", "", "",
+    "stick", "", ""
+  ],
+  "result": "golden_sword",
+  "count": 1
+}

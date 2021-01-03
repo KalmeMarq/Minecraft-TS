@@ -1,0 +1,10 @@
+{
+  "type": "crafting_table",
+  "grid": [
+    "flint", "", "",
+    "stick", "", "",
+    "feather", "", ""
+  ],
+  "result": "arrow",
+  "count": 4
+}

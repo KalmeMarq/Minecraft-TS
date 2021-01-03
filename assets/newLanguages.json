@@ -1,0 +1,8 @@
+{
+  "namespace": "minecraft",
+  "languages": [
+    "lang/en_us.json",
+    "lang/pt_pt.json",
+    "lang/pv_pv.json"
+  ]
+}

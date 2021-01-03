@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Minecraft</title>
+  <link rel="stylesheet" href="index.css">
+</head>
+<body>
+  <div id="root">
+    <div id="tooltip"></div>
+    <select id="langSelection">
+      <option value="en_us">English (US)</option>
+      <option value="pt_pt">Português (Portugal)</option>
+      <option value="pv_pv">Porvet (Custom)</option>
+    </select>
+    <div class="wrapper">
+      <div class="left-panel">
+        <div id="allitems"></div>
+        <br>
+        <div id="inventory"></div>
+        <br></br>
+        <div id="hotbar"></div>
+      </div>
+      <div class="right-panel">
+        <div id="craftingtable">
+          <div id="craftinggrid"></div>
+          <br>
+          <br>
+          <div id="resultSlot"></div>
+        </div>
+        <br>
+        <br>
+        <div id="furnace">
+          <div class="wrapper">
+            <div class="left-panel">
+              <div id="furnaceinput"></div>
+              <br>
+              <br>
+              <div id="furnacefuel"></div>
+            </div>
+            <div class="right-panel">
+              <div id="furnaceoutput"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="NinePatch.js"></script>
+  <script src="index.js"></script>
+</body>
+</html>

@@ -1,0 +1,10 @@
+{
+  "type": "crafting_table",
+  "grid": [
+    "iron_ingot", "", "",
+    "iron_ingot", "", "",
+    "stick", "", ""
+  ],
+  "result": "iron_sword",
+  "count": 1
+}

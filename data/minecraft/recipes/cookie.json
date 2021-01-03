@@ -1,0 +1,10 @@
+{
+  "type": "crafting_table",
+  "grid": [
+    "", "", "",
+    "wheat", "dye_brown", "wheat",
+    "", "", ""
+  ],
+  "result": "cookie",
+  "count": 2
+}

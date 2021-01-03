@@ -1,0 +1,6 @@
+{
+  "namespace": "minecraft",
+  "recipes": [
+    "tags/test.json"
+  ]
+}

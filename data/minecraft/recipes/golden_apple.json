@@ -1,0 +1,10 @@
+{
+  "type": "crafting_table",
+  "grid": [
+    "gold_ingot", "gold_ingot", "gold_ingot",
+    "gold_ingot", "apple", "gold_ingot",
+    "gold_ingot", "gold_ingot", "gold_ingot"
+  ],
+  "result": "golden_apple",
+  "count": 1
+}

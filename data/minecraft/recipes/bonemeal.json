@@ -1,0 +1,10 @@
+{
+  "type": "crafting_table",
+  "grid": [
+    "", "", "",
+    "", "bone", "",
+    "", "", ""
+  ],
+  "result": "bonemeal",
+  "count": 3
+}

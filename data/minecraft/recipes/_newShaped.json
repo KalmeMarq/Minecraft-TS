@@ -1,0 +1,17 @@
+{
+  "type": "crafting_table",
+  "crafting_type": "crafting_shaped",
+  "grid_items": [
+    "", "S", "",
+    "S", "D", "S",
+    "", "S", ""
+  ],
+  "key": {
+    "S": "stick",
+    "D": "diamond"
+  },
+  "result": {
+    "item": "apple",
+    "count": 1
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "type": "crafting_table",
+  "grid": [
+    "sugarcane", "", "",
+    "sugarcane", "", "",
+    "sugarcane", "", ""
+  ],
+  "result": "paper",
+  "count": 3
+}

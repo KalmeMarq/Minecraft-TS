@@ -1,0 +1,19 @@
+{
+  "namespace": "minecraft",
+  "recipes": [
+    "recipes/apple.json",
+    "recipes/arrow.json",
+    "recipes/bonemeal.json",
+    "recipes/book.json",
+    "recipes/bread.json",
+    "recipes/bucket.json",
+    "recipes/diamond_sword.json",
+    "recipes/golden_apple.json",
+    "recipes/golden_sword.json",
+    "recipes/iron_door.json",
+    "recipes/iron_sword.json",
+    "recipes/paper.json",
+    "recipes/shears.json",
+    "recipes/cookie.json"
+  ]
+}
