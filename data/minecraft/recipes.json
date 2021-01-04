@@ -1,8 +1,8 @@
 [
-  "data/minecraft/recipes/apple.json",
   "data/minecraft/recipes/arrow.json",
   "data/minecraft/recipes/bonemeal.json",
   "data/minecraft/recipes/book.json",
+  "data/minecraft/recipes/bone_meal.json",
   "data/minecraft/recipes/bread.json",
   "data/minecraft/recipes/bucket.json",
   "data/minecraft/recipes/diamond_sword.json",

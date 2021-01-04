@@ -915,8 +915,52 @@ function drawCraftingGrid() {
       for(let i = 0; i < recipesFiles.length; i++) {
         const recipe = recipesFiles[i];
 
+        if(recipe['type'] && recipe['type'] === 'crafting_shapeless') {
+          let filteredCraftingGrid = craftingGrid.filter(a => a.Item !== '');
 
-        if(craftingGrid[0].Item === recipe.grid[0] && craftingGrid[1].Item === recipe.grid[1] && craftingGrid[2].Item === recipe.grid[2] &&
+          let reMadeRecipeGrid = [];
+          let reMadeCraftingGrid = [];
+          filteredCraftingGrid.forEach(slot => reMadeCraftingGrid.push(slot.Item));
+          recipe.ingredients.sort().forEach(slot => reMadeRecipeGrid.push(slot.item));
+
+          let recipeGridSorted = reMadeRecipeGrid.sort();  
+          let craftingGridGridSorted = reMadeCraftingGrid.sort();  
+
+          let goes = true;
+
+          for(let i = 0; i < recipeGridSorted.length; i++) {
+            if(recipeGridSorted[i] !== craftingGridGridSorted[i]) {
+              goes = false;
+              continue;
+            }
+          }
+
+          if(goes) {
+            resultSlotGrid.Item = recipe.result.item;
+            resultSlotGrid.Count = recipe.result.count;
+            drawResultSlotGrid();
+
+            break;
+
+          } else {
+            
+            resultSlotGrid.Item = '';
+            resultSlotGrid.Count = 0;
+            drawResultSlotGrid();
+          }
+
+         /*  if(recipe.grid.sort() === reMadeCraftingGrid.sort()) {
+            resultSlotGrid.Item = recipe.result;
+            resultSlotGrid.Count = recipe.count;
+            drawResultSlotGrid();
+
+          } else {
+            resultSlotGrid.Item = '';
+            resultSlotGrid.Count = 0;
+            drawResultSlotGrid();
+          } */
+
+        } else if(craftingGrid[0].Item === recipe.grid[0] && craftingGrid[1].Item === recipe.grid[1] && craftingGrid[2].Item === recipe.grid[2] &&
           craftingGrid[3].Item === recipe.grid[3] && craftingGrid[4].Item === recipe.grid[4] && craftingGrid[5].Item === recipe.grid[5] &&
           craftingGrid[6].Item === recipe.grid[6] && craftingGrid[7].Item === recipe.grid[7] && craftingGrid[8].Item === recipe.grid[8]) {
             resultSlotGrid.Item = recipe.result;
@@ -935,6 +979,7 @@ function drawCraftingGrid() {
     checkForRecipes();
 
     slotEl.addEventListener('click', (e) => {
+      checkForRecipes()
       if(selectedItem.getItemID() === '') {
         if(e.shiftKey) {
           selectedItem.set(craftingSlot.Item, Math.round(craftingSlot.Count / 2));
@@ -942,6 +987,7 @@ function drawCraftingGrid() {
         } else {
           selectedItem.set(craftingSlot.Item, craftingSlot.Count);
           craftingSlot.Item = '';
+          craftingSlot.Damage = -1;
           craftingSlot.Count = 0;
 
           localStorage.setItem('playerHotbar', JSON.stringify(playerHotbar));
@@ -955,6 +1001,7 @@ function drawCraftingGrid() {
       } else if(selectedItem.getItemID() !== '') {
         if(craftingSlot.Item === '') {
           craftingSlot.Item = selectedItem.getItemID();
+          craftingSlot.Damage = selectedItem.Damage;
           craftingSlot.Count = selectedItem.getCount();
 
           selectedItem.reset();
@@ -1018,6 +1065,17 @@ function drawCraftingGrid() {
         stackSpan.classList.add('stack-size');
         stackSpan.innerText = craftingSlot.Count !== 1 ? craftingSlot.Count : '';
         slotEl.appendChild(stackSpan);
+      }
+
+      if(regItem.maxDamage !== -1 && craftingSlot.Damage < regItem.maxDamage) {
+        const durabilitybar = document.createElement('div');
+        durabilitybar.classList.add('durabilityBar');
+        const calcDurabilityPerc = (craftingSlot.Damage / regItem.maxDamage) * 100;
+
+        durabilitybar.innerHTML = `
+          <div class="durabilityBarInside" style="width: ${calcDurabilityPerc}%; background: ${checkForDurabilityColor(calcDurabilityPerc)}"></div>
+        `;
+        slotEl.appendChild(durabilitybar)
       }
 
       slotEl.appendChild(img);

@@ -1,9 +1,9 @@
 {
   "type": "crafting_table",
   "grid": [
-    "", "diamond", "",
-    "", "diamond", "",
-    "", "stick", ""
+    "diamond", "", "",
+    "diamond", "", "",
+    "stick", "", ""
   ],
   "result": "diamond_sword",
   "count": 1
