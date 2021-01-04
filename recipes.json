@@ -1,10 +1,11 @@
 {
+  "root": "data",
   "namespace": "minecraft",
-  "recipes": [
-    "recipes/apple.json",
+  "values": [
     "recipes/arrow.json",
     "recipes/bonemeal.json",
     "recipes/book.json",
+    "recipes/bone_meal.json",
     "recipes/bread.json",
     "recipes/bucket.json",
     "recipes/diamond_sword.json",

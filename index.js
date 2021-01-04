@@ -2,10 +2,11 @@ window.addEventListener('contextmenu', (e) => { e.preventDefault() }, false);
 
 const root = document.getElementById('root');
 
-let recipesFile = [];
-let langFile = [];
 let recipesFiles = [];
 let langFiles = [];
+let tagFiles = [];
+let lootTableFiles = [];
+let dummy = [];
 
 let isCreativeMode = true;
 
@@ -15,14 +16,18 @@ async function getJSONData(url) {
   return await res.json(); 
 }
 
-async function getAllFiles(url, a, save) {
+async function getAllFiles(url, save) {
   let aaa = await getJSONData(url);
 
-  aaa.forEach(async (src) => {
-    let urlData = await getJSONData(src);
+  let obj = [];
 
-    save.push(await urlData);
+  aaa.values.forEach(async (src) => {
+    let urlData = await getJSONData(`./${aaa.root}/${aaa.namespace}/${src}`);
+
+    obj.push(await urlData);
   })
+
+  return obj;
 }
 
 /* Get Translation text if possible */
@@ -53,14 +58,13 @@ class Item {
   #isStackable;
   #isDamageable;
 
-  constructor(identifier, texture, maxStackSize, maxDamage, itemGroup, props) {
+  constructor(identifier, maxStackSize, maxDamage, props) {
     this.identifier = identifier;
-    this.texture = texture;
+    this.texture = 'assets/minecraft/textures/item/' + this.identifier + '.png';
     this.maxStackSize = maxStackSize;
     this.#isStackable = maxStackSize === 1 ? false : true;
     this.maxDamage = maxDamage;
     this.#isDamageable = maxDamage === -1 ? false : true;
-    this.itemGroup = itemGroup;
     this.props = props;
   }
 
@@ -70,125 +74,125 @@ class Item {
 }
 
 const RegistryItems = [
-  new Item('acacia_boat', 'assets/minecraft/textures/item/acacia_boat.png', 1, -1, 'misc'),
-  new Item('acacia_door', 'assets/minecraft/textures/item/acacia_door.png', 64, -1, 'misc'),
-  new Item('acacia_sign', 'assets/minecraft/textures/item/acacia_sign.png', 16, -1, 'misc'),
-  new Item('apple', 'assets/minecraft/textures/item/apple.png', 64, -1, 'foodstuffs'),
-  new Item('armor_stand', 'assets/minecraft/textures/item/armor_stand.png', 64, -1, 'misc'),
-  new Item('arrow', 'assets/minecraft/textures/item/arrow.png', 64, -1, 'misc'),
-  new Item('baked_potato', 'assets/minecraft/textures/item/baked_potato.png', 64, -1, 'foodstuffs'),
-  new Item('bamboo', 'assets/minecraft/textures/item/bamboo.png', 64, -1, 'misc'),
-  new Item('barrier', 'assets/minecraft/textures/item/barrier.png', 64, -1, 'misc'),
-  new Item('beef', 'assets/minecraft/textures/item/beef.png', 64, -1, 'foodstuffs'),
-  new Item('beetroot', 'assets/minecraft/textures/item/beetroot.png', 64, -1, 'foodstuffs'),
-  new Item('beetroot_seeds', 'assets/minecraft/textures/item/beetroot_seeds.png', 64, -1, 'misc'),
-  new Item('beetroot_soup', 'assets/minecraft/textures/item/beetroot_soup.png', 1, -1, 'foodstuffs'),
-  new Item('bell', 'assets/minecraft/textures/item/bell.png', 64, -1, 'misc'),
-  new Item('birch_boat', 'assets/minecraft/textures/item/birch_boat.png', 1, -1, 'misc'),
-  new Item('birch_door', 'assets/minecraft/textures/item/birch_door.png', 64, -1, 'misc'),
-  new Item('birch_sign', 'assets/minecraft/textures/item/birch_sign.png', 64, -1, 'misc'),
-  new Item('black_dye', 'assets/minecraft/textures/item/black_dye.png', 64, -1, 'misc'),
-  new Item('blaze_powder', 'assets/minecraft/textures/item/blaze_powder.png', 64, -1, 'misc'),
-  new Item('blaze_rod', 'assets/minecraft/textures/item/blaze_rod.png', 64, -1, 'misc'),
-  new Item('blue_dye', 'assets/minecraft/textures/item/blue_dye.png', 64, -1, 'misc'),
-  new Item('bone', 'assets/minecraft/textures/item/bone.png', 64, -1, 'misc'),
-  new Item('bone_meal', 'assets/minecraft/textures/item/bone_meal.png', 64, -1, 'misc'),
-  new Item('book', 'assets/minecraft/textures/item/book.png', 64, -1, 'misc'),
-  new Item('bow', 'assets/minecraft/textures/item/bow.png', 1, -1, 'tools'),
-  new Item('bowl', 'assets/minecraft/textures/item/bowl.png', 64, -1, 'misc'),
-  new Item('bread', 'assets/minecraft/textures/item/bread.png', 64, -1, 'foodstuffs'),
-  new Item('brewing_stand', 'assets/minecraft/textures/item/brewing_stand.png', 64, -1, 'misc'),
-  new Item('brick', 'assets/minecraft/textures/item/brick.png', 64, -1, 'misc'),
-  new Item('brown_dye', 'assets/minecraft/textures/item/brown_dye.png', 64, -1, 'misc'),
-  new Item('bucket', 'assets/minecraft/textures/item/bucket.png', 64, -1, 'misc'),
-  new Item('cake', 'assets/minecraft/textures/item/cake.png', 64, -1, 'foodstuffs'),
-  new Item('campfire', 'assets/minecraft/textures/item/campfire.png', 64, -1, 'misc'),
-  new Item('carrot', 'assets/minecraft/textures/item/carrot.png', 64, -1, 'foodstuffs'),
-  new Item('chainmail_boots', 'assets/minecraft/textures/item/chainmail_boots.png', 1, 20, 'equipment'),
-  new Item('chainmail_chestplate', 'assets/minecraft/textures/item/chainmail_chestplate.png', 1, 20, 'equipment'),
-  new Item('chainmail_helmet', 'assets/minecraft/textures/item/chainmail_helmet.png', 1, 20, 'equipment'),
-  new Item('chainmail_leggings', 'assets/minecraft/textures/item/chainmail_leggings.png', 1, 20, 'equipment'),
-  new Item('charcoal', 'assets/minecraft/textures/item/charcoal.png', 64, -1, 'misc'),
-  new Item('chest_minecart', 'assets/minecraft/textures/item/chest_minecart.png', 1, -1, 'misc'),
-  new Item('chicken', 'assets/minecraft/textures/item/chicken.png', 64, -1, 'misc'),
-  new Item('chorus_fruit', 'assets/minecraft/textures/item/chorus_fruit.png', 64, -1, 'foodstuffs'),
-  new Item('clay_ball', 'assets/minecraft/textures/item/clay_ball.png', 64, -1, 'misc'),
-  new Item('clock', 'assets/minecraft/textures/item/clock.png', 64, -1, 'tools'),
-  new Item('coal', 'assets/minecraft/textures/item/coal.png', 64, -1, 'misc'),
-  new Item('cocoa_beans', 'assets/minecraft/textures/item/cocoa_beans.png', 64, -1, 'misc'),
-  new Item('cod', 'assets/minecraft/textures/item/cod.png', 64, -1, 'foodstuffs'),
-  new Item('comparator', 'assets/minecraft/textures/item/comparator.png', 64, -1, 'misc'),
-  new Item('compass', 'assets/minecraft/textures/item/compass.png', 64, -1, 'tools'),
-  new Item('cooked_beef', 'assets/minecraft/textures/item/cooked_beef.png', 64, -1, 'foodstuffs'),
-  new Item('cooked_chicken', 'assets/minecraft/textures/item/cooked_chicken.png', 64, -1, 'foodstuffs'),
-  new Item('cooked_cod', 'assets/minecraft/textures/item/cooked_cod.png', 64, -1, 'foodstuffs'),
-  new Item('cooked_mutton', 'assets/minecraft/textures/item/cooked_mutton.png', 64, -1, 'foodstuffs'),
-  new Item('cooked_porkchop', 'assets/minecraft/textures/item/cooked_porkchop.png', 64, -1, 'foodstuffs'),
-  new Item('cooked_rabbit', 'assets/minecraft/textures/item/cooked_rabbit.png', 64, -1, 'foodstuffs'),
-  new Item('cooked_salmon', 'assets/minecraft/textures/item/cooked_salmon.png', 64, -1, 'foodstuffs'),
-  new Item('crimson_door', 'assets/minecraft/textures/item/crimson_door.png', 64, -1, 'misc'),
-  new Item('crimson_sign', 'assets/minecraft/textures/item/crimson_sign.png', 64, -1, 'misc'),
-  new Item('crossbow_standby', 'assets/minecraft/textures/item/crossbow_standby.png', 64, 20, 'equipment'),
-  new Item('cyan_dye', 'assets/minecraft/textures/item/cyan_dye.png', 64, -1, 'misc'),
-  new Item('dark_oak_boat', 'assets/minecraft/textures/item/dark_oak_boat.png', 64, -1, 'misc'),
-  new Item('dark_oak_door', 'assets/minecraft/textures/item/dark_oak_door.png', 64, -1, 'misc'),
-  new Item('dark_oak_sign', 'assets/minecraft/textures/item/dark_oak_sign.png', 64, -1, 'misc'),
-  new Item('diamond', 'assets/minecraft/textures/item/diamond.png', 64, -1, 'misc'),
-  new Item('diamond_axe', 'assets/minecraft/textures/item/diamond_axe.png', 1, 20, 'tools'),
-  new Item('diamond_boots', 'assets/minecraft/textures/item/diamond_boots.png', 1, 20, 'equipment'),
-  new Item('diamond_chestplate', 'assets/minecraft/textures/item/diamond_chestplate.png', 1, 20, 'equipment'),
-  new Item('diamond_helmet', 'assets/minecraft/textures/item/diamond_helmet.png', 1, -1, 'equipment'),
-  new Item('diamond_hoe', 'assets/minecraft/textures/item/diamond_hoe.png', 1, 20, 'tools'),
-  new Item('diamond_horse_armor', 'assets/minecraft/textures/item/diamond_horse_armor.png', 1, -1, 'tools'),
-  new Item('diamond_leggings', 'assets/minecraft/textures/item/diamond_leggings.png', 1, 20, 'equipment'),
-  new Item('diamond_pickaxe', 'assets/minecraft/textures/item/diamond_pickaxe.png', 1, 20, 'tools'),
-  new Item('diamond_shovel', 'assets/minecraft/textures/item/diamond_shovel.png', 1, 20, 'tools'),
-  new Item('diamond_sword', 'assets/minecraft/textures/item/diamond_sword.png', 1, 20, 'equipment'),
-  new Item('dragon_breath', 'assets/minecraft/textures/item/dragon_breath.png', 64, -1, 'misc'),
-  new Item('dried_kelp', 'assets/minecraft/textures/item/dried_kelp.png', 64, -1, 'foodstuffs'),
-  new Item('egg', 'assets/minecraft/textures/item/egg.png', 16, -1, 'misc'),
-  new Item('emerald', 'assets/minecraft/textures/item/emerald.png', 64, -1, 'misc'),
-  new Item('end_crystal', 'assets/minecraft/textures/item/end_crystal.png', 64, -1, 'misc'),
-  new Item('ender_eye', 'assets/minecraft/textures/item/ender_eye.png', 16, -1, 'misc'),
-  new Item('ender_pearl', 'assets/minecraft/textures/item/ender_pearl.png', 16, -1, 'misc'),
-  new Item('experience_bottle', 'assets/minecraft/textures/item/experience_bottle.png', 64, -1, 'misc'),
-  new Item('feather', 'assets/minecraft/textures/item/feather.png', 64, -1, 'misc'),
-  new Item('fermented_spider_eye', 'assets/minecraft/textures/item/fermented_spider_eye.png', 64, -1, 'foodstuffs'),
-  new Item('fire_charge', 'assets/minecraft/textures/item/fire_charge.png', 64, -1, 'misc'),
-  new Item('firework_rocket', 'assets/minecraft/textures/item/firework_rocket.png', 64, -1, 'misc'),
-  new Item('fishing_rod', 'assets/minecraft/textures/item/fishing_rod.png', 64, -1, 'tools'),
-  new Item('flint', 'assets/minecraft/textures/item/flint.png', 64, -1, 'misc'),
-  new Item('flint_and_steel', 'assets/minecraft/textures/item/flint_and_steel.png', 1, -1, 'tools'),
-  new Item('flower_pot', 'assets/minecraft/textures/item/flower_pot.png', 64, -1, 'misc'),
-  new Item('furnace_minecart', 'assets/minecraft/textures/item/furnace_minecart.png', 64, -1, 'misc'),
-  new Item('ghast_tear', 'assets/minecraft/textures/item/ghast_tear.png', 64, -1, 'misc'),
-  new Item('glass_bottle', 'assets/minecraft/textures/item/glass_bottle.png', 64, -1, 'misc'),
-  new Item('glistering_melon_slice', 'assets/minecraft/textures/item/glistering_melon_slice.png', 64, -1, 'misc'),
-  new Item('glowstone_dust', 'assets/minecraft/textures/item/glowstone_dust.png', 64, -1, 'misc'),
-  new Item('gold_ingot', 'assets/minecraft/textures/item/gold_ingot.png', 64, -1, 'misc'),
-  new Item('gold_nugget', 'assets/minecraft/textures/item/gold_nugget.png', 64, -1, 'misc'),
-  new Item('golden_apple', 'assets/minecraft/textures/item/golden_apple.png', 64, -1, 'foodstuffs'),
-  new Item('golden_axe', 'assets/minecraft/textures/item/golden_axe.png', 64, -1, 'tools'),
-  new Item('golden_boots', 'assets/minecraft/textures/item/golden_boots.png', 64, -1, 'equipment'),
-  new Item('golden_carrot', 'assets/minecraft/textures/item/golden_carrot.png', 64, -1, 'foodstuffs'),
-  new Item('golden_chestplate', 'assets/minecraft/textures/item/golden_chestplate.png', 1, -1, 'equipment'),
-  new Item('golden_helmet', 'assets/minecraft/textures/item/golden_helmet.png', 1, -1, 'equipment'),
-  new Item('golden_hoe', 'assets/minecraft/textures/item/golden_hoe.png', 1, -1, 'tools'),
-  new Item('golden_horse_armor', 'assets/minecraft/textures/item/golden_hoe.png', 1, -1, 'misc'),
-  new Item('golden_leggings', 'assets/minecraft/textures/item/golden_leggings.png', 1, -1, 'equipment'),
-  new Item('golden_sword', 'assets/minecraft/textures/item/golden_sword.png', 1, -1, 'equipment'),
-  new Item('iron_door', 'assets/minecraft/textures/item/iron_door.png', 64, -1, 'misc'),
-  new Item('iron_ingot', 'assets/minecraft/textures/item/iron_ingot.png', 64, -1, 'misc'),
-  new Item('iron_sword', 'assets/minecraft/textures/item/iron_sword.png', 1, -1, 'equipment'),
-  new Item('leather', 'assets/minecraft/textures/item/leather.png', 1, -1, 'misc'),
-  new Item('paper', 'assets/minecraft/textures/item/paper.png', 64, -1, 'misc'),
-  new Item('shears', 'assets/minecraft/textures/item/shears.png', 1, -1, 'tools'),
-  new Item('stick', 'assets/minecraft/textures/item/stick.png', 64, -1, 'misc'),
-  new Item('snowball', 'assets/minecraft/textures/item/snowball.png', 16, -1, 'misc'),
-  new Item('string', 'assets/minecraft/textures/item/string.png', 64, -1, 'misc'),
-  new Item('sugar_cane', 'assets/minecraft/textures/item/sugar_cane.png', 64, -1, 'misc'),
-  new Item('wheat', 'assets/minecraft/textures/item/wheat.png', 64, -1, 'misc'),
-  new Item('cookie', 'assets/minecraft/textures/item/cookie.png', 64, -1, 'foodstuffs')
+  new Item('acacia_boat', 1, -1, { itemGroup: 'misc' }),
+  new Item('acacia_door', 64, -1, { itemGroup: 'misc' }),
+  new Item('acacia_sign', 16, -1, { itemGroup: 'misc' }),
+  new Item('apple', 64, -1, { itemGroup: 'foodstuffs' }),
+  new Item('armor_stand', 64, -1, { itemGroup: 'misc' }),
+  new Item('arrow', 64, -1, { itemGroup: 'misc' }),
+  new Item('baked_potato', 64, -1, { itemGroup: 'foodstuffs' }),
+  new Item('bamboo', 64, -1, { itemGroup: 'misc' }),
+  new Item('barrier', 64, -1, { itemGroup: 'misc' }),
+  new Item('beef', 64, -1, { itemGroup: 'foodstuffs' }),
+  new Item('beetroot', 64, -1, { itemGroup: 'foodstuffs' }),
+  new Item('beetroot_seeds', 64, -1, { itemGroup: 'misc' }),
+  new Item('beetroot_soup', 1, -1, { itemGroup: 'foodstuffs' }),
+  new Item('bell', 64, -1, { itemGroup: 'misc' }),
+  new Item('birch_boat', 1, -1, { itemGroup: 'misc' }),
+  new Item('birch_door', 64, -1, { itemGroup: 'misc' }),
+  new Item('birch_sign', 64, -1, { itemGroup: 'misc' }),
+  new Item('black_dye', 64, -1, { itemGroup: 'misc' }),
+  new Item('blaze_powder', 64, -1, { itemGroup: 'misc' }),
+  new Item('blaze_rod', 64, -1, { itemGroup: 'misc' }),
+  new Item('blue_dye', 64, -1, { itemGroup: 'misc' }),
+  new Item('bone', 64, -1, { itemGroup: 'misc' }),
+  new Item('bone_meal', 64, -1, { itemGroup: 'misc' }),
+  new Item('book', 64, -1, { itemGroup: 'misc' }),
+  new Item('bow', 1, -1, { itemGroup: 'tools' }),
+  new Item('bowl', 64, -1, { itemGroup: 'misc' }),
+  new Item('bread', 64, -1, { itemGroup: 'foodstuffs' }),
+  new Item('brewing_stand', 64, -1, { itemGroup: 'misc' }),
+  new Item('brick', 64, -1, { itemGroup: 'misc' }),
+  new Item('brown_dye', 64, -1, { itemGroup: 'misc' }),
+  new Item('bucket', 64, -1, { itemGroup: 'misc' }),
+  new Item('cake', 64, -1, { itemGroup: 'foodstuffs' }),
+  new Item('campfire', 64, -1, { itemGroup: 'misc' }),
+  new Item('carrot', 64, -1, { itemGroup: 'foodstuffs' }),
+  new Item('chainmail_boots', 1, 20, { itemGroup: 'equipment' }),
+  new Item('chainmail_chestplate', 1, 20, { itemGroup: 'equipment' }),
+  new Item('chainmail_helmet', 1, 20, { itemGroup: 'equipment' }),
+  new Item('chainmail_leggings', 1, 20, { itemGroup: 'equipment' }),
+  new Item('charcoal', 64, -1, { itemGroup: 'misc' }),
+  new Item('chest_minecart', 1, -1, { itemGroup: 'misc' }),
+  new Item('chicken', 64, -1, { itemGroup: 'misc' }),
+  new Item('chorus_fruit', 64, -1, { itemGroup: 'foodstuffs' }),
+  new Item('clay_ball', 64, -1, { itemGroup: 'misc' }),
+  new Item('clock', 64, -1, { itemGroup: 'tools' }),
+  new Item('coal', 64, -1, { itemGroup: 'misc' }),
+  new Item('cocoa_beans', 64, -1, { itemGroup: 'misc' }),
+  new Item('cod', 64, -1, { itemGroup: 'foodstuffs' }),
+  new Item('comparator', 64, -1, { itemGroup: 'misc' }),
+  new Item('compass', 64, -1, { itemGroup: 'tools' }),
+  new Item('cooked_beef', 64, -1, { itemGroup: 'foodstuffs' }),
+  new Item('cooked_chicken', 64, -1, { itemGroup: 'foodstuffs' }),
+  new Item('cooked_cod', 64, -1, { itemGroup: 'foodstuffs' }),
+  new Item('cooked_mutton', 64, -1, { itemGroup: 'foodstuffs' }),
+  new Item('cooked_porkchop', 64, -1, { itemGroup: 'foodstuffs' }),
+  new Item('cooked_rabbit', 64, -1, { itemGroup: 'foodstuffs' }),
+  new Item('cooked_salmon', 64, -1, { itemGroup: 'foodstuffs' }),
+  new Item('crimson_door', 64, -1, { itemGroup: 'misc' }),
+  new Item('crimson_sign', 64, -1, { itemGroup: 'misc' }),
+  new Item('crossbow_standby', 64, 20, { itemGroup: 'equipment' }),
+  new Item('cyan_dye', 64, -1, { itemGroup: 'misc' }),
+  new Item('dark_oak_boat', 64, -1, { itemGroup: 'misc' }),
+  new Item('dark_oak_door', 64, -1, { itemGroup: 'misc' }),
+  new Item('dark_oak_sign', 64, -1, { itemGroup: 'misc' }),
+  new Item('diamond', 64, -1, { itemGroup: 'misc' }),
+  new Item('diamond_axe', 1, 20, { itemGroup: 'tools' }),
+  new Item('diamond_boots', 1, 20, { itemGroup: 'equipment' }),
+  new Item('diamond_chestplate', 1, 20, { itemGroup: 'equipment' }),
+  new Item('diamond_helmet', 1, -1, { itemGroup: 'equipment' }),
+  new Item('diamond_hoe', 1, 20, { itemGroup: 'tools' }),
+  new Item('diamond_horse_armor', 1, -1, { itemGroup: 'tools' }),
+  new Item('diamond_leggings', 1, 20, { itemGroup: 'equipment' }),
+  new Item('diamond_pickaxe', 1, 20, { itemGroup: 'tools' }),
+  new Item('diamond_shovel', 1, 20, { itemGroup: 'tools' }),
+  new Item('diamond_sword', 1, 20, { itemGroup: 'equipment' }),
+  new Item('dragon_breath', 64, -1, { itemGroup: 'misc' }),
+  new Item('dried_kelp', 64, -1, { itemGroup: 'foodstuffs' }),
+  new Item('egg', 16, -1, { itemGroup: 'misc' }),
+  new Item('emerald', 64, -1, { itemGroup: 'misc' }),
+  new Item('end_crystal', 64, -1, { itemGroup: 'misc' }),
+  new Item('ender_eye', 16, -1, { itemGroup: 'misc' }),
+  new Item('ender_pearl', 16, -1, { itemGroup: 'misc' }),
+  new Item('experience_bottle', 64, -1, { itemGroup: 'misc' }),
+  new Item('feather', 64, -1, { itemGroup: 'misc' }),
+  new Item('fermented_spider_eye', 64, -1, { itemGroup: 'foodstuffs' }),
+  new Item('fire_charge', 64, -1, { itemGroup: 'misc' }),
+  new Item('firework_rocket', 64, -1, { itemGroup: 'misc' }),
+  new Item('fishing_rod', 64, -1, { itemGroup: 'tools' }),
+  new Item('flint', 64, -1, { itemGroup: 'misc' }),
+  new Item('flint_and_steel', 1, -1, { itemGroup: 'tools' }),
+  new Item('flower_pot', 64, -1, { itemGroup: 'misc' }),
+  new Item('furnace_minecart', 64, -1, { itemGroup: 'misc' }),
+  new Item('ghast_tear', 64, -1, { itemGroup: 'misc' }),
+  new Item('glass_bottle', 64, -1, { itemGroup: 'misc' }),
+  new Item('glistering_melon_slice', 64, -1, { itemGroup: 'misc' }),
+  new Item('glowstone_dust', 64, -1, { itemGroup: 'misc' }),
+  new Item('gold_ingot', 64, -1, { itemGroup: 'misc' }),
+  new Item('gold_nugget', 64, -1, { itemGroup: 'misc' }),
+  new Item('golden_apple', 64, -1, { itemGroup: 'foodstuffs' }),
+  new Item('golden_axe', 64, -1, { itemGroup: 'tools' }),
+  new Item('golden_boots', 64, -1, { itemGroup: 'equipment' }),
+  new Item('golden_carrot', 64, -1, { itemGroup: 'foodstuffs' }),
+  new Item('golden_chestplate', 1, -1, { itemGroup: 'equipment' }),
+  new Item('golden_helmet', 1, -1, { itemGroup: 'equipment' }),
+  new Item('golden_hoe', 1, -1, { itemGroup: 'tools' }),
+  new Item('golden_horse_armor', 1, -1, { itemGroup: 'misc' }),
+  new Item('golden_leggings', 1, -1, { itemGroup: 'equipment' }),
+  new Item('golden_sword', 1, -1, { itemGroup: 'equipment' }),
+  new Item('iron_door', 64, -1, { itemGroup: 'misc' }),
+  new Item('iron_ingot', 64, -1, { itemGroup: 'misc' }),
+  new Item('iron_sword', 1, -1, { itemGroup: 'equipment' }),
+  new Item('leather', 1, -1, { itemGroup: 'misc' }),
+  new Item('paper', 64, -1, { itemGroup: 'misc' }),
+  new Item('shears', 1, -1, { itemGroup: 'tools' }),
+  new Item('stick', 64, -1, { itemGroup: 'misc' }),
+  new Item('snowball', 16, -1, { itemGroup: 'misc' }),
+  new Item('string', 64, -1, { itemGroup: 'misc' }),
+  new Item('sugar_cane', 64, -1, { itemGroup: 'misc' }),
+  new Item('wheat', 64, -1, { itemGroup: 'misc' }),
+  new Item('cookie', 64, -1, { itemGroup: 'foodstuffs' })
 ];
 
 /* Inventories Gen */
@@ -267,10 +271,20 @@ class Slot {
     craftingGrid.forEach(slot => { slot.Item = ''; slot.Count = 0; });
     resultSlotGrid.forEach(slot => { slot.Item = ''; slot.Count = 0; });
 
+    localStorage.setItem('playerArmor', JSON.stringify(playerArmor));
+    localStorage.setItem('playerOffHand', JSON.stringify(playerOffHand));
+    localStorage.setItem('playerInv', JSON.stringify(playerInv));
+    localStorage.setItem('playerHotbar', JSON.stringify(playerHotbar));
+
     Slot.redrawInventories();
   }
 
   static redrawInventories() {
+    localStorage.setItem('playerArmor', JSON.stringify(playerArmor));
+    localStorage.setItem('playerOffHand', JSON.stringify(playerOffHand));
+    localStorage.setItem('playerInv', JSON.stringify(playerInv));
+    localStorage.setItem('playerHotbar', JSON.stringify(playerHotbar));
+
     drawAllItems();
     drawArmor();
     drawOffHand();
@@ -398,10 +412,10 @@ class Slot {
 const craftingGrid = Inventory.craftingSlots();
 const resultSlotGrid = Inventory.craftingOutput();
 const furnaceGrid = Inventory.furnaceGrid();
-const playerArmor = Inventory.playerArmor();
-const playerOffHand = Inventory.playerOffHand();
-const playerInv = Inventory.playerInv();
-const playerHotbar = Inventory.playerHotbar();
+const playerArmor = JSON.parse(localStorage.getItem('playerArmor')) || Inventory.playerArmor();
+const playerOffHand = JSON.parse(localStorage.getItem('playerOffHand')) || Inventory.playerOffHand();
+const playerInv = JSON.parse(localStorage.getItem('playerInv')) || Inventory.playerInv();
+const playerHotbar = JSON.parse(localStorage.getItem('playerHotbar')) || Inventory.playerHotbar();
 
 let selectedItem = {
   Item: '',
@@ -504,7 +518,7 @@ function drawAllItems() {
   
   function drawGroupItems(itemGroup) {
     RegistryItems.forEach(invSlot => {
-      if(invSlot.itemGroup === itemGroup) {
+      if(invSlot.props.itemGroup === itemGroup) {
       const itemID = invSlot.identifier;
       const itemName = invSlot.name;
       const itemTexture = invSlot.texture;
@@ -1312,12 +1326,13 @@ document.getElementById('showAdvancedTooltipBtn').addEventListener('click', () =
 });
 
 async function initMinecraft() {
+  document.getElementById('loadingPanel').style.display = 'block';
 
-  await getAllFiles('./assets/minecraft/lang/languages.json', langFile, langFiles);
-  
-  await getAllFiles('./data/minecraft/recipes.json', recipesFile, recipesFiles);
-  await getAllFiles('./data/minecraft/recipes.json', recipesFile, recipesFiles);
-
+  recipesFiles = await getAllFiles('./recipes.json');
+  lootTableFiles = await getAllFiles('./loot_tables.json');
+  langFiles = await getAllFiles('./languages.json');
+  tagFiles = await getAllFiles('./tags.json');
+  dummy = await getAllFiles('./dummy.json');
 
   Slot.redrawInventories();
   document.getElementById('loadingPanel').style.opacity = '0';

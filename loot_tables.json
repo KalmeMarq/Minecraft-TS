@@ -1,0 +1,7 @@
+{
+  "root": "data",
+  "namespace": "minecraft",
+  "values": [
+    "loot_tables/gameplay/fishing/fish.json"
+  ]
+}

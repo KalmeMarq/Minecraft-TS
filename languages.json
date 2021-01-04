@@ -1,6 +1,7 @@
 {
+  "root": "assets",
   "namespace": "minecraft",
-  "languages": [
+  "values": [
     "lang/en_us.json",
     "lang/pt_pt.json",
     "lang/pv_pv.json"
