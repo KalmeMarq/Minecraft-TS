@@ -54,11 +54,14 @@ let guiScale = Number(getComputedStyle(document.documentElement).getPropertyValu
 let advancedTooltip = true;
 
 /* Item Registry */
+let itemIdx = 0;
 class Item {
   #isStackable;
   #isDamageable;
 
   constructor(identifier, maxStackSize, maxDamage, props) {
+    this.id = itemIdx;
+    itemIdx++;
     this.identifier = identifier;
     this.texture = 'assets/minecraft/textures/item/' + this.identifier + '.png';
     this.maxStackSize = maxStackSize;
@@ -74,23 +77,23 @@ class Item {
 }
 
 const RegistryItems = [
-  new Item('acacia_boat', 1, -1, { itemGroup: 'misc' }),
-  new Item('acacia_door', 64, -1, { itemGroup: 'misc' }),
-  new Item('acacia_sign', 16, -1, { itemGroup: 'misc' }),
+  new Item('acacia_boat', 1, -1, { itemGroup: 'transportation' }),
+  new Item('acacia_door', 64, -1, { isBlock: true, itemGroup: 'redstone' }),
+  new Item('acacia_sign', 16, -1, { isBlock: true, itemGroup: 'decorations' }),
   new Item('apple', 64, -1, { itemGroup: 'foodstuffs' }),
-  new Item('armor_stand', 64, -1, { itemGroup: 'misc' }),
+  new Item('armor_stand', 64, -1, { itemGroup: 'decorations' }),
   new Item('arrow', 64, -1, { itemGroup: 'misc' }),
   new Item('baked_potato', 64, -1, { itemGroup: 'foodstuffs' }),
-  new Item('bamboo', 64, -1, { itemGroup: 'misc' }),
-  new Item('barrier', 64, -1, { itemGroup: 'misc' }),
+  new Item('bamboo', 64, -1, { isBlock: true, itemGroup: 'misc' }),
+  new Item('barrier', 64, -1, { isBlock: true, itemGroup: 'misc' }),
   new Item('beef', 64, -1, { itemGroup: 'foodstuffs' }),
   new Item('beetroot', 64, -1, { itemGroup: 'foodstuffs' }),
   new Item('beetroot_seeds', 64, -1, { itemGroup: 'misc' }),
   new Item('beetroot_soup', 1, -1, { itemGroup: 'foodstuffs' }),
-  new Item('bell', 64, -1, { itemGroup: 'misc' }),
-  new Item('birch_boat', 1, -1, { itemGroup: 'misc' }),
-  new Item('birch_door', 64, -1, { itemGroup: 'misc' }),
-  new Item('birch_sign', 64, -1, { itemGroup: 'misc' }),
+  new Item('bell', 64, -1, { isBlock: true, itemGroup: 'redstone' }),
+  new Item('birch_boat', 1, -1, { itemGroup: 'transportation' }),
+  new Item('birch_door', 64, -1, { isBlock: true, itemGroup: 'misc' }),
+  new Item('birch_sign', 64, -1, { isBlock: true, itemGroup: 'misc' }),
   new Item('black_dye', 64, -1, { itemGroup: 'misc' }),
   new Item('blaze_powder', 64, -1, { itemGroup: 'misc' }),
   new Item('blaze_rod', 64, -1, { itemGroup: 'misc' }),
@@ -101,27 +104,27 @@ const RegistryItems = [
   new Item('bow', 1, -1, { itemGroup: 'tools' }),
   new Item('bowl', 64, -1, { itemGroup: 'misc' }),
   new Item('bread', 64, -1, { itemGroup: 'foodstuffs' }),
-  new Item('brewing_stand', 64, -1, { itemGroup: 'misc' }),
+  new Item('brewing_stand', 64, -1, { isBlock: true, itemGroup: 'brewing' }),
   new Item('brick', 64, -1, { itemGroup: 'misc' }),
   new Item('brown_dye', 64, -1, { itemGroup: 'misc' }),
   new Item('bucket', 64, -1, { itemGroup: 'misc' }),
-  new Item('cake', 64, -1, { itemGroup: 'foodstuffs' }),
-  new Item('campfire', 64, -1, { itemGroup: 'misc' }),
+  new Item('cake', 64, -1, { isBlock: true, itemGroup: 'foodstuffs' }),
+  new Item('campfire', 64, -1, { isBlock: true, itemGroup: 'decorations' }),
   new Item('carrot', 64, -1, { itemGroup: 'foodstuffs' }),
   new Item('chainmail_boots', 1, 20, { itemGroup: 'equipment' }),
   new Item('chainmail_chestplate', 1, 20, { itemGroup: 'equipment' }),
   new Item('chainmail_helmet', 1, 20, { itemGroup: 'equipment' }),
   new Item('chainmail_leggings', 1, 20, { itemGroup: 'equipment' }),
   new Item('charcoal', 64, -1, { itemGroup: 'misc' }),
-  new Item('chest_minecart', 1, -1, { itemGroup: 'misc' }),
-  new Item('chicken', 64, -1, { itemGroup: 'misc' }),
+  new Item('chest_minecart', 1, -1, { itemGroup: 'transportation' }),
+  new Item('chicken', 64, -1, { itemGroup: 'foodstuffs' }),
   new Item('chorus_fruit', 64, -1, { itemGroup: 'foodstuffs' }),
   new Item('clay_ball', 64, -1, { itemGroup: 'misc' }),
   new Item('clock', 64, -1, { itemGroup: 'tools' }),
   new Item('coal', 64, -1, { itemGroup: 'misc' }),
   new Item('cocoa_beans', 64, -1, { itemGroup: 'misc' }),
   new Item('cod', 64, -1, { itemGroup: 'foodstuffs' }),
-  new Item('comparator', 64, -1, { itemGroup: 'misc' }),
+  new Item('comparator', 64, -1, { isBlock: true, itemGroup: 'redstone' }),
   new Item('compass', 64, -1, { itemGroup: 'tools' }),
   new Item('cooked_beef', 64, -1, { itemGroup: 'foodstuffs' }),
   new Item('cooked_chicken', 64, -1, { itemGroup: 'foodstuffs' }),
@@ -130,13 +133,13 @@ const RegistryItems = [
   new Item('cooked_porkchop', 64, -1, { itemGroup: 'foodstuffs' }),
   new Item('cooked_rabbit', 64, -1, { itemGroup: 'foodstuffs' }),
   new Item('cooked_salmon', 64, -1, { itemGroup: 'foodstuffs' }),
-  new Item('crimson_door', 64, -1, { itemGroup: 'misc' }),
-  new Item('crimson_sign', 64, -1, { itemGroup: 'misc' }),
+  new Item('crimson_door', 64, -1, { isBlock: true, itemGroup: 'redstone' }),
+  new Item('crimson_sign', 64, -1, { isBlock: true, itemGroup: 'decorations' }),
   new Item('crossbow_standby', 64, 20, { itemGroup: 'equipment' }),
   new Item('cyan_dye', 64, -1, { itemGroup: 'misc' }),
-  new Item('dark_oak_boat', 64, -1, { itemGroup: 'misc' }),
-  new Item('dark_oak_door', 64, -1, { itemGroup: 'misc' }),
-  new Item('dark_oak_sign', 64, -1, { itemGroup: 'misc' }),
+  new Item('dark_oak_boat', 64, -1, { itemGroup: 'transportation' }),
+  new Item('dark_oak_door', 64, -1, { isBlock: true, itemGroup: 'redstone' }),
+  new Item('dark_oak_sign', 64, -1, { isBlock: true, itemGroup: 'decorations' }),
   new Item('diamond', 64, -1, { itemGroup: 'misc' }),
   new Item('diamond_axe', 1, 20, { itemGroup: 'tools' }),
   new Item('diamond_boots', 1, 20, { itemGroup: 'equipment' }),
@@ -163,12 +166,12 @@ const RegistryItems = [
   new Item('fishing_rod', 64, -1, { itemGroup: 'tools' }),
   new Item('flint', 64, -1, { itemGroup: 'misc' }),
   new Item('flint_and_steel', 1, -1, { itemGroup: 'tools' }),
-  new Item('flower_pot', 64, -1, { itemGroup: 'misc' }),
-  new Item('furnace_minecart', 64, -1, { itemGroup: 'misc' }),
-  new Item('ghast_tear', 64, -1, { itemGroup: 'misc' }),
-  new Item('glass_bottle', 64, -1, { itemGroup: 'misc' }),
+  new Item('flower_pot', 64, -1, { itemGroup: 'decorations' }),
+  new Item('furnace_minecart', 64, -1, { itemGroup: 'transportation' }),
+  new Item('ghast_tear', 64, -1, { itemGroup: 'brewing_stand' }),
+  new Item('glass_bottle', 64, -1, { itemGroup: 'brewing' }),
   new Item('glistering_melon_slice', 64, -1, { itemGroup: 'misc' }),
-  new Item('glowstone_dust', 64, -1, { itemGroup: 'misc' }),
+  new Item('glowstone_dust', 64, -1, { itemGroup: 'brewing' }),
   new Item('gold_ingot', 64, -1, { itemGroup: 'misc' }),
   new Item('gold_nugget', 64, -1, { itemGroup: 'misc' }),
   new Item('golden_apple', 64, -1, { itemGroup: 'foodstuffs' }),
@@ -180,17 +183,159 @@ const RegistryItems = [
   new Item('golden_hoe', 1, -1, { itemGroup: 'tools' }),
   new Item('golden_horse_armor', 1, -1, { itemGroup: 'misc' }),
   new Item('golden_leggings', 1, -1, { itemGroup: 'equipment' }),
+  new Item('golden_pickaxe', 1, -1, { itemGroup: 'tools' }),
+  new Item('golden_shovel', 1, -1, { itemGroup: 'tools' }),
   new Item('golden_sword', 1, -1, { itemGroup: 'equipment' }),
-  new Item('iron_door', 64, -1, { itemGroup: 'misc' }),
+  new Item('gray_dye', 64, -1, { itemGroup: 'misc' }),
+  new Item('green_dye', 64, -1, { itemGroup: 'misc' }),
+  new Item('gunpowder', 64, -1, { itemGroup: 'misc' }),
+  new Item('heart_of_the_sea', 64, -1, { itemGroup: 'misc' }),
+  new Item('honey_bottle', 64, -1, { itemGroup: 'misc' }),
+  new Item('honeycomb', 64, -1, { itemGroup: 'misc' }),
+  new Item('hopper', 64, -1, { itemGroup: 'misc' }),
+  new Item('hopper_minecart', 64, -1, { itemGroup: 'misc' }),
+  new Item('ink_sac', 64, -1, { itemGroup: 'misc' }),
+  new Item('iron_axe', 1, -1, { itemGroup: 'misc' }),
+  new Item('iron_boots', 1, -1, { itemGroup: 'misc' }),
+  new Item('iron_chestplate', 1, -1, { itemGroup: 'misc' }),
+  new Item('iron_door', 64, -1, { isBlock: true, itemGroup: 'redstone' }),
+  new Item('iron_helmet', 1, -1, { itemGroup: 'misc' }),
+  new Item('iron_hoe', 1, -1, { itemGroup: 'misc' }),
+  new Item('iron_horse_armor', 1, -1, { itemGroup: 'misc' }),
   new Item('iron_ingot', 64, -1, { itemGroup: 'misc' }),
+  new Item('iron_leggings', 1, -1, { itemGroup: 'misc' }),
+  new Item('iron_nugget', 64, -1, { itemGroup: 'misc' }),
+  new Item('iron_pickaxe', 1, -1, { itemGroup: 'equipment' }),
+  new Item('iron_shovel', 1, -1, { itemGroup: 'equipment' }),
   new Item('iron_sword', 1, -1, { itemGroup: 'equipment' }),
-  new Item('leather', 1, -1, { itemGroup: 'misc' }),
+  new Item('item_frame', 64, -1, { itemGroup: 'misc' }),
+  new Item('jungle_boat', 64, -1, { itemGroup: 'misc' }),
+  new Item('jungle_door', 64, -1, { itemGroup: 'misc' }),
+  new Item('jungle_sign', 64, -1, { itemGroup: 'misc' }),
+  new Item('kelp', 64, -1, { itemGroup: 'misc' }),
+  new Item('lantern', 64, -1, { itemGroup: 'misc' }),
+  new Item('lapis_lazuli', 64, -1, { itemGroup: 'misc' }),
+  new Item('lava_bucket', 64, -1, { itemGroup: 'misc' }),
+  new Item('lead', 64, -1, { itemGroup: 'misc' }),
+  new Item('leather', 64, -1, { itemGroup: 'misc' }),
+  new Item('light_blue_dye', 64, -1, { itemGroup: 'misc' }),
+  new Item('light_gray_dye', 64, -1, { itemGroup: 'misc' }),
+  new Item('lime_dye', 64, -1, { itemGroup: 'misc' }),
+  new Item('magenta_dye', 64, -1, { itemGroup: 'misc' }),
+  new Item('magma_cream', 64, -1, { itemGroup: 'misc' }),
+  new Item('melon_seeds', 64, -1, { itemGroup: 'misc' }),
+  new Item('melon_slice', 64, -1, { itemGroup: 'misc' }),
+  new Item('milk_bucket', 64, -1, { itemGroup: 'misc' }),
+  new Item('minecart', 64, -1, { itemGroup: 'misc' }),
+  new Item('mushroom_stew', 64, -1, { itemGroup: 'misc' }),
+  new Item('music_disc_11', 64, -1, { itemGroup: 'misc' }),
+  new Item('music_disc_13', 64, -1, { itemGroup: 'misc' }),
+  new Item('music_disc_blocks', 64, -1, { itemGroup: 'misc' }),
+  new Item('music_disc_cat', 64, -1, { itemGroup: 'misc' }),
+  new Item('music_disc_chirp', 64, -1, { itemGroup: 'misc' }),
+  new Item('music_disc_far', 64, -1, { itemGroup: 'misc' }),
+  new Item('music_disc_mall', 64, -1, { itemGroup: 'misc' }),
+  new Item('music_disc_mell', 64, -1, { itemGroup: 'misc' }),
+  new Item('music_disc_pigstep', 64, -1, { itemGroup: 'misc' }),
+  new Item('music_disc_stal', 64, -1, { itemGroup: 'misc' }),
+  new Item('music_disc_strad', 64, -1, { itemGroup: 'misc' }),
+  new Item('music_disc_wait', 64, -1, { itemGroup: 'misc' }),
+  new Item('music_disc_ward', 64, -1, { itemGroup: 'misc' }),
+  new Item('mutton', 64, -1, { itemGroup: 'misc' }),
+  new Item('nametag', 64, -1, { itemGroup: 'misc' }),
+  new Item('nautilus_shell', 64, -1, { itemGroup: 'misc' }),
+  new Item('nether_brick', 64, -1, { itemGroup: 'misc' }),
+  new Item('nether_sprouts', 64, -1, { itemGroup: 'misc' }),
+  new Item('nether_star', 64, -1, { itemGroup: 'misc' }),
+  new Item('nether_wart', 64, -1, { itemGroup: 'misc' }),
+  new Item('netherite_axe', 1, -1, { itemGroup: 'misc' }),
+  new Item('netherite_boots', 1, -1, { itemGroup: 'misc' }),
+  new Item('netherite_chestplate', 1, -1, { itemGroup: 'misc' }),
+  new Item('netherite_helmet', 1, -1, { itemGroup: 'misc' }),
+  new Item('netherite_hoe', 1, -1, { itemGroup: 'misc' }),
+  new Item('netherite_ingot', 1, -1, { itemGroup: 'misc' }),
+  new Item('netherite_leggings', 1, -1, { itemGroup: 'misc' }),
+  new Item('netherite_pickaxe', 1, -1, { itemGroup: 'misc' }),
+  new Item('netherite_scrap', 1, -1, { itemGroup: 'misc' }),
+  new Item('netherite_shovel', 1, -1, { itemGroup: 'misc' }),
+  new Item('netherite_sword', 1, -1, { itemGroup: 'misc' }),
+  new Item('oak_boat', 1, -1, { itemGroup: 'misc' }),
+  new Item('oak_door', 64, -1, { itemGroup: 'misc' }),
+  new Item('oak_sign', 64, -1, { itemGroup: 'misc' }),
+  new Item('orange_dye', 64, -1, { itemGroup: 'misc' }),
+  new Item('painting', 64, -1, { itemGroup: 'misc' }),
   new Item('paper', 64, -1, { itemGroup: 'misc' }),
+  new Item('phantom_membrane', 64, -1, { itemGroup: 'misc' }),
+  new Item('pink_dye', 64, -1, { itemGroup: 'misc' }),
+  new Item('poisonous_potato', 64, -1, { itemGroup: 'misc' }),
+  new Item('popped_chorus_fruit', 64, -1, { itemGroup: 'misc' }),
+  new Item('porkchop', 64, -1, { itemGroup: 'misc' }),
+  new Item('potato', 64, -1, { itemGroup: 'misc' }),
+  new Item('prismarine_crystals', 64, -1, { itemGroup: 'misc' }),
+  new Item('prismarine_shard', 64, -1, { itemGroup: 'misc' }),
+  new Item('pufferfish', 64, -1, { itemGroup: 'misc' }),
+  new Item('pufferfish_bucket', 64, -1, { itemGroup: 'misc' }),
+  new Item('pumpkin_pie', 64, -1, { itemGroup: 'misc' }),
+  new Item('pumpkin_seeds', 64, -1, { itemGroup: 'misc' }),
+  new Item('purple_dye', 64, -1, { itemGroup: 'misc' }),
+  new Item('quartz', 64, -1, { itemGroup: 'misc' }),
+  new Item('rabbit', 64, -1, { itemGroup: 'misc' }),
+  new Item('rabbit_foot', 64, -1, { itemGroup: 'misc' }),
+  new Item('rabbit_hide', 64, -1, { itemGroup: 'misc' }),
+  new Item('rabbit_stew', 64, -1, { itemGroup: 'misc' }),
+  new Item('red_dye', 64, -1, { itemGroup: 'misc' }),
+  new Item('redstone', 64, -1, { itemGroup: 'misc' }),
+  new Item('repeater', 64, -1, { itemGroup: 'misc' }),
+  new Item('rotten_flesh', 64, -1, { itemGroup: 'misc' }),
+  new Item('saddle', 64, -1, { itemGroup: 'misc' }),
+  new Item('salmon', 64, -1, { itemGroup: 'misc' }),
+  new Item('salmon_bucket', 64, -1, { itemGroup: 'misc' }),
+  new Item('scute', 64, -1, { itemGroup: 'misc' }),
+  new Item('sea_pickle', 64, -1, { itemGroup: 'misc' }),
+  new Item('seagrass', 64, -1, { itemGroup: 'misc' }),
   new Item('shears', 1, -1, { itemGroup: 'tools' }),
-  new Item('stick', 64, -1, { itemGroup: 'misc' }),
+  new Item('shulker_shell', 64, -1, { itemGroup: 'misc' }),
+  new Item('slime_ball', 64, -1, { itemGroup: 'misc' }),
   new Item('snowball', 16, -1, { itemGroup: 'misc' }),
+  new Item('soul_campfire', 16, -1, { itemGroup: 'misc' }),
+  new Item('soul_lantern', 16, -1, { itemGroup: 'misc' }),
+  new Item('spectral_arrow', 64, -1, { itemGroup: 'misc' }),
+  new Item('spider_eye', 64, -1, { itemGroup: 'misc' }),
+  new Item('spruce_boat', 64, -1, { itemGroup: 'misc' }),
+  new Item('spruce_door', 64, -1, { itemGroup: 'misc' }),
+  new Item('spruce_sign', 64, -1, { itemGroup: 'misc' }),
+  new Item('spruce_stick', 64, -1, { itemGroup: 'misc' }),
+  new Item('stone_axe', 64, -1, { itemGroup: 'misc' }),
+  new Item('stone_hoe', 64, -1, { itemGroup: 'misc' }),
+  new Item('stone_pickaxe', 64, -1, { itemGroup: 'misc' }),
+  new Item('stone_shovel', 64, -1, { itemGroup: 'misc' }),
+  new Item('stone_sword', 64, -1, { itemGroup: 'misc' }),
+  new Item('sugar', 64, -1, { itemGroup: 'misc' }),
+  new Item('suspicious_stew', 64, -1, { itemGroup: 'misc' }),
+  new Item('sweet_berries', 64, -1, { itemGroup: 'misc' }),
+  new Item('tnt_minecart', 64, -1, { itemGroup: 'misc' }),
+  new Item('totem_of_undying', 64, -1, { itemGroup: 'misc' }),
+  new Item('trident', 64, -1, { itemGroup: 'misc' }),
+  new Item('tropical_fish', 64, -1, { itemGroup: 'misc' }),
+  new Item('tropical_fish_bucket', 64, -1, { itemGroup: 'misc' }),
+  new Item('turtle_egg', 64, -1, { itemGroup: 'misc' }),
+  new Item('turtle_helmet', 64, -1, { itemGroup: 'misc' }),
+  new Item('warped_door', 64, -1, { itemGroup: 'misc' }),
+  new Item('warped_fungus_on_a_stick', 64, -1, { itemGroup: 'misc' }),
+  new Item('warped_sign', 64, -1, { itemGroup: 'misc' }),
+  new Item('water_bucket', 64, -1, { itemGroup: 'misc' }),
+  new Item('wheat_seeds', 64, -1, { itemGroup: 'misc' }),
+  new Item('white_dye', 64, -1, { itemGroup: 'misc' }),
+  new Item('wooden_axe', 64, -1, { itemGroup: 'misc' }),
+  new Item('wooden_hoe', 64, -1, { itemGroup: 'misc' }),
+  new Item('wooden_pickaxe', 64, -1, { itemGroup: 'misc' }),
+  new Item('wooden_shovel', 64, -1, { itemGroup: 'misc' }),
+  new Item('wooden_sword', 64, -1, { itemGroup: 'misc' }),
+  new Item('writable_book', 64, -1, { itemGroup: 'misc' }),
+  new Item('yellow_dye', 64, -1, { itemGroup: 'misc' }),
+  new Item('stick', 64, -1, { itemGroup: 'misc' }),
   new Item('string', 64, -1, { itemGroup: 'misc' }),
-  new Item('sugar_cane', 64, -1, { itemGroup: 'misc' }),
+  new Item('sugar_cane', 64, -1, { isBlock: true, itemGroup: 'misc' }),
   new Item('wheat', 64, -1, { itemGroup: 'misc' }),
   new Item('cookie', 64, -1, { itemGroup: 'foodstuffs' })
 ];
@@ -527,8 +672,9 @@ function drawAllItems() {
       const slotEl = document.createElement('div');
       slotEl.classList.add('slot');
       slotEl.tabIndex = '0';
+
   
-      slotEl.setAttribute('data-tooltip', `${translateKey(`item.${itemID}.name`) + ',minecraft:' + itemID}`);
+      slotEl.setAttribute('data-tooltip', `${translateKey(`${invSlot.props.isBlock ? 'block' : 'item'}.minecraft.${itemID}`) + ',minecraft:' + itemID}`);
   
       // console.log(langFiles[langFiles.findIndex(file => file[langFiles.id] === displayLang)]);
      /*  slotEl.addEventListener('mouseenter', () => {
@@ -587,14 +733,17 @@ function drawAllItems() {
       }
 
   
-  });
-}
+    });
+    } 
 
-  drawGroupItems('foodstuffs');
-  drawGroupItems('equipment');
-  drawGroupItems('tools');
+  drawGroupItems('decorations');
+  drawGroupItems('redstone');
+  drawGroupItems('transportation');
   drawGroupItems('misc');
-
+  drawGroupItems('foodstuffs');
+  drawGroupItems('tools');
+  drawGroupItems('equipment');
+  drawGroupItems('brewing');
 }
 
 
@@ -610,7 +759,7 @@ function drawArmor() {
     if(armorSlot.Item === '') {
       slotEl.setAttribute('data-tooltip', 'empty');
     } else {
-      slotEl.setAttribute('data-tooltip', `${translateKey(`item.${armorSlot.Item}.name`)}${regItem.maxDamage !== -1 ? ',Durability: ' + armorSlot.Damage + '/' + regItem.maxDamage : ''}${',minecraft:' + armorSlot.Item}`);
+      slotEl.setAttribute('data-tooltip', `${translateKey(`${regItem.props.isBlock ? 'block' : 'item'}.minecraft.${armorSlot.Item}`)}${regItem.maxDamage !== -1 ? ',Durability: ' + armorSlot.Damage + '/' + regItem.maxDamage : ''}${',minecraft:' + armorSlot.Item}`);
     }
 
     Slot.addOne(slotEl, armorSlot);
@@ -758,7 +907,7 @@ function drawArmor() {
       if(offhandSlot.Item === '') {
         slotEl.setAttribute('data-tooltip', 'empty');
       } else {
-        slotEl.setAttribute('data-tooltip', `${translateKey(`item.${offhandSlot.Item}.name`)}${regItem.maxDamage !== -1 ? ',Durability: ' + offhandSlot.Damage + '/' + regItem.maxDamage : ''}${',minecraft:' + offhandSlot.Item}`);
+        slotEl.setAttribute('data-tooltip', `${translateKey(`${regItem.props.isBlock ? 'block' : 'item'}.minecraft.${offhandSlot.Item}`)}${regItem.maxDamage !== -1 ? ',Durability: ' + offhandSlot.Damage + '/' + regItem.maxDamage : ''}${',minecraft:' + offhandSlot.Item}`);
       }
   
       Slot.addOne(slotEl, offhandSlot);
@@ -811,7 +960,7 @@ function drawInv() {
     if(invSlot.Item === '') {
       slotEl.setAttribute('data-tooltip', 'empty');
     } else {
-      slotEl.setAttribute('data-tooltip', `${translateKey(`item.${invSlot.Item}.name`)}${regItem.maxDamage !== -1 ? ',Durability: ' + invSlot.Damage + '/' + regItem.maxDamage : ''}${',minecraft:' + invSlot.Item}`);
+      slotEl.setAttribute('data-tooltip', `${translateKey(`${regItem.props.isBlock ? 'block' : 'item'}.minecraft.${invSlot.Item}`)}${regItem.maxDamage !== -1 ? ',Durability: ' + invSlot.Damage + '/' + regItem.maxDamage : ''}${',minecraft:' + invSlot.Item}`);
     }
 
     Slot.addOne(slotEl, invSlot);
@@ -858,7 +1007,7 @@ function drawHotbar() {
     if(hotbarSlot.Item === '') {
       slotEl.setAttribute('data-tooltip', 'empty');
     } else {
-      slotEl.setAttribute('data-tooltip', `${translateKey(`item.${hotbarSlot.Item}.name`)}${regItem.maxDamage !== -1 ? ',Durability: ' + hotbarSlot.Damage + '/' + regItem.maxDamage : ''}${',minecraft:' + hotbarSlot.Item}`);
+      slotEl.setAttribute('data-tooltip', `${translateKey(`${regItem.props.isBlock ? 'block' : 'item'}.minecraft.${hotbarSlot.Item}`)}${regItem.maxDamage !== -1 ? ',Durability: ' + hotbarSlot.Damage + '/' + regItem.maxDamage : ''}${',minecraft:' + hotbarSlot.Item}`);
     }
 
     Slot.addOne(slotEl, hotbarSlot);
@@ -907,7 +1056,7 @@ function drawCraftingGrid() {
     if(craftingSlot.Item === '') {
       slotEl.setAttribute('data-tooltip', 'empty');
     } else {
-      slotEl.setAttribute('data-tooltip', translateKey(`item.${craftingSlot.Item}.name`));
+      slotEl.setAttribute('data-tooltip', translateKey(`${regItem.props.isBlock ? 'block' : 'item'}.minecraft.${craftingSlot.Item}`));
     }
 
     slotEl.addEventListener('mousedown', (e) => {
@@ -1109,7 +1258,7 @@ function drawResultSlotGrid() {
   if(resultSlotGrid.Item === '') {
     resultSlot.setAttribute('data-tooltip', 'empty');
   } else {
-    resultSlot.setAttribute('data-tooltip', translateKey(`item.${resultSlotGrid.Item}.name`));
+    resultSlot.setAttribute('data-tooltip', translateKey(`item.minecraft.${resultSlotGrid.Item}`));
   }
 
   resultSlot.addEventListener('click', (e) => {
