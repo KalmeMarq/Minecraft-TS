@@ -7,6 +7,11 @@
   <link rel="stylesheet" href="index.css">
 </head>
 <body>
+  <div id="loadingPanel">
+    <div id="loadingBar">
+      <div id="loadingBarInside"></div>
+    </div>
+  </div>
   <div id="root">
     <div id="tooltip"></div>
     <select id="langSelection">
@@ -14,7 +19,9 @@
       <option value="pt_pt">Português (Portugal)</option>
       <option value="pv_pv">Porvet (Custom)</option>
     </select>
+    <button id="showAdvancedTooltipBtn">Advanced Tooltips: ON</button>
     <button id="clearInvsBtn">Clear Everything</button>
+    <button id="useItemBtn">Simulate Item Use (Put it on Slot 0)</button>
     <br>
     <br>
     <br>

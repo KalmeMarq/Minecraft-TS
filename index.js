@@ -30,13 +30,15 @@ function translateKey(key) {
   const langDefault = langFiles.find(file => file['lang.id'] === defaultLang);
   const lang = langFiles.find(file => file['lang.id'] === displayLang);
 
-  /* if(lang[key]) {
+  // console.log(langFiles[langFiles.findIndex(file => file['lang.id'] === displayLang)][key]);
+
+  if(lang[key]) {
     return lang[key]
   } else if(langDefault[key]) {
     return langDefault[key];
-  } else { */
+  } else {
     return key
-  /* } */
+  }
 }
 
 /* Settings */
@@ -44,22 +46,22 @@ let defaultLang = 'en_us';
 let displayLang = 'en_us';
 let soundVolume = 0.5;
 let guiScale = Number(getComputedStyle(document.documentElement).getPropertyValue('--guiScale'));
-let advancedTooltip = false;
+let advancedTooltip = true;
 
 /* Item Registry */
 class Item {
   #isStackable;
   #isDamageable;
 
-  constructor(identifier, name, texture, maxStackSize, maxDamage, itemGroup) {
+  constructor(identifier, texture, maxStackSize, maxDamage, itemGroup, props) {
     this.identifier = identifier;
-    this.name = name;
     this.texture = texture;
     this.maxStackSize = maxStackSize;
     this.#isStackable = maxStackSize === 1 ? false : true;
     this.maxDamage = maxDamage;
     this.#isDamageable = maxDamage === -1 ? false : true;
     this.itemGroup = itemGroup;
+    this.props = props;
   }
 
   get isStackable() {
@@ -68,120 +70,125 @@ class Item {
 }
 
 const RegistryItems = [
-  new Item('acacia_boat', translateKey('item.acacia_boat.name'), 'assets/minecraft/textures/item/acacia_boat.png', 1, -1, 'misc'),
-  new Item('acacia_door', translateKey('item.acacia_door.name'), 'assets/minecraft/textures/item/acacia_door.png', 64, -1, 'misc'),
-  new Item('acacia_sign', translateKey('item.acacia_sign.name'), 'assets/minecraft/textures/item/acacia_sign.png', 16, -1, 'misc'),
-  new Item('apple', translateKey('item.apple.name'), 'assets/minecraft/textures/item/apple.png', 64, -1, 'foodstuffs'),
-  new Item('armor_stand', translateKey('item.armor_stand.name'), 'assets/minecraft/textures/item/armor_stand.png', 64, -1, 'misc'),
-  new Item('arrow', translateKey('item.arrow.name'), 'assets/minecraft/textures/item/arrow.png', 64, -1, 'misc'),
-  new Item('baked_potato', translateKey('item.baked_potato.name'), 'assets/minecraft/textures/item/baked_potato.png', 64, -1, 'foodstuffs'),
-  new Item('bamboo', translateKey('item.bamboo.name'), 'assets/minecraft/textures/item/bamboo.png', 64, -1, 'misc'),
-  new Item('barrier', translateKey('item.barrier.name'), 'assets/minecraft/textures/item/barrier.png', 64, -1, 'misc'),
-  new Item('beef', translateKey('item.beef.name'), 'assets/minecraft/textures/item/beef.png', 64, -1, 'foodstuffs'),
-  new Item('beetroot', translateKey('item.beetroot.name'), 'assets/minecraft/textures/item/beetroot.png', 64, -1, 'foodstuffs'),
-  new Item('beetroot_seeds', translateKey('item.beetroot_seeds.name'), 'assets/minecraft/textures/item/beetroot_seeds.png', 64, -1, 'misc'),
-  new Item('beetroot_soup', translateKey('item.beetroot_soup.name'), 'assets/minecraft/textures/item/beetroot_soup.png', 1, -1, 'foodstuffs'),
-  new Item('bell', translateKey('item.bell.name'), 'assets/minecraft/textures/item/bell.png', 64, -1, 'misc'),
-  new Item('birch_boat', translateKey('item.birch_boat.name'), 'assets/minecraft/textures/item/birch_boat.png', 1, -1, 'misc'),
-  new Item('birch_door', translateKey('item.birch_door.name'), 'assets/minecraft/textures/item/birch_door.png', 64, -1, 'misc'),
-  new Item('birch_sign', translateKey('item.birch_sign.name'), 'assets/minecraft/textures/item/birch_sign.png', 64, -1, 'misc'),
-  new Item('black_dye', translateKey('item.black_dye.name'), 'assets/minecraft/textures/item/black_dye.png', 64, -1, 'misc'),
-  new Item('blaze_powder', translateKey('item.blaze_powder.name'), 'assets/minecraft/textures/item/blaze_powder.png', 64, -1, 'misc'),
-  new Item('blaze_rod', translateKey('item.blaze_rod.name'), 'assets/minecraft/textures/item/blaze_rod.png', 64, -1, 'misc'),
-  new Item('blue_dye', translateKey('item.blue_dye.name'), 'assets/minecraft/textures/item/blue_dye.png', 64, -1, 'misc'),
-  new Item('bone', translateKey('item.bone.name'), 'assets/minecraft/textures/item/bone.png', 64, -1, 'misc'),
-  new Item('bone_meal', translateKey('item.bone_meal.name'), 'assets/minecraft/textures/item/bone_meal.png', 64, -1, 'misc'),
-  new Item('book', translateKey('item.book.name'), 'assets/minecraft/textures/item/book.png', 64, -1, 'misc'),
-  new Item('bow', translateKey('item.bow.name'), 'assets/minecraft/textures/item/bow.png', 1, -1, 'tools'),
-  new Item('bowl', translateKey('item.bowl.name'), 'assets/minecraft/textures/item/bowl.png', 64, -1, 'misc'),
-  new Item('bread', translateKey('item.bread.name'), 'assets/minecraft/textures/item/bread.png', 64, -1, 'foodstuffs'),
-  new Item('brewing_stand', translateKey('item.brewing_stand.name'), 'assets/minecraft/textures/item/brewing_stand.png', 64, -1, 'misc'),
-  new Item('brick', translateKey('item.brick.name'), 'assets/minecraft/textures/item/brick.png', 64, -1, 'misc'),
-  new Item('brown_dye', translateKey('item.brown_dye.name'), 'assets/minecraft/textures/item/brown_dye.png', 64, -1, 'misc'),
-  new Item('bucket', translateKey('item.bucket.name'), 'assets/minecraft/textures/item/bucket.png', 64, -1, 'misc'),
-  new Item('cake', translateKey('item.cake.name'), 'assets/minecraft/textures/item/cake.png', 64, -1, 'foodstuffs'),
-  new Item('campfire', translateKey('item.campfire.name'), 'assets/minecraft/textures/item/campfire.png', 64, -1, 'misc'),
-  new Item('carrot', translateKey('item.carrot.name'), 'assets/minecraft/textures/item/carrot.png', 64, -1, 'foodstuffs'),
-  new Item('chainmail_boots', translateKey('item.chainmail_boots.name'), 'assets/minecraft/textures/item/chainmail_boots.png', 1, -1, 'equipment'),
-  new Item('chainmail_chestplate', translateKey('item.chainmail_chestplate.name'), 'assets/minecraft/textures/item/chainmail_chestplate.png', 1, -1, 'equipment'),
-  new Item('chainmail_helmet', translateKey('item.chainmail_helmet.name'), 'assets/minecraft/textures/item/chainmail_helmet.png', 1, -1, 'equipment'),
-  new Item('chainmail_leggings', translateKey('item.chainmail_leggings.name'), 'assets/minecraft/textures/item/chainmail_leggings.png', 1, -1, 'equipment'),
-  new Item('charcoal', translateKey('item.charcoal.name'), 'assets/minecraft/textures/item/charcoal.png', 64, -1, 'misc'),
-  new Item('chest_minecart', translateKey('item.chest_minecart.name'), 'assets/minecraft/textures/item/chest_minecart.png', 1, -1, 'misc'),
-  new Item('chicken', translateKey('item.chicken.name'), 'assets/minecraft/textures/item/chicken.png', 64, -1, 'misc'),
-  new Item('chorus_fruit', translateKey('item.chorus_fruit.name'), 'assets/minecraft/textures/item/chorus_fruit.png', 64, -1, 'foodstuffs'),
-  new Item('clay_ball', translateKey('item.clay_ball.name'), 'assets/minecraft/textures/item/clay_ball.png', 64, -1, 'misc'),
-  new Item('clock', translateKey('item.clock.name'), 'assets/minecraft/textures/item/clock.png', 64, -1, 'tools'),
-  new Item('coal', translateKey('item.coal.name'), 'assets/minecraft/textures/item/coal.png', 64, -1, 'misc'),
-  new Item('cocoa_beans', translateKey('item.cocoa_beans.name'), 'assets/minecraft/textures/item/cocoa_beans.png', 64, -1, 'misc'),
-  new Item('cod', translateKey('item.cod.name'), 'assets/minecraft/textures/item/cod.png', 64, -1, 'foodstuffs'),
-  new Item('comparator', translateKey('item.comparator.name'), 'assets/minecraft/textures/item/comparator.png', 64, -1, 'misc'),
-  new Item('compass', translateKey('item.compass.name'), 'assets/minecraft/textures/item/compass.png', 64, -1, 'tools'),
-  new Item('cooked_beef', translateKey('item.cooked_beef.name'), 'assets/minecraft/textures/item/cooked_beef.png', 64, -1, 'foodstuffs'),
-  new Item('cooked_chicken', translateKey('item.cooked_chicken.name'), 'assets/minecraft/textures/item/cooked_chicken.png', 64, -1, 'foodstuffs'),
-  new Item('cooked_cod', translateKey('item.cooked_cod.name'), 'assets/minecraft/textures/item/cooked_cod.png', 64, -1, 'foodstuffs'),
-  new Item('cooked_mutton', translateKey('item.cooked_mutton.name'), 'assets/minecraft/textures/item/cooked_mutton.png', 64, -1, 'foodstuffs'),
-  new Item('cooked_porkchop', translateKey('item.cooked_porkchop.name'), 'assets/minecraft/textures/item/cooked_porkchop.png', 64, -1, 'foodstuffs'),
-  new Item('cooked_rabbit', translateKey('item.cooked_rabbit.name'), 'assets/minecraft/textures/item/cooked_rabbit.png', 64, -1, 'foodstuffs'),
-  new Item('cooked_salmon', translateKey('item.cooked_salmon.name'), 'assets/minecraft/textures/item/cooked_salmon.png', 64, -1, 'foodstuffs'),
-  new Item('crimson_door', translateKey('item.crimson_door.name'), 'assets/minecraft/textures/item/crimson_door.png', 64, -1, 'misc'),
-  new Item('crimson_sign', translateKey('item.crimson_sign.name'), 'assets/minecraft/textures/item/crimson_sign.png', 64, -1, 'misc'),
-  new Item('crossbow_standby', translateKey('item.crossbow_standby.name'), 'assets/minecraft/textures/item/crossbow_standby.png', 64, -1, 'equipment'),
-  new Item('cyan_dye', translateKey('item.cyan_dye.name'), 'assets/minecraft/textures/item/cyan_dye.png', 64, -1, 'misc'),
-  new Item('dark_oak_boat', translateKey('item.dark_oak_boat.name'), 'assets/minecraft/textures/item/dark_oak_boat.png', 64, -1, 'misc'),
-  new Item('dark_oak_door', translateKey('item.dark_oak_door.name'), 'assets/minecraft/textures/item/dark_oak_door.png', 64, -1, 'misc'),
-  new Item('dark_oak_sign', translateKey('item.dark_oak_sign.name'), 'assets/minecraft/textures/item/dark_oak_sign.png', 64, -1, 'misc'),
-  new Item('diamond', translateKey('item.diamond.name'), 'assets/minecraft/textures/item/diamond.png', 64, -1, 'misc'),
-  new Item('diamond_axe', translateKey('item.diamond_axe.name'), 'assets/minecraft/textures/item/diamond_axe.png', 1, -1, 'tools'),
-  new Item('diamond_boots', translateKey('item.diamond_boots.name'), 'assets/minecraft/textures/item/diamond_boots.png', 1, -1, 'equipment'),
-  new Item('diamond_chestplate', translateKey('item.diamond_chestplate.name'), 'assets/minecraft/textures/item/diamond_chestplate.png', 1, -1, 'equipment'),
-  new Item('diamond_helmet', translateKey('item.diamond_helmet.name'), 'assets/minecraft/textures/item/diamond_helmet.png', 1, -1, 'equipment'),
-  new Item('diamond_hoe', translateKey('item.diamond_hoe.name'), 'assets/minecraft/textures/item/diamond_hoe.png', 1, -1, 'tools'),
-  new Item('diamond_horse_armor', translateKey('item.diamond_horse_armor.name'), 'assets/minecraft/textures/item/diamond_horse_armor.png', 1, -1, 'tools'),
-  new Item('diamond_leggings', translateKey('item.diamond_leggings.name'), 'assets/minecraft/textures/item/diamond_leggings.png', 1, -1, 'equipment'),
-  new Item('diamond_pickaxe', translateKey('item.diamond_pickaxe.name'), 'assets/minecraft/textures/item/diamond_pickaxe.png', 1, -1, 'tools'),
-  new Item('diamond_shovel', translateKey('item.diamond_shovel.name'), 'assets/minecraft/textures/item/diamond_shovel.png', 1, -1, 'tools'),
-  new Item('diamond_sword', translateKey('item.diamond_sword.name'), 'assets/minecraft/textures/item/diamond_sword.png', 1, -1, 'equipment'),
-  new Item('dragon_breath', translateKey('item.dragon_breath.name'), 'assets/minecraft/textures/item/dragon_breath.png', 64, -1, 'misc'),
-  new Item('dried_kelp', translateKey('item.dried_kelp.name'), 'assets/minecraft/textures/item/dried_kelp.png', 64, -1, 'foodstuffs'),
-  new Item('egg', translateKey('item.egg.name'), 'assets/minecraft/textures/item/egg.png', 16, -1, 'misc'),
-  new Item('emerald', translateKey('item.emerald.name'), 'assets/minecraft/textures/item/emerald.png', 64, -1, 'misc'),
-  new Item('end_crystal', translateKey('item.end_crystal.name'), 'assets/minecraft/textures/item/end_crystal.png', 64, -1, 'misc'),
-  new Item('ender_eye', translateKey('item.ender_eye.name'), 'assets/minecraft/textures/item/ender_eye.png', 16, -1, 'misc'),
-  new Item('ender_pearl', translateKey('item.ender_pearl.name'), 'assets/minecraft/textures/item/ender_pearl.png', 16, -1, 'misc'),
-  new Item('experience_bottle', translateKey('item.experience_bottle.name'), 'assets/minecraft/textures/item/experience_bottle.png', 64, -1, 'misc'),
-  new Item('feather', translateKey('item.feather.name'), 'assets/minecraft/textures/item/feather.png', 64, -1, 'misc'),
-  new Item('fermented_spider_eye', translateKey('item.fermented_spider_eye.name'), 'assets/minecraft/textures/item/fermented_spider_eye.png', 64, -1, 'foodstuffs'),
-  new Item('fire_charge', translateKey('item.fire_charge.name'), 'assets/minecraft/textures/item/fire_charge.png', 64, -1, 'misc'),
-  new Item('firework_rocket', translateKey('item.firework_rocket.name'), 'assets/minecraft/textures/item/firework_rocket.png', 64, -1, 'misc'),
-  new Item('fishing_rod', translateKey('item.fishing_rod.name'), 'assets/minecraft/textures/item/fishing_rod.png', 64, -1, 'tools'),
-  new Item('flint', translateKey('item.flint.name'), 'assets/minecraft/textures/item/flint.png', 64, -1, 'misc'),
-  new Item('flint_and_steel', translateKey('item.flint_and_steel.name'), 'assets/minecraft/textures/item/flint_and_steel.png', 1, -1, 'tools'),
-  new Item('flower_pot', translateKey('item.flower_pot.name'), 'assets/minecraft/textures/item/flower_pot.png', 64, -1, 'misc'),
-  new Item('furnace_minecart', translateKey('item.furnace_minecart.name'), 'assets/minecraft/textures/item/furnace_minecart.png', 64, -1, 'misc'),
-  new Item('ghast_tear', translateKey('item.ghast_tear.name'), 'assets/minecraft/textures/item/ghast_tear.png', 64, -1, 'misc'),
-  new Item('glass_bottle', translateKey('item.glass_bottle.name'), 'assets/minecraft/textures/item/glass_bottle.png', 64, -1, 'misc'),
-  new Item('glistering_melon_slice', translateKey('item.glistering_melon_slice.name'), 'assets/minecraft/textures/item/glistering_melon_slice.png', 64, -1, 'misc'),
-  new Item('glowstone_dust', translateKey('item.glowstone_dust.name'), 'assets/minecraft/textures/item/glowstone_dust.png', 64, -1, 'misc'),
-  new Item('gold_ingot', translateKey('item.gold_ingot.name'), 'assets/minecraft/textures/item/gold_ingot.png', 64, -1, 'misc'),
-  new Item('gold_nugget', translateKey('item.gold_nugget.name'), 'assets/minecraft/textures/item/gold_nugget.png', 64, -1, 'misc'),
-  new Item('golden_apple', translateKey('item.golden_apple.name'), 'assets/minecraft/textures/item/golden_apple.png', 64, -1, 'foodstuffs'),
-  new Item('golden_axe', translateKey('item.golden_axe.name'), 'assets/minecraft/textures/item/golden_axe.png', 64, -1, 'tools'),
-  new Item('golden_boots', translateKey('item.golden_boots.name'), 'assets/minecraft/textures/item/golden_boots.png', 64, -1, 'equipment'),
-  new Item('golden_carrot', translateKey('item.golden_carrot.name'), 'assets/minecraft/textures/item/golden_carrot.png', 64, -1, 'foodstuffs'),
-  new Item('golden_sword', translateKey('item.golden_sword.name'), 'assets/minecraft/textures/item/golden_sword.png', 1, -1, 'equipment'),
-  new Item('iron_door', translateKey('item.iron_door.name'), 'assets/minecraft/textures/item/iron_door.png', 64, -1, 'misc'),
-  new Item('iron_ingot', translateKey('item.iron_ingot.name'), 'assets/minecraft/textures/item/iron_ingot.png', 64, -1, 'misc'),
-  new Item('iron_sword', translateKey('item.iron_sword.name'), 'assets/minecraft/textures/item/iron_sword.png', 1, -1, 'equipment'),
-  new Item('leather', translateKey('item.leather.name'), 'assets/minecraft/textures/item/leather.png', 1, -1, 'misc'),
-  new Item('paper', translateKey('item.paper.name'), 'assets/minecraft/textures/item/paper.png', 64, -1, 'misc'),
-  new Item('shears', translateKey('item.shears.name'), 'assets/minecraft/textures/item/shears.png', 1, -1, 'tools'),
-  new Item('stick', translateKey('item.stick.name'), 'assets/minecraft/textures/item/stick.png', 64, -1, 'misc'),
-  new Item('snowball', translateKey('item.snowball.name'), 'assets/minecraft/textures/item/snowball.png', 16, -1, 'misc'),
-  new Item('string', translateKey('item.string.name'), 'assets/minecraft/textures/item/string.png', 64, -1, 'misc'),
-  new Item('sugar_cane', translateKey('item.sugar_cane.name'), 'assets/minecraft/textures/item/sugar_cane.png', 64, -1, 'misc'),
-  new Item('wheat', translateKey('item.wheat.name'), 'assets/minecraft/textures/item/wheat.png', 64, -1, 'misc'),
-  new Item('cookie', translateKey('item.cookie.name'), 'assets/minecraft/textures/item/cookie.png', 64, -1, 'foodstuffs')
+  new Item('acacia_boat', 'assets/minecraft/textures/item/acacia_boat.png', 1, -1, 'misc'),
+  new Item('acacia_door', 'assets/minecraft/textures/item/acacia_door.png', 64, -1, 'misc'),
+  new Item('acacia_sign', 'assets/minecraft/textures/item/acacia_sign.png', 16, -1, 'misc'),
+  new Item('apple', 'assets/minecraft/textures/item/apple.png', 64, -1, 'foodstuffs'),
+  new Item('armor_stand', 'assets/minecraft/textures/item/armor_stand.png', 64, -1, 'misc'),
+  new Item('arrow', 'assets/minecraft/textures/item/arrow.png', 64, -1, 'misc'),
+  new Item('baked_potato', 'assets/minecraft/textures/item/baked_potato.png', 64, -1, 'foodstuffs'),
+  new Item('bamboo', 'assets/minecraft/textures/item/bamboo.png', 64, -1, 'misc'),
+  new Item('barrier', 'assets/minecraft/textures/item/barrier.png', 64, -1, 'misc'),
+  new Item('beef', 'assets/minecraft/textures/item/beef.png', 64, -1, 'foodstuffs'),
+  new Item('beetroot', 'assets/minecraft/textures/item/beetroot.png', 64, -1, 'foodstuffs'),
+  new Item('beetroot_seeds', 'assets/minecraft/textures/item/beetroot_seeds.png', 64, -1, 'misc'),
+  new Item('beetroot_soup', 'assets/minecraft/textures/item/beetroot_soup.png', 1, -1, 'foodstuffs'),
+  new Item('bell', 'assets/minecraft/textures/item/bell.png', 64, -1, 'misc'),
+  new Item('birch_boat', 'assets/minecraft/textures/item/birch_boat.png', 1, -1, 'misc'),
+  new Item('birch_door', 'assets/minecraft/textures/item/birch_door.png', 64, -1, 'misc'),
+  new Item('birch_sign', 'assets/minecraft/textures/item/birch_sign.png', 64, -1, 'misc'),
+  new Item('black_dye', 'assets/minecraft/textures/item/black_dye.png', 64, -1, 'misc'),
+  new Item('blaze_powder', 'assets/minecraft/textures/item/blaze_powder.png', 64, -1, 'misc'),
+  new Item('blaze_rod', 'assets/minecraft/textures/item/blaze_rod.png', 64, -1, 'misc'),
+  new Item('blue_dye', 'assets/minecraft/textures/item/blue_dye.png', 64, -1, 'misc'),
+  new Item('bone', 'assets/minecraft/textures/item/bone.png', 64, -1, 'misc'),
+  new Item('bone_meal', 'assets/minecraft/textures/item/bone_meal.png', 64, -1, 'misc'),
+  new Item('book', 'assets/minecraft/textures/item/book.png', 64, -1, 'misc'),
+  new Item('bow', 'assets/minecraft/textures/item/bow.png', 1, -1, 'tools'),
+  new Item('bowl', 'assets/minecraft/textures/item/bowl.png', 64, -1, 'misc'),
+  new Item('bread', 'assets/minecraft/textures/item/bread.png', 64, -1, 'foodstuffs'),
+  new Item('brewing_stand', 'assets/minecraft/textures/item/brewing_stand.png', 64, -1, 'misc'),
+  new Item('brick', 'assets/minecraft/textures/item/brick.png', 64, -1, 'misc'),
+  new Item('brown_dye', 'assets/minecraft/textures/item/brown_dye.png', 64, -1, 'misc'),
+  new Item('bucket', 'assets/minecraft/textures/item/bucket.png', 64, -1, 'misc'),
+  new Item('cake', 'assets/minecraft/textures/item/cake.png', 64, -1, 'foodstuffs'),
+  new Item('campfire', 'assets/minecraft/textures/item/campfire.png', 64, -1, 'misc'),
+  new Item('carrot', 'assets/minecraft/textures/item/carrot.png', 64, -1, 'foodstuffs'),
+  new Item('chainmail_boots', 'assets/minecraft/textures/item/chainmail_boots.png', 1, 20, 'equipment'),
+  new Item('chainmail_chestplate', 'assets/minecraft/textures/item/chainmail_chestplate.png', 1, 20, 'equipment'),
+  new Item('chainmail_helmet', 'assets/minecraft/textures/item/chainmail_helmet.png', 1, 20, 'equipment'),
+  new Item('chainmail_leggings', 'assets/minecraft/textures/item/chainmail_leggings.png', 1, 20, 'equipment'),
+  new Item('charcoal', 'assets/minecraft/textures/item/charcoal.png', 64, -1, 'misc'),
+  new Item('chest_minecart', 'assets/minecraft/textures/item/chest_minecart.png', 1, -1, 'misc'),
+  new Item('chicken', 'assets/minecraft/textures/item/chicken.png', 64, -1, 'misc'),
+  new Item('chorus_fruit', 'assets/minecraft/textures/item/chorus_fruit.png', 64, -1, 'foodstuffs'),
+  new Item('clay_ball', 'assets/minecraft/textures/item/clay_ball.png', 64, -1, 'misc'),
+  new Item('clock', 'assets/minecraft/textures/item/clock.png', 64, -1, 'tools'),
+  new Item('coal', 'assets/minecraft/textures/item/coal.png', 64, -1, 'misc'),
+  new Item('cocoa_beans', 'assets/minecraft/textures/item/cocoa_beans.png', 64, -1, 'misc'),
+  new Item('cod', 'assets/minecraft/textures/item/cod.png', 64, -1, 'foodstuffs'),
+  new Item('comparator', 'assets/minecraft/textures/item/comparator.png', 64, -1, 'misc'),
+  new Item('compass', 'assets/minecraft/textures/item/compass.png', 64, -1, 'tools'),
+  new Item('cooked_beef', 'assets/minecraft/textures/item/cooked_beef.png', 64, -1, 'foodstuffs'),
+  new Item('cooked_chicken', 'assets/minecraft/textures/item/cooked_chicken.png', 64, -1, 'foodstuffs'),
+  new Item('cooked_cod', 'assets/minecraft/textures/item/cooked_cod.png', 64, -1, 'foodstuffs'),
+  new Item('cooked_mutton', 'assets/minecraft/textures/item/cooked_mutton.png', 64, -1, 'foodstuffs'),
+  new Item('cooked_porkchop', 'assets/minecraft/textures/item/cooked_porkchop.png', 64, -1, 'foodstuffs'),
+  new Item('cooked_rabbit', 'assets/minecraft/textures/item/cooked_rabbit.png', 64, -1, 'foodstuffs'),
+  new Item('cooked_salmon', 'assets/minecraft/textures/item/cooked_salmon.png', 64, -1, 'foodstuffs'),
+  new Item('crimson_door', 'assets/minecraft/textures/item/crimson_door.png', 64, -1, 'misc'),
+  new Item('crimson_sign', 'assets/minecraft/textures/item/crimson_sign.png', 64, -1, 'misc'),
+  new Item('crossbow_standby', 'assets/minecraft/textures/item/crossbow_standby.png', 64, 20, 'equipment'),
+  new Item('cyan_dye', 'assets/minecraft/textures/item/cyan_dye.png', 64, -1, 'misc'),
+  new Item('dark_oak_boat', 'assets/minecraft/textures/item/dark_oak_boat.png', 64, -1, 'misc'),
+  new Item('dark_oak_door', 'assets/minecraft/textures/item/dark_oak_door.png', 64, -1, 'misc'),
+  new Item('dark_oak_sign', 'assets/minecraft/textures/item/dark_oak_sign.png', 64, -1, 'misc'),
+  new Item('diamond', 'assets/minecraft/textures/item/diamond.png', 64, -1, 'misc'),
+  new Item('diamond_axe', 'assets/minecraft/textures/item/diamond_axe.png', 1, 20, 'tools'),
+  new Item('diamond_boots', 'assets/minecraft/textures/item/diamond_boots.png', 1, 20, 'equipment'),
+  new Item('diamond_chestplate', 'assets/minecraft/textures/item/diamond_chestplate.png', 1, 20, 'equipment'),
+  new Item('diamond_helmet', 'assets/minecraft/textures/item/diamond_helmet.png', 1, -1, 'equipment'),
+  new Item('diamond_hoe', 'assets/minecraft/textures/item/diamond_hoe.png', 1, 20, 'tools'),
+  new Item('diamond_horse_armor', 'assets/minecraft/textures/item/diamond_horse_armor.png', 1, -1, 'tools'),
+  new Item('diamond_leggings', 'assets/minecraft/textures/item/diamond_leggings.png', 1, 20, 'equipment'),
+  new Item('diamond_pickaxe', 'assets/minecraft/textures/item/diamond_pickaxe.png', 1, 20, 'tools'),
+  new Item('diamond_shovel', 'assets/minecraft/textures/item/diamond_shovel.png', 1, 20, 'tools'),
+  new Item('diamond_sword', 'assets/minecraft/textures/item/diamond_sword.png', 1, 20, 'equipment'),
+  new Item('dragon_breath', 'assets/minecraft/textures/item/dragon_breath.png', 64, -1, 'misc'),
+  new Item('dried_kelp', 'assets/minecraft/textures/item/dried_kelp.png', 64, -1, 'foodstuffs'),
+  new Item('egg', 'assets/minecraft/textures/item/egg.png', 16, -1, 'misc'),
+  new Item('emerald', 'assets/minecraft/textures/item/emerald.png', 64, -1, 'misc'),
+  new Item('end_crystal', 'assets/minecraft/textures/item/end_crystal.png', 64, -1, 'misc'),
+  new Item('ender_eye', 'assets/minecraft/textures/item/ender_eye.png', 16, -1, 'misc'),
+  new Item('ender_pearl', 'assets/minecraft/textures/item/ender_pearl.png', 16, -1, 'misc'),
+  new Item('experience_bottle', 'assets/minecraft/textures/item/experience_bottle.png', 64, -1, 'misc'),
+  new Item('feather', 'assets/minecraft/textures/item/feather.png', 64, -1, 'misc'),
+  new Item('fermented_spider_eye', 'assets/minecraft/textures/item/fermented_spider_eye.png', 64, -1, 'foodstuffs'),
+  new Item('fire_charge', 'assets/minecraft/textures/item/fire_charge.png', 64, -1, 'misc'),
+  new Item('firework_rocket', 'assets/minecraft/textures/item/firework_rocket.png', 64, -1, 'misc'),
+  new Item('fishing_rod', 'assets/minecraft/textures/item/fishing_rod.png', 64, -1, 'tools'),
+  new Item('flint', 'assets/minecraft/textures/item/flint.png', 64, -1, 'misc'),
+  new Item('flint_and_steel', 'assets/minecraft/textures/item/flint_and_steel.png', 1, -1, 'tools'),
+  new Item('flower_pot', 'assets/minecraft/textures/item/flower_pot.png', 64, -1, 'misc'),
+  new Item('furnace_minecart', 'assets/minecraft/textures/item/furnace_minecart.png', 64, -1, 'misc'),
+  new Item('ghast_tear', 'assets/minecraft/textures/item/ghast_tear.png', 64, -1, 'misc'),
+  new Item('glass_bottle', 'assets/minecraft/textures/item/glass_bottle.png', 64, -1, 'misc'),
+  new Item('glistering_melon_slice', 'assets/minecraft/textures/item/glistering_melon_slice.png', 64, -1, 'misc'),
+  new Item('glowstone_dust', 'assets/minecraft/textures/item/glowstone_dust.png', 64, -1, 'misc'),
+  new Item('gold_ingot', 'assets/minecraft/textures/item/gold_ingot.png', 64, -1, 'misc'),
+  new Item('gold_nugget', 'assets/minecraft/textures/item/gold_nugget.png', 64, -1, 'misc'),
+  new Item('golden_apple', 'assets/minecraft/textures/item/golden_apple.png', 64, -1, 'foodstuffs'),
+  new Item('golden_axe', 'assets/minecraft/textures/item/golden_axe.png', 64, -1, 'tools'),
+  new Item('golden_boots', 'assets/minecraft/textures/item/golden_boots.png', 64, -1, 'equipment'),
+  new Item('golden_carrot', 'assets/minecraft/textures/item/golden_carrot.png', 64, -1, 'foodstuffs'),
+  new Item('golden_chestplate', 'assets/minecraft/textures/item/golden_chestplate.png', 1, -1, 'equipment'),
+  new Item('golden_helmet', 'assets/minecraft/textures/item/golden_helmet.png', 1, -1, 'equipment'),
+  new Item('golden_hoe', 'assets/minecraft/textures/item/golden_hoe.png', 1, -1, 'tools'),
+  new Item('golden_horse_armor', 'assets/minecraft/textures/item/golden_hoe.png', 1, -1, 'misc'),
+  new Item('golden_leggings', 'assets/minecraft/textures/item/golden_leggings.png', 1, -1, 'equipment'),
+  new Item('golden_sword', 'assets/minecraft/textures/item/golden_sword.png', 1, -1, 'equipment'),
+  new Item('iron_door', 'assets/minecraft/textures/item/iron_door.png', 64, -1, 'misc'),
+  new Item('iron_ingot', 'assets/minecraft/textures/item/iron_ingot.png', 64, -1, 'misc'),
+  new Item('iron_sword', 'assets/minecraft/textures/item/iron_sword.png', 1, -1, 'equipment'),
+  new Item('leather', 'assets/minecraft/textures/item/leather.png', 1, -1, 'misc'),
+  new Item('paper', 'assets/minecraft/textures/item/paper.png', 64, -1, 'misc'),
+  new Item('shears', 'assets/minecraft/textures/item/shears.png', 1, -1, 'tools'),
+  new Item('stick', 'assets/minecraft/textures/item/stick.png', 64, -1, 'misc'),
+  new Item('snowball', 'assets/minecraft/textures/item/snowball.png', 16, -1, 'misc'),
+  new Item('string', 'assets/minecraft/textures/item/string.png', 64, -1, 'misc'),
+  new Item('sugar_cane', 'assets/minecraft/textures/item/sugar_cane.png', 64, -1, 'misc'),
+  new Item('wheat', 'assets/minecraft/textures/item/wheat.png', 64, -1, 'misc'),
+  new Item('cookie', 'assets/minecraft/textures/item/cookie.png', 64, -1, 'foodstuffs')
 ];
 
 /* Inventories Gen */
@@ -189,7 +196,7 @@ class Inventory {
   static playerHotbar() {
     let grid = [];
     for(let i = 0; i < 9; i++) {
-      grid.push({ Slot: i, Item: '', Count: 0 })
+      grid.push({ Slot: i, Item: '', Damage: -1, Count: 0 })
     }
 
     console.log('Player hotbar created.');
@@ -199,7 +206,7 @@ class Inventory {
   static playerInv() {
     let grid = [];
     for(let i = 9; i < 36; i++) {
-      grid.push({ Slot: i, Item: '', Count: 0 })
+      grid.push({ Slot: i, Item: '', Damage: -1, Count: 0 })
     }
     console.log('Player inventory created.');
     return grid;
@@ -208,7 +215,7 @@ class Inventory {
   static playerArmor() {
     let grid = [];
     for(let i = 36; i < 40; i++) {
-      grid.push({ Slot: i, Item: '', Count: 0 })
+      grid.push({ Slot: i, Item: '', Damage: -1, Count: 0 })
     }
     console.log('Player armor created.');
     return grid;
@@ -217,7 +224,7 @@ class Inventory {
   static playerOffHand() {
     let grid = [];
     for(let i = 40; i < 41; i++) {
-      grid.push({ Slot: i, Item: '', Count: 0 })
+      grid.push({ Slot: i, Item: '', Damage: -1, Count: 0 })
     }
     console.log('Player offhand created.');
     return grid;
@@ -226,7 +233,7 @@ class Inventory {
   static craftingSlots() {
     let grid = [];
     for(let i = 0; i < 9; i++) {
-      grid.push({ Slot: i, Item: '', Count: 0 })
+      grid.push({ Slot: i, Item: '', Damage: -1,Count: 0 })
     }
     console.log('Crafting table grid created.');
     return grid;
@@ -235,7 +242,7 @@ class Inventory {
   static craftingOutput() {
     let grid = [];
     for(let i = 0; i < 1; i++) {
-      grid.push({ Slot: i, Item: '', Count: 0 })
+      grid.push({ Slot: i, Item: '', Damage: -1, Count: 0 })
     }
     console.log('Crafting table output slot created.');
     return grid;
@@ -244,7 +251,7 @@ class Inventory {
   static furnaceGrid() {
     let grid = [];
     for(let i = 0; i < 3; i++) {
-      grid.push({ Slot: i, Item: '', Count: 0 })
+      grid.push({ Slot: i, Item: '', Damage: -1, Count: 0 })
     }
     return grid;
   }
@@ -278,11 +285,14 @@ class Slot {
     slotEl.addEventListener('mousedown', (e) => {
       if(e.button === 2 && selectedItem.getCount() > 0) {
         slotType.Item = selectedItem.getItemID();
+        slotItem.Damage = selectedItem.Damage;
         slotType.Count++;
 
-        console.log('Added 1 ' + selectedItem.getItemID() + ' to Slot ' + slotType.Slot);
 
         selectedItem.set(selectedItem.Item, selectedItem.getCount() - 1);
+
+        console.log('Added 1 ' + selectedItem.getItemID() + ' with ' + selectedItem.Damage + ' of durability to Slot ' + slotType.Slot);
+
 
         Slot.redrawInventories();
         drawFlyingItem(e);
@@ -316,10 +326,11 @@ class Slot {
           slotType.Count = slotType.Count - Math.round(slotType.Count / 2);
         } else {
           selectedItem.set(slotType.Item, slotType.Count);
+          selectedItem.Damage = slotType.Damage;
           slotType.Item = '';
+          slotType.Damage = -1;
           slotType.Count = 0;
 
-          localStorage.setItem('playerHotbar', JSON.stringify(playerHotbar));
         }
         slotEl.setAttribute('data-tooltip', 'empty');
 
@@ -329,6 +340,7 @@ class Slot {
       } else if(selectedItem.getItemID() !== '') {
         if(slotType.Item === '') {
           slotType.Item = selectedItem.getItemID();
+          slotType.Damage = selectedItem.Damage;
           slotType.Count = selectedItem.getCount();
 
           selectedItem.reset();
@@ -356,16 +368,20 @@ class Slot {
         } else {
           const storeSelectedItem = {
             Item: selectedItem.getItemID(),
+            ItemDamage: selectedItem.Damage,
             Count: selectedItem.getCount()
           }
 
           const storeslotType = {
             Item: slotType.Item,
+            ItemDamage: slotType.maxDamage,
             Count: slotType.Count 
           }
 
+          selectedItem.Damage = storeslotType.ItemDamage;
           selectedItem.set(storeslotType.Item, storeslotType.Count);
           slotType.Item = storeSelectedItem.Item;
+          slotType.Damage = storeSelectedItem.ItemDamage;
           slotType.Count = storeSelectedItem.Count;
 
           drawFlyingItem(e);
@@ -389,6 +405,8 @@ const playerHotbar = Inventory.playerHotbar();
 
 let selectedItem = {
   Item: '',
+  Name: '',
+  Damage: -1,
   Count: 0,
   getItemID: () => {
     return selectedItem.Item;
@@ -402,9 +420,23 @@ let selectedItem = {
   },
   reset: () => {
     selectedItem.Item = '';
+    selectedItem.Damage = -1;
     selectedItem.Count = 0;
   }
 };
+
+function checkForDurabilityColor(value) {
+  if(value <= 100 && value > 90) return '#13cf3c';
+  if(value <= 90 && value > 80) return '#13cf3c';
+  if(value <= 80 && value > 70) return '#58cf13';
+  if(value <= 70 && value > 60) return '#7ecf13';
+  if(value <= 60 && value > 50) return '#b3cf13';
+  if(value <= 50 && value > 40) return '#cfb313';
+  if(value <= 40 && value > 30) return '#cf8d13';
+  if(value <= 30 && value > 20) return '#cf6813';
+  if(value <= 20 && value > 10) return '#cf1313';
+  if(value <= 10 && value > 0) return '#000';
+}
 
 const armorEl = document.getElementById('armor');
 const offHandEl = document.getElementById('offhand');
@@ -442,6 +474,17 @@ function drawFlyingItem(e) {
       stackSpan.innerText = selectedItem.getCount() !== 1 ? selectedItem.Count : '';
       slotItem.appendChild(stackSpan);
     }
+    
+    if(item.maxDamage !== -1 && selectedItem.Damage < item.maxDamage) {
+      const durabilitybar = document.createElement('div');
+      const calcDurabilityPerc = (selectedItem.Damage / item.maxDamage) * 100;
+
+      durabilitybar.classList.add('durabilityBar');
+      durabilitybar.innerHTML = `
+        <div class="durabilityBarInside" style="width: ${calcDurabilityPerc}%; background: ${checkForDurabilityColor(calcDurabilityPerc)}"></div>
+      `;
+      slotItem.appendChild(durabilitybar)
+    }
 
     slotItem.style.top = e.pageY - (8 * guiScale) + 'px';
     slotItem.style.left = e.clientX - (8 * guiScale) + 'px';
@@ -471,7 +514,7 @@ function drawAllItems() {
       slotEl.classList.add('slot');
       slotEl.tabIndex = '0';
   
-      slotEl.setAttribute('data-tooltip', translateKey(`item.${itemID}.name`));
+      slotEl.setAttribute('data-tooltip', `${translateKey(`item.${itemID}.name`) + ',minecraft:' + itemID}`);
   
       // console.log(langFiles[langFiles.findIndex(file => file[langFiles.id] === displayLang)]);
      /*  slotEl.addEventListener('mouseenter', () => {
@@ -500,6 +543,7 @@ function drawAllItems() {
   
           if(selectedItem.Count < itemMaxStackSize) {
             selectedItem.set(itemID, e.shiftKey ? itemMaxStackSize : selectedItem.getCount() + 1);
+            selectedItem.Damage = invSlot.maxDamage;
           }
   
           drawFlyingItem(e);
@@ -513,6 +557,7 @@ function drawAllItems() {
       slotEl.addEventListener('click', (e) => {
         if(selectedItem.Item === '') {
           selectedItem.set(itemID, e.shiftKey ? itemMaxStackSize : 1);
+          selectedItem.Damage = invSlot.maxDamage;
           drawFlyingItem(e);
         } else if(selectedItem.Item !== '') {
           selectedItem.reset();
@@ -551,26 +596,14 @@ function drawArmor() {
     if(armorSlot.Item === '') {
       slotEl.setAttribute('data-tooltip', 'empty');
     } else {
-      slotEl.setAttribute('data-tooltip', translateKey(`item.${armorSlot.Item}.name`));
+      slotEl.setAttribute('data-tooltip', `${translateKey(`item.${armorSlot.Item}.name`)}${regItem.maxDamage !== -1 ? ',Durability: ' + armorSlot.Damage + '/' + regItem.maxDamage : ''}${',minecraft:' + armorSlot.Item}`);
     }
 
-    // Slot.pickOne(slotEl, armorSlot);
+    Slot.addOne(slotEl, armorSlot);
+    Slot.pickStack(slotEl, armorSlot);
+    Slot.pickAll(slotEl, armorSlot);
 
-    // slotEl.addEventListener('mousedown', (e) => {
-    //   if(e.button === 2 && selectedItem.getCount() > 0) {
-    //     armorSlot.Item = selectedItem.getItemID();
-    //     armorSlot.Count++;
-
-    //     selectedItem.set(selectedItem.Item, selectedItem.getCount() - 1);
-
-    //     drawArmor();
-    //     drawFlyingItem(e);
-
-    //     localStorage.setItem('playerInv', JSON.stringify(playerInv));
-    //   }
-    // })
-
-    slotEl.addEventListener('click', (e) => {
+    /* slotEl.addEventListener('click', (e) => {
       let canPlaceHere = true;
       
       if(armorSlot.Slot === 36) {
@@ -659,7 +692,7 @@ function drawArmor() {
         }
       }
 
-    });
+    }); */
 
     const img = document.createElement('img');
 
@@ -672,6 +705,16 @@ function drawArmor() {
         stackSpan.classList.add('stack-size');
         stackSpan.innerText = armorSlot.Count !== 1 ? armorSlot.Count : '';
         slotEl.appendChild(stackSpan);
+      }
+
+      if(regItem.maxDamage !== -1 && armorSlot.Damage < regItem.maxDamage) {
+        const durabilitybar = document.createElement('div');
+        const calcDurabilityPerc = (armorSlot.Damage / regItem.maxDamage) * 100;
+        durabilitybar.classList.add('durabilityBar');
+        durabilitybar.innerHTML = `
+          <div class="durabilityBarInside" style="width: ${calcDurabilityPerc}%; background: ${checkForDurabilityColor(calcDurabilityPerc)}"></div>
+        `;
+        slotEl.appendChild(durabilitybar)
       }
     }
     
@@ -701,93 +744,12 @@ function drawArmor() {
       if(offhandSlot.Item === '') {
         slotEl.setAttribute('data-tooltip', 'empty');
       } else {
-        slotEl.setAttribute('data-tooltip', translateKey(`item.${offhandSlot.Item}.name`));
+        slotEl.setAttribute('data-tooltip', `${translateKey(`item.${offhandSlot.Item}.name`)}${regItem.maxDamage !== -1 ? ',Durability: ' + offhandSlot.Damage + '/' + regItem.maxDamage : ''}${',minecraft:' + offhandSlot.Item}`);
       }
   
-      slotEl.addEventListener('mousedown', (e) => {
-        if(e.button === 2 && selectedItem.getCount() > 0) {
-          offhandSlot.Item = selectedItem.getItemID();
-          offhandSlot.Count++;
-  
-          selectedItem.set(selectedItem.Item, selectedItem.getCount() - 1);
-  
-          drawOffHand();
-          drawFlyingItem(e);
-  
-          localStorage.setItem('playerInv', JSON.stringify(playerInv));
-        }
-      })
-  
-      slotEl.addEventListener('click', (e) => {
-  
-        if(selectedItem.getItemID() === '') {
-          if(e.shiftKey) {
-            selectedItem.set(offhandSlot.Item, Math.round(offhandSlot.Count / 2));
-            offhandSlot.Count = offhandSlot.Count - Math.round(offhandSlot.Count / 2);
-          } else {
-            selectedItem.set(offhandSlot.Item, offhandSlot.Count);
-            offhandSlot.Item = '';
-            offhandSlot.Count = 0;
-  
-            localStorage.setItem('playerHotbar', JSON.stringify(playerHotbar));
-          }
-          slotEl.setAttribute('data-tooltip', 'empty');
-  
-          drawOffHand();
-          drawFlyingItem(e);
-  
-        } else if(selectedItem.getItemID() !== '') {
-          if(offhandSlot.Item === '') {
-            offhandSlot.Item = selectedItem.getItemID();
-            offhandSlot.Count = selectedItem.getCount();
-  
-            selectedItem.reset();
-            drawOffHand();
-            removeFlyingItem();
-  
-            localStorage.setItem('playerHotbar', JSON.stringify(playerHotbar));
-          } else if(selectedItem.getItemID() === offhandSlot.Item) {
-              if((offhandSlot.Count + selectedItem.getCount()) <= regItem.maxStackSize) {
-                offhandSlot.Count += selectedItem.getCount();
-                selectedItem.reset();
-                removeFlyingItem();
-  
-                localStorage.setItem('playerHotbar', JSON.stringify(playerHotbar));
-              } else {
-                const amountAdded = regItem.maxStackSize - offhandSlot.Count;
-  
-                offhandSlot.Count = regItem.maxStackSize;
-  
-                selectedItem.set(selectedItem.getItemID(), amountAdded)
-                drawFlyingItem(e);
-  
-                localStorage.setItem('playerHotbar', JSON.stringify(playerHotbar));
-              }
-  
-  
-              drawOffHand();
-          } else {
-            const storeSelectedItem = {
-              Item: selectedItem.getItemID(),
-              Count: selectedItem.getCount()
-            }
-  
-            const storeoffhandSlot = {
-              Item: offhandSlot.Item,
-              Count: offhandSlot.Count 
-            }
-  
-            selectedItem.set(storeoffhandSlot.Item, storeoffhandSlot.Count);
-            offhandSlot.Item = storeSelectedItem.Item;
-            offhandSlot.Count = storeSelectedItem.Count;
-  
-            drawFlyingItem(e);
-            drawOffHand();
-  
-          }
-        }
-  
-      });
+      Slot.addOne(slotEl, offhandSlot);
+      Slot.pickStack(slotEl, offhandSlot);
+      Slot.pickAll(slotEl, offhandSlot);
   
       const img = document.createElement('img');
   
@@ -800,6 +762,16 @@ function drawArmor() {
           stackSpan.classList.add('stack-size');
           stackSpan.innerText = offhandSlot.Count !== 1 ? offhandSlot.Count : '';
           slotEl.appendChild(stackSpan);
+        }
+
+        if(regItem.maxDamage !== -1 && offhandSlot.Damage < regItem.maxDamage) {
+          const durabilitybar = document.createElement('div');
+          const calcDurabilityPerc = (offhandSlot.Damage / regItem.maxDamage) * 100;
+          durabilitybar.classList.add('durabilityBar');
+          durabilitybar.innerHTML = `
+            <div class="durabilityBarInside" style="width: ${calcDurabilityPerc}%; background: ${checkForDurabilityColor(calcDurabilityPerc)}"></div>
+          `;
+          slotEl.appendChild(durabilitybar)
         }
       }
       
@@ -825,7 +797,7 @@ function drawInv() {
     if(invSlot.Item === '') {
       slotEl.setAttribute('data-tooltip', 'empty');
     } else {
-      slotEl.setAttribute('data-tooltip', translateKey(`item.${invSlot.Item}.name`));
+      slotEl.setAttribute('data-tooltip', `${translateKey(`item.${invSlot.Item}.name`)}${regItem.maxDamage !== -1 ? ',Durability: ' + invSlot.Damage + '/' + regItem.maxDamage : ''}${',minecraft:' + invSlot.Item}`);
     }
 
     Slot.addOne(slotEl, invSlot);
@@ -842,6 +814,16 @@ function drawInv() {
         stackSpan.classList.add('stack-size');
         stackSpan.innerText = invSlot.Count !== 1 ? invSlot.Count : '';
         slotEl.appendChild(stackSpan);
+      }
+
+      if(regItem.maxDamage !== -1 && invSlot.Damage < regItem.maxDamage) {
+        const durabilitybar = document.createElement('div');
+        const calcDurabilityPerc = (invSlot.Damage / regItem.maxDamage) * 100;
+        durabilitybar.classList.add('durabilityBar');
+        durabilitybar.innerHTML = `
+          <div class="durabilityBarInside" style="width: ${calcDurabilityPerc}%; background: ${checkForDurabilityColor(calcDurabilityPerc)}"></div>
+        `;
+        slotEl.appendChild(durabilitybar)
       }
     } else slotEl.innerHTML = '';
 
@@ -862,7 +844,7 @@ function drawHotbar() {
     if(hotbarSlot.Item === '') {
       slotEl.setAttribute('data-tooltip', 'empty');
     } else {
-      slotEl.setAttribute('data-tooltip', translateKey(`item.${hotbarSlot.Item}.name`));
+      slotEl.setAttribute('data-tooltip', `${translateKey(`item.${hotbarSlot.Item}.name`)}${regItem.maxDamage !== -1 ? ',Durability: ' + hotbarSlot.Damage + '/' + regItem.maxDamage : ''}${',minecraft:' + hotbarSlot.Item}`);
     }
 
     Slot.addOne(slotEl, hotbarSlot);
@@ -878,6 +860,17 @@ function drawHotbar() {
         stackSpan.classList.add('stack-size');
         stackSpan.innerText = hotbarSlot.Count !== 1 ? hotbarSlot.Count : '';
         slotEl.appendChild(stackSpan);
+      }
+
+      if(regItem.maxDamage !== -1 && hotbarSlot.Damage < regItem.maxDamage) {
+        const durabilitybar = document.createElement('div');
+        durabilitybar.classList.add('durabilityBar');
+        const calcDurabilityPerc = (hotbarSlot.Damage / regItem.maxDamage) * 100;
+
+        durabilitybar.innerHTML = `
+          <div class="durabilityBarInside" style="width: ${calcDurabilityPerc}%; background: ${checkForDurabilityColor(calcDurabilityPerc)}"></div>
+        `;
+        slotEl.appendChild(durabilitybar)
       }
 
       slotEl.appendChild(img);
@@ -1038,6 +1031,8 @@ function drawResultSlotGrid() {
   document.getElementById('resultSlot').innerHTML = '';
   const resultSlot = document.createElement('div');
   resultSlot.classList.add('slot');
+  resultSlot.style.width = `${26 * guiScale}px`;
+  resultSlot.style.height = `${26 * guiScale}px`;
 
   if(resultSlotGrid.Item === '') {
     resultSlot.setAttribute('data-tooltip', 'empty');
@@ -1226,17 +1221,40 @@ function drawFurnaceGrid() {
 document.getElementById('langSelection').addEventListener('change', (e) => {
   displayLang = document.getElementById('langSelection').value;
 
-  drawAllItems();
-  drawArmor();
-  drawOffHand();
-  drawInv();
-  drawHotbar();
-  drawCraftingGrid();
-  drawResultSlotGrid();
-  drawFurnaceGrid();
+  Slot.redrawInventories();
+
+});
+
+document.getElementById('useItemBtn').addEventListener('click', () => {
+
+  if(playerHotbar[0] !== -1) {
+    if(playerHotbar[0].Damage >= 2) {
+      playerHotbar[0].Damage--;
+    } else if(playerHotbar[0].Damage === 1) {
+      playerHotbar[0].Item = '';
+      playerHotbar[0].Damage = -1;
+      playerHotbar[0].Count = 0;
+    }
+  }
+  
+
+  Slot.redrawInventories();
+})
+
+document.getElementById('showAdvancedTooltipBtn').addEventListener('click', () => {
+  if(!advancedTooltip) {
+    document.getElementById('showAdvancedTooltipBtn').innerText = 'Advanced Tooltips: ON';
+    advancedTooltip = true;
+  } else {
+    document.getElementById('showAdvancedTooltipBtn').innerText = 'Advanced Tooltips: OFF';
+    advancedTooltip = false;
+  }
+
+  Slot.redrawInventories();
 });
 
 async function initMinecraft() {
+
   await getAllFiles('./assets/minecraft/lang/languages.json', langFile, langFiles);
   
   await getAllFiles('./data/minecraft/recipes.json', recipesFile, recipesFiles);
@@ -1244,36 +1262,81 @@ async function initMinecraft() {
 
 
   Slot.redrawInventories();
+  document.getElementById('loadingPanel').style.opacity = '0';
+  document.getElementById('loadingBarInside').style.width = '100%';
+  setTimeout(() => {
+    document.getElementById('loadingPanel').style.display = 'none';
+
+  }, 1001);
+
 }
 
-window.addEventListener('DOMContentLoaded', () => initMinecraft());
+window.addEventListener('DOMContentLoaded', () => {
+  initMinecraft()
+});
 
 const tooltip = document.getElementById('tooltip');
 
 window.addEventListener('mousemove', (e) => {
   if(document.getElementById('flyingItem')) {
     document.getElementById('flyingItem').style.top = e.pageY - (8 * guiScale) + 'px';
-    document.getElementById('flyingItem').style.left = e.clientX - (8 * guiScale) + 'px';
+    document.getElementById('flyingItem').style.left = e.pageX - (8 * guiScale) + 'px';
   }
 
-  tooltip.style.top = e.pageY - 15 + 'px';
-  tooltip.style.left = e.clientX + 10 + 'px';
+    // // if(tooltip.getBoundingClientRect().width > 0) {
+    //   if(tooltip.getBoundingClientRect().width + tooltip.getBoundingClientRect().left > window.innerWidth) {
+    //   tooltip.style.display = 'none';
+    //     tooltip.style.top = e.pageY - 15 + 'px';
+    //     tooltip.style.left = e.pageX - 10 - tooltip.getBoundingClientRect().width + 'px';
+    //   tooltip.style.display = 'flex';
+    //   } else {
+        tooltip.style.top = e.pageY - (8 * guiScale) + 'px';
+        tooltip.style.left = e.pageX + (6 * guiScale) + 'px';
+      // }
+
+    // }
+ 
+  
 });
 
 window.addEventListener('mouseover', (e) => {
   if((e.target.dataset.tooltip && e.target.dataset.tooltip !== 'empty')) {
-    tooltip.innerHTML = e.target.dataset.tooltip;
+    if(tooltip.getBoundingClientRect().width + tooltip.getBoundingClientRect().left > window.innerWidth) {
+      tooltip.style.top = e.pageY - (8 * guiScale) + 'px';
+      tooltip.style.left = e.pageX - (6 * guiScale) - tooltip.getBoundingClientRect().width + 'px';
+    } else {
+      tooltip.style.top = e.pageY - (8 * guiScale) + 'px';
+      tooltip.style.left = e.pageX + (6 * guiScale) + 'px';
+    }
+
+    tooltip.innerHTML = '';
+    const tooltipTexts = e.target.dataset.tooltip.split(',');
+    if(advancedTooltip) {
+      tooltipTexts.forEach((text) => {
+        const p = document.createElement('p');
+        p.innerText = text;
+  
+        if(text.includes('minecraft:')) {
+          p.style.color = 'grey';
+        }
+
+        tooltip.appendChild(p);
+
+      });
+    } else {
+      tooltip.innerHTML = tooltipTexts[0];
+    }
+
     tooltip.style.position = 'absolute';
     tooltip.style.zIndex = '200';
-    tooltip.style.display = 'flex';
+    tooltip.style.display = 'block';
     tooltip.style.pointerEvents = 'none';
     tooltip.style.padding = '0.2rem 0.9rem 0.4rem 0.9rem';
     tooltip.style.cursor = 'none';
     tooltip.style.background = 'rgba(16, 0, 16, 0.90)';
     tooltip.style.boxShadow = `inset ${0.5 * guiScale}px ${0.5 * guiScale}px 0px 1px rgba(48, 0, 160, 0.45), inset -${0.5 * guiScale}px -${0.5 * guiScale}px 0px 1px rgba(48, 0, 160, 0.45)`;
     tooltip.style.color = 'white';
-    tooltip.style.top = e.pageY - 15 + 'px';
-    tooltip.style.left = e.clientX + 10 + 'px';
+    
   } else {
     tooltip.innerHTML = '';
     tooltip.style.display = 'none';
