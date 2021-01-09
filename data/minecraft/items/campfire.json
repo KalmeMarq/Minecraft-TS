@@ -1,0 +1,11 @@
+{
+  "description": {
+    "identifier": "minecraft:campfire",
+    "item_group": "decorations"
+  },
+  "components": {
+    "icon": "assets/minecraft/textures/item/campfire",
+    "display_name": "item.minecraft.campfire",
+    "max_stack_size": 64
+  }
+}

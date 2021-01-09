@@ -1,0 +1,16 @@
+{
+  "description": {
+    "identifier": "minecraft:golden_leggings",
+    "item_group": "equipment",
+    "type_group": "golden_armor"
+  },
+  "components": {
+    "icon": "assets/minecraft/textures/item/golden_leggings",
+    "display_name": "item.minecraft.golden_leggings",
+    "max_stack_size": 1,
+    "durability": 105,
+    "armor": {
+      "slot": "leggings"
+    }
+  }
+}

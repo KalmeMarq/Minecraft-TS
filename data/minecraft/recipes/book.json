@@ -1,21 +1,20 @@
 {
-  "type": "crafting_shapeless",
+  "type": "minecraft:crafting_shapeless",
   "ingredients": [
     {
-      "item": "paper"
+      "item": "minecraft:paper"
     },
     {
-      "item": "paper"
+      "item": "minecraft:paper"
     },
     {
-      "item": "paper"
+      "item": "minecraft:paper"
     },
     {
-      "item": "leather"
+      "item": "minecraft:leather"
     }
   ],
   "result": {
-    "item": "book",
-    "count": 1
+    "item": "minecraft:book"
   }
 }

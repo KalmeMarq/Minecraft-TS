@@ -1,0 +1,11 @@
+{
+  "description": {
+    "identifier": "minecraft:cooked_mutton",
+    "item_group": "foodstuffs"
+  },
+  "components": {
+    "icon": "assets/minecraft/textures/item/cooked_mutton",
+    "display_name": "item.minecraft.cooked_mutton",
+    "max_stack_size": 64
+  }
+}

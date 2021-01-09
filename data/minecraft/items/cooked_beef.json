@@ -1,0 +1,11 @@
+{
+  "description": {
+    "identifier": "minecraft:cooked_beef",
+    "item_group": "foodstuffs"
+  },
+  "components": {
+    "icon": "assets/minecraft/textures/item/cooked_beef",
+    "display_name": "item.minecraft.cooked_beef",
+    "max_stack_size": 64
+  }
+}

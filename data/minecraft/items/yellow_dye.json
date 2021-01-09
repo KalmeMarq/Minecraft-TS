@@ -1,0 +1,12 @@
+{
+  "description": {
+    "identifier": "minecraft:yellow_dye",
+    "item_group": "misc",
+    "type_group": "dye"
+  },
+  "components": {
+    "icon": "assets/minecraft/textures/item/yellow_dye",
+    "display_name": "item.minecraft.yellow_dye",
+    "max_stack_size": 64
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "description": {
+    "identifier": "minecraft:peony",
+    "item_group": "decorations",
+    "type_group": "flower"
+  },
+  "components": {
+    "icon": "assets/minecraft/textures/block/peony_top",
+    "display_name": "block.minecraft.peony",
+    "max_stack_size": 64
+  }
+}

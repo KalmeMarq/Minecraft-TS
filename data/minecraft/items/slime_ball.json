@@ -1,0 +1,11 @@
+{
+  "description": {
+    "identifier": "minecraft:slime_ball",
+    "item_group": "misc"
+  },
+  "components": {
+    "icon": "assets/minecraft/textures/item/slime_ball",
+    "display_name": "item.minecraft.slime_ball",
+    "max_stack_size": 64
+  }
+}

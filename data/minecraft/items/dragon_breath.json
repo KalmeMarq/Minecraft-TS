@@ -1,0 +1,11 @@
+{
+  "description": {
+    "identifier": "minecraft:dragon_breath",
+    "item_group": "brewing"
+  },
+  "components": {
+    "icon": "assets/minecraft/textures/item/dragon_breath",
+    "display_name": "item.minecraft.dragon_breath",
+    "max_stack_size": 16
+  }
+}

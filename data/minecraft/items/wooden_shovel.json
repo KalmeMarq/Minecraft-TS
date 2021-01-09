@@ -1,0 +1,12 @@
+{
+  "description": {
+    "identifier": "minecraft:wooden_shovel",
+    "item_group": "tools"
+  },
+  "components": {
+    "icon": "assets/minecraft/textures/item/wooden_shovel",
+    "display_name": "item.minecraft.wooden_shovel",
+    "max_stack_size": 1,
+    "durability": 59
+  }
+}

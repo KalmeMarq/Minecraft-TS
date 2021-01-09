@@ -1,0 +1,11 @@
+{
+  "description": {
+    "identifier": "minecraft:stick",
+    "item_group": "misc"
+  },
+  "components": {
+    "icon": "assets/minecraft/textures/item/stick",
+    "display_name": "item.minecraft.stick",
+    "max_stack_size": 64
+  }
+}

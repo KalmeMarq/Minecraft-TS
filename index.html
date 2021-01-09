@@ -1,81 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Minecraft</title>
-  <link rel="stylesheet" href="index.css">
-</head>
-<body>
-  <div id="loadingPanel">
-    <div id="loadingBar">
-      <div id="loadingBarInside"></div>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="icon.png" type="image/png">
+    <title>Minecraft JS</title>
+    <link rel="stylesheet" href="index.min.css">
+  </head>
+  <body>
+    <div id="txrs">
+      <img src="./assets/minecraft/textures/gui/container/creative_inventory/tab_inventory.png" width="0" height="0" id="creative-inv-inv-txr">
+      <img src="./assets/minecraft/textures/gui/container/creative_inventory/tab_item_search.png" width="0" height="0" id="creative-inv-search-txr">
+      <img src="./assets/minecraft/textures/gui/container/creative_inventory/tab_items.png" width="0" height="0" id="creative-inv-items-txr">
+      <img src="./assets/minecraft/textures/gui/container/creative_inventory/tabs.png" width="0" height="0" id="creative-inv-tabs-txr">
+      <img src="./assets/minecraft/textures/gui/container/crafting_table.png" width="0" height="0" id="crafting-table-txr">
+      <img src="./assets/minecraft/textures/gui/container/inventory.png" width="0" height="0" id="inventory-txr">
+      <img src="./assets/minecraft/textures/gui/icons.png" width="0" height="0" id="icons-txr">
+      <img src="./assets/minecraft/textures/gui/widgets.png" width="0" height="0" id="widgets-txr">
     </div>
-  </div>
-  <div id="root">
-    <div id="tooltip"></div>
-    <select id="langSelection">
-      <option value="en_us">English (US)</option>
-      <option value="pt_pt">Português (Portugal)</option>
-      <option value="pv_pv">Porvet (Custom)</option>
-    </select>
-    <button id="showAdvancedTooltipBtn">Advanced Tooltips: ON</button>
-    <button id="clearInvsBtn">Clear Everything</button>
-    <button id="useItemBtn">Simulate Item Use (Put it on Slot 0)</button>
-    <br>
-    <br>
-    <br>
-    <hr>
-    <br>
-    <div class="wrapper">
-      <div class="centerer">
-        <div id="allitems"></div>
-        <br></br>
-        
-      </div>
-      <div class="centerer">
-        <div class="wrapper">
-          <div class="left-panel">
-            <div id="armor"></div>
-          </div>
-          <div class="right-panel">
-            <div id="offhand"></div>
-          </div>
-        </div>
-        <br>
-        <div id="inventory"></div>
-        <br>
-        <div id="hotbar"></div>
-        <br>
-        <br>
-        <br>
-        <div id="craftingtable" style="position: relative; display: flex; flex-direction: row; gap: 20px; width: 100%;">
-          <div id="craftinggrid"></div>
-          <div id="resultSlot" style="position: absolute; top: 50%; left: 50%; transform: translate(0, -50%);"></div>
-        </div>
+    <div id="loadingPanel">
+      <div id="loadingBar">
+        <div id="loadingBarInside"></div>
       </div>
     </div>
-    
-    <div class="wrapper">
-      <div class="left-panel">
-        <div id="furnace" style="display: none;">
-          <div class="wrapper">
-            <div class="left-panel">
-              <div id="furnaceinput"></div>
-              <br>
-              <br>
-              <div id="furnacefuel"></div>
-            </div>
-            <div class="right-panel">
-              <div id="furnaceoutput"></div>
-            </div>
-          </div>
-        </div>
-        <div id="chest"></div>
-      </div>
-    </div>
-  </div>
-
-  <script src="index.js"></script>
-</body>
+    <div id="root"></div>  
+    <script src="index.js"></script>
+  </body>
 </html>

@@ -1,0 +1,11 @@
+{
+  "description": {
+    "identifier": "minecraft:nether_brick",
+    "item_group": "misc"
+  },
+  "components": {
+    "icon": "assets/minecraft/textures/item/nether_brick",
+    "display_name": "item.minecraft.nether_brick",
+    "max_stack_size": 64
+  }
+}

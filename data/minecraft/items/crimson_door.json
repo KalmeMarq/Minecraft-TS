@@ -1,0 +1,12 @@
+{
+  "description": {
+    "identifier": "minecraft:crimson_door",
+    "item_group": "redstone",
+    "type_group": "door"
+  },
+  "components": {
+    "icon": "assets/minecraft/textures/item/crimson_door",
+    "display_name": "item.minecraft.crimson_door",
+    "max_stack_size": 64
+  }
+}

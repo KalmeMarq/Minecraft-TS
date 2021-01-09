@@ -1,0 +1,13 @@
+{
+  "description": {
+    "identifier": "minecraft:diamond_shovel",
+    "item_group": "tools",
+    "type_group": "diamond_tools"
+  },
+  "components": {
+    "icon": "assets/minecraft/textures/item/diamond_shovel",
+    "display_name": "item.minecraft.diamond_shovel",
+    "max_stack_size": 1,
+    "durability": 1561
+  }
+}

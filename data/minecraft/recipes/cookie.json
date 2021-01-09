@@ -1,10 +1,18 @@
 {
-  "type": "crafting_table",
-  "grid": [
-    "", "", "",
-    "wheat", "dye_brown", "wheat",
-    "", "", ""
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "#X#"
   ],
-  "result": "cookie",
-  "count": 2
+  "key": {
+    "#": {
+      "item": "minecraft:wheat"
+    },
+    "X": {
+      "item": "minecraft:cocoa_beans"
+    }
+  },
+  "result": {
+    "item": "minecraft:cookie",
+    "count": 8
+  }
 }

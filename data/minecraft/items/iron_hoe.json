@@ -1,0 +1,12 @@
+{
+  "description": {
+    "identifier": "minecraft:iron_hoe",
+    "item_group": "tools"
+  },
+  "components": {
+    "icon": "assets/minecraft/textures/item/iron_hoe",
+    "display_name": "item.minecraft.iron_hoe",
+    "max_stack_size": 1,
+    "durability": 250
+  }
+}

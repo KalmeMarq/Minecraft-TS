@@ -1,0 +1,12 @@
+{
+  "description": {
+    "identifier": "minecraft:stone_pickaxe",
+    "item_group": "tools"
+  },
+  "components": {
+    "icon": "assets/minecraft/textures/item/stone_pickaxe",
+    "display_name": "item.minecraft.stone_pickaxe",
+    "max_stack_size": 1,
+    "durability": 131
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "description": {
+    "identifier": "minecraft:carrot",
+    "item_group": "foodstuffs"
+  },
+  "components": {
+    "icon": "assets/minecraft/textures/item/carrot",
+    "display_name": "item.minecraft.carrot",
+    "max_stack_size": 64
+  }
+}

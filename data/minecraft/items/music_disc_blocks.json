@@ -1,0 +1,11 @@
+{
+  "description": {
+    "identifier": "minecraft:music_disc_blocks",
+    "item_group": "misc"
+  },
+  "components": {
+    "icon": "assets/minecraft/textures/item/music_disc_blocks",
+    "display_name": "item.minecraft.music_disc_blocks",
+    "max_stack_size": 64
+  }
+}

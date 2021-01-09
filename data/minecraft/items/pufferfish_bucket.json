@@ -1,0 +1,11 @@
+{
+  "description": {
+    "identifier": "minecraft:pufferfish_bucket",
+    "item_group": "misc"
+  },
+  "components": {
+    "icon": "assets/minecraft/textures/item/pufferfish_bucket",
+    "display_name": "item.minecraft.pufferfish_bucket",
+    "max_stack_size": 1
+  }
+}

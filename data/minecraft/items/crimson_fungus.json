@@ -1,0 +1,11 @@
+{
+  "description": {
+    "identifier": "minecraft:crimson_fungus",
+    "item_group": "decorations"
+  },
+  "components": {
+    "icon": "assets/minecraft/textures/block/crimson_fungus",
+    "display_name": "block.minecraft.crimson_fungus",
+    "max_stack_size": 64
+  }
+}

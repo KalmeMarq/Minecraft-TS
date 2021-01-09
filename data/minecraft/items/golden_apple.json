@@ -1,0 +1,11 @@
+{
+  "description": {
+    "identifier": "minecraft:golden_apple",
+    "item_group": "misc"
+  },
+  "components": {
+    "icon": "assets/minecraft/textures/item/golden_apple",
+    "display_name": "item.minecraft.golden_apple",
+    "max_stack_size": 64
+  }
+}

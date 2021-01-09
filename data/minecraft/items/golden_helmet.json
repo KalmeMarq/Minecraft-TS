@@ -1,0 +1,16 @@
+{
+  "description": {
+    "identifier": "minecraft:golden_helmet",
+    "item_group": "equipment",
+    "type_group": "golden_armor"
+  },
+  "components": {
+    "icon": "assets/minecraft/textures/item/golden_helmet",
+    "display_name": "item.minecraft.golden_helmet",
+    "max_stack_size": 1,
+    "durability": 77,
+    "armor": {
+      "slot": "helmet"
+    }
+  }
+}

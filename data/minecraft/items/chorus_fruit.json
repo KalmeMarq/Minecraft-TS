@@ -1,0 +1,11 @@
+{
+  "description": {
+    "identifier": "minecraft:chorus_fruit",
+    "item_group": "foodstuffs"
+  },
+  "components": {
+    "icon": "assets/minecraft/textures/item/chorus_fruit",
+    "display_name": "item.minecraft.chorus_fruit",
+    "max_stack_size": 64
+  }
+}

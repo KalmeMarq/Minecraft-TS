@@ -1,0 +1,12 @@
+{
+  "description": {
+    "identifier": "minecraft:fishing_rod",
+    "item_group": "tools"
+  },
+  "components": {
+    "icon": "assets/minecraft/textures/item/fishing_rod",
+    "display_name": "item.minecraft.fishing_rod",
+    "max_stack_size": 1,
+    "durability": 64
+  }
+}

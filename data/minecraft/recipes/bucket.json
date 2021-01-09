@@ -1,10 +1,15 @@
 {
-  "type": "crafting_table",
-  "grid": [
-    "", "", "",
-    "iron_ingot", "", "iron_ingot",
-    "", "iron_ingot", ""
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "# #",
+    " # "
   ],
-  "result": "bucket",
-  "count": 1
+  "key": {
+    "#": {
+      "item": "minecraft:iron_ingot"
+    }
+  },
+  "result": {
+    "item": "minecraft:bucket"
+  }
 }

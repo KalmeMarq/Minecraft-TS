@@ -1,0 +1,11 @@
+{
+  "description": {
+    "identifier": "minecraft:rabbit_hide",
+    "item_group": "misc"
+  },
+  "components": {
+    "icon": "assets/minecraft/textures/item/rabbit_hide",
+    "display_name": "item.minecraft.rabbit_hide",
+    "max_stack_size": 64
+  }
+}

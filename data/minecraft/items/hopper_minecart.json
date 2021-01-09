@@ -1,0 +1,11 @@
+{
+  "description": {
+    "identifier": "minecraft:hopper_minecart",
+    "item_group": "transportation"
+  },
+  "components": {
+    "icon": "assets/minecraft/textures/item/hopper_minecart",
+    "display_name": "item.minecraft.hopper_minecart",
+    "max_stack_size": 1
+  }
+}

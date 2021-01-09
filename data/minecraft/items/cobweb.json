@@ -1,0 +1,11 @@
+{
+  "description": {
+    "identifier": "minecraft:cobweb",
+    "item_group": "decorations"
+  },
+  "components": {
+    "icon": "assets/minecraft/textures/block/cobweb",
+    "display_name": "block.minecraft.cobweb",
+    "max_stack_size": 64
+  }
+}

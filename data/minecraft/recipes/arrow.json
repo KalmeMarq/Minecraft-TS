@@ -1,10 +1,23 @@
 {
-  "type": "crafting_table",
-  "grid": [
-    "flint", "", "",
-    "stick", "", "",
-    "feather", "", ""
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "X",
+    "#",
+    "Y"
   ],
-  "result": "arrow",
-  "count": 4
+  "key": {
+    "#": {
+      "item": "minecraft:stick"
+    },
+    "X": {
+      "item": "minecraft:flint"
+    },
+    "Y": {
+      "item": "minecraft:feather"
+    }
+  },
+  "result": {
+    "item": "minecraft:arrow",
+    "count": 4
+  }
 }

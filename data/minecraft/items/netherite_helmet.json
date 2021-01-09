@@ -1,0 +1,16 @@
+{
+  "description": {
+    "identifier": "minecraft:netherite_helmet",
+    "item_group": "equipment",
+    "type_group": "netherite_armor"
+  },
+  "components": {
+    "icon": "assets/minecraft/textures/item/netherite_helmet",
+    "display_name": "item.minecraft.netherite_helmet",
+    "max_stack_size": 1,
+    "durability": 407,
+    "armor": {
+      "slot": "helmet"
+    }
+  }
+}

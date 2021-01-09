@@ -1,0 +1,16 @@
+{
+  "description": {
+    "identifier": "minecraft:iron_boots",
+    "item_group": "equipment",
+    "type_group": "iron_armor"
+  },
+  "components": {
+    "icon": "assets/minecraft/textures/item/iron_boots",
+    "display_name": "item.minecraft.iron_boots",
+    "max_stack_size": 1,
+    "durability": 195,
+    "armor": {
+      "slot": "boots"
+    }
+  }
+}

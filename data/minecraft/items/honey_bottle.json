@@ -1,0 +1,11 @@
+{
+  "description": {
+    "identifier": "minecraft:honey_bottle",
+    "item_group": "foodstuffs"
+  },
+  "components": {
+    "icon": "assets/minecraft/textures/item/honey_bottle",
+    "display_name": "item.minecraft.honey_bottle",
+    "max_stack_size": 64
+  }
+}

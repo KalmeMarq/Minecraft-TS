@@ -1,0 +1,11 @@
+{
+  "description": {
+    "identifier": "minecraft:beef",
+    "item_group": "foodstuffs"
+  },
+  "components": {
+    "icon": "assets/minecraft/textures/item/beef",
+    "display_name": "item.minecraft.beef",
+    "max_stack_size": 64
+  }
+}

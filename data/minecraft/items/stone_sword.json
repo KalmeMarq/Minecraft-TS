@@ -1,0 +1,12 @@
+{
+  "description": {
+    "identifier": "minecraft:stone_sword",
+    "item_group": "tools"
+  },
+  "components": {
+    "icon": "assets/minecraft/textures/item/stone_sword",
+    "display_name": "item.minecraft.stone_sword",
+    "max_stack_size": 1,
+    "durability": 131
+  }
+}

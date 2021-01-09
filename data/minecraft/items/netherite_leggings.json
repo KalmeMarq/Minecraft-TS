@@ -1,0 +1,16 @@
+{
+  "description": {
+    "identifier": "minecraft:netherite_leggings",
+    "item_group": "equipment",
+    "type_group": "netherite_armor"
+  },
+  "components": {
+    "icon": "assets/minecraft/textures/item/netherite_leggings",
+    "display_name": "item.minecraft.netherite_leggings",
+    "max_stack_size": 1,
+    "durability": 555,
+    "armor": {
+      "slot": "leggings"
+    }
+  }
+}

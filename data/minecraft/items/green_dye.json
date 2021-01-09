@@ -1,0 +1,13 @@
+{
+  "description": {
+    "id": 351,
+    "identifier": "minecraft:green_dye",
+    "item_group": "misc",
+    "type_group": "dye"
+  },
+  "components": {
+    "icon": "assets/minecraft/textures/item/green_dye",
+    "display_name": "item.minecraft.green_dye",
+    "max_stack_size": 64
+  }
+}

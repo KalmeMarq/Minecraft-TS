@@ -1,0 +1,11 @@
+{
+  "description": {
+    "identifier": "minecraft:fermented_spider_eye",
+    "item_group": "misc"
+  },
+  "components": {
+    "icon": "assets/minecraft/textures/item/fermented_spider_eye",
+    "display_name": "item.minecraft.fermented_spider_eye",
+    "max_stack_size": 64
+  }
+}

@@ -1,571 +1,48 @@
-window.addEventListener('contextmenu', (e) => { e.preventDefault() }, false);
-
 const root = document.getElementById('root');
+const guiScale = 3;
 
-let recipesFiles = [];
-let langFiles = [];
-let tagFiles = [];
-let lootTableFiles = [];
-let dummy = [];
+let last_known_scroll_position = 0;
 
-let isCreativeMode = true;
+let playerHealth = 20;
 
-/* Get JSON Files Data */
 async function getJSONData(url) {
   const res = await fetch(url);
   return await res.json(); 
 }
 
-async function getAllFiles(url, save) {
-  let aaa = await getJSONData(url);
+/* Items Registry */
+let RegistryItems = [];
 
-  let obj = [];
-
-  aaa.values.forEach(async (src) => {
-    let urlData = await getJSONData(`./${aaa.root}/${aaa.namespace}/${src}`);
-
-    obj.push(await urlData);
-  })
-
-  return obj;
-}
-
-/* Get Translation text if possible */
-function translateKey(key) {
-  const langDefault = langFiles.find(file => file['lang.id'] === defaultLang);
-  const lang = langFiles.find(file => file['lang.id'] === displayLang);
-
-  // console.log(langFiles[langFiles.findIndex(file => file['lang.id'] === displayLang)][key]);
-
-  if(lang[key]) {
-    return lang[key]
-  } else if(langDefault[key]) {
-    return langDefault[key];
-  } else {
-    return key
-  }
-}
-
-/* Settings */
-let defaultLang = 'en_us';
-let displayLang = 'en_us';
-let soundVolume = 0.5;
-let guiScale = Number(getComputedStyle(document.documentElement).getPropertyValue('--guiScale'));
-let advancedTooltip = true;
-
-/* Item Registry */
-let itemIdx = 0;
+let ItemIdNum = 0;
 class Item {
   #isStackable;
   #isDamageable;
 
-  constructor(identifier, maxStackSize, maxDamage, props) {
-    this.id = itemIdx;
-    itemIdx++;
+  constructor(identifier, texture, itemGroup, maxStackSize, maxDamage, components) {
+    this.id = ItemIdNum;
+    ItemIdNum++;
     this.identifier = identifier;
-    this.texture = 'assets/minecraft/textures/item/' + this.identifier + '.png';
+    this.itemGroup = itemGroup;
+    this.texture = texture + '.png';
+    this.components = components;
     this.maxStackSize = maxStackSize;
     this.#isStackable = maxStackSize === 1 ? false : true;
     this.maxDamage = maxDamage;
     this.#isDamageable = maxDamage === -1 ? false : true;
-    this.props = props;
   }
 
   get isStackable() {
     return this.#isStackable;
   }
-}
 
-const RegistryItems = [
-  new Item('acacia_boat', 1, -1, { itemGroup: 'transportation' }),
-  new Item('acacia_door', 64, -1, { isBlock: true, itemGroup: 'redstone' }),
-  new Item('acacia_sign', 16, -1, { isBlock: true, itemGroup: 'decorations' }),
-  new Item('apple', 64, -1, { itemGroup: 'foodstuffs' }),
-  new Item('armor_stand', 64, -1, { itemGroup: 'decorations' }),
-  new Item('arrow', 64, -1, { itemGroup: 'misc' }),
-  new Item('baked_potato', 64, -1, { itemGroup: 'foodstuffs' }),
-  new Item('bamboo', 64, -1, { isBlock: true, itemGroup: 'misc' }),
-  new Item('barrier', 64, -1, { isBlock: true, itemGroup: 'misc' }),
-  new Item('beef', 64, -1, { itemGroup: 'foodstuffs' }),
-  new Item('beetroot', 64, -1, { itemGroup: 'foodstuffs' }),
-  new Item('beetroot_seeds', 64, -1, { itemGroup: 'misc' }),
-  new Item('beetroot_soup', 1, -1, { itemGroup: 'foodstuffs' }),
-  new Item('bell', 64, -1, { isBlock: true, itemGroup: 'redstone' }),
-  new Item('birch_boat', 1, -1, { itemGroup: 'transportation' }),
-  new Item('birch_door', 64, -1, { isBlock: true, itemGroup: 'misc' }),
-  new Item('birch_sign', 64, -1, { isBlock: true, itemGroup: 'misc' }),
-  new Item('black_dye', 64, -1, { itemGroup: 'misc' }),
-  new Item('blaze_powder', 64, -1, { itemGroup: 'misc' }),
-  new Item('blaze_rod', 64, -1, { itemGroup: 'misc' }),
-  new Item('blue_dye', 64, -1, { itemGroup: 'misc' }),
-  new Item('bone', 64, -1, { itemGroup: 'misc' }),
-  new Item('bone_meal', 64, -1, { itemGroup: 'misc' }),
-  new Item('book', 64, -1, { itemGroup: 'misc' }),
-  new Item('bow', 1, -1, { itemGroup: 'tools' }),
-  new Item('bowl', 64, -1, { itemGroup: 'misc' }),
-  new Item('bread', 64, -1, { itemGroup: 'foodstuffs' }),
-  new Item('brewing_stand', 64, -1, { isBlock: true, itemGroup: 'brewing' }),
-  new Item('brick', 64, -1, { itemGroup: 'misc' }),
-  new Item('brown_dye', 64, -1, { itemGroup: 'misc' }),
-  new Item('bucket', 64, -1, { itemGroup: 'misc' }),
-  new Item('cake', 64, -1, { isBlock: true, itemGroup: 'foodstuffs' }),
-  new Item('campfire', 64, -1, { isBlock: true, itemGroup: 'decorations' }),
-  new Item('carrot', 64, -1, { itemGroup: 'foodstuffs' }),
-  new Item('chainmail_boots', 1, 20, { itemGroup: 'equipment' }),
-  new Item('chainmail_chestplate', 1, 20, { itemGroup: 'equipment' }),
-  new Item('chainmail_helmet', 1, 20, { itemGroup: 'equipment' }),
-  new Item('chainmail_leggings', 1, 20, { itemGroup: 'equipment' }),
-  new Item('charcoal', 64, -1, { itemGroup: 'misc' }),
-  new Item('chest_minecart', 1, -1, { itemGroup: 'transportation' }),
-  new Item('chicken', 64, -1, { itemGroup: 'foodstuffs' }),
-  new Item('chorus_fruit', 64, -1, { itemGroup: 'foodstuffs' }),
-  new Item('clay_ball', 64, -1, { itemGroup: 'misc' }),
-  new Item('clock', 64, -1, { itemGroup: 'tools' }),
-  new Item('coal', 64, -1, { itemGroup: 'misc' }),
-  new Item('cocoa_beans', 64, -1, { itemGroup: 'misc' }),
-  new Item('cod', 64, -1, { itemGroup: 'foodstuffs' }),
-  new Item('comparator', 64, -1, { isBlock: true, itemGroup: 'redstone' }),
-  new Item('compass', 64, -1, { itemGroup: 'tools' }),
-  new Item('cooked_beef', 64, -1, { itemGroup: 'foodstuffs' }),
-  new Item('cooked_chicken', 64, -1, { itemGroup: 'foodstuffs' }),
-  new Item('cooked_cod', 64, -1, { itemGroup: 'foodstuffs' }),
-  new Item('cooked_mutton', 64, -1, { itemGroup: 'foodstuffs' }),
-  new Item('cooked_porkchop', 64, -1, { itemGroup: 'foodstuffs' }),
-  new Item('cooked_rabbit', 64, -1, { itemGroup: 'foodstuffs' }),
-  new Item('cooked_salmon', 64, -1, { itemGroup: 'foodstuffs' }),
-  new Item('crimson_door', 64, -1, { isBlock: true, itemGroup: 'redstone' }),
-  new Item('crimson_sign', 64, -1, { isBlock: true, itemGroup: 'decorations' }),
-  new Item('crossbow_standby', 64, 20, { itemGroup: 'equipment' }),
-  new Item('cyan_dye', 64, -1, { itemGroup: 'misc' }),
-  new Item('dark_oak_boat', 64, -1, { itemGroup: 'transportation' }),
-  new Item('dark_oak_door', 64, -1, { isBlock: true, itemGroup: 'redstone' }),
-  new Item('dark_oak_sign', 64, -1, { isBlock: true, itemGroup: 'decorations' }),
-  new Item('diamond', 64, -1, { itemGroup: 'misc' }),
-  new Item('diamond_axe', 1, 20, { itemGroup: 'tools' }),
-  new Item('diamond_boots', 1, 20, { itemGroup: 'equipment' }),
-  new Item('diamond_chestplate', 1, 20, { itemGroup: 'equipment' }),
-  new Item('diamond_helmet', 1, -1, { itemGroup: 'equipment' }),
-  new Item('diamond_hoe', 1, 20, { itemGroup: 'tools' }),
-  new Item('diamond_horse_armor', 1, -1, { itemGroup: 'tools' }),
-  new Item('diamond_leggings', 1, 20, { itemGroup: 'equipment' }),
-  new Item('diamond_pickaxe', 1, 20, { itemGroup: 'tools' }),
-  new Item('diamond_shovel', 1, 20, { itemGroup: 'tools' }),
-  new Item('diamond_sword', 1, 20, { itemGroup: 'equipment' }),
-  new Item('dragon_breath', 64, -1, { itemGroup: 'misc' }),
-  new Item('dried_kelp', 64, -1, { itemGroup: 'foodstuffs' }),
-  new Item('egg', 16, -1, { itemGroup: 'misc' }),
-  new Item('emerald', 64, -1, { itemGroup: 'misc' }),
-  new Item('end_crystal', 64, -1, { itemGroup: 'misc' }),
-  new Item('ender_eye', 16, -1, { itemGroup: 'misc' }),
-  new Item('ender_pearl', 16, -1, { itemGroup: 'misc' }),
-  new Item('experience_bottle', 64, -1, { itemGroup: 'misc' }),
-  new Item('feather', 64, -1, { itemGroup: 'misc' }),
-  new Item('fermented_spider_eye', 64, -1, { itemGroup: 'foodstuffs' }),
-  new Item('fire_charge', 64, -1, { itemGroup: 'misc' }),
-  new Item('firework_rocket', 64, -1, { itemGroup: 'misc' }),
-  new Item('fishing_rod', 64, -1, { itemGroup: 'tools' }),
-  new Item('flint', 64, -1, { itemGroup: 'misc' }),
-  new Item('flint_and_steel', 1, -1, { itemGroup: 'tools' }),
-  new Item('flower_pot', 64, -1, { itemGroup: 'decorations' }),
-  new Item('furnace_minecart', 64, -1, { itemGroup: 'transportation' }),
-  new Item('ghast_tear', 64, -1, { itemGroup: 'brewing_stand' }),
-  new Item('glass_bottle', 64, -1, { itemGroup: 'brewing' }),
-  new Item('glistering_melon_slice', 64, -1, { itemGroup: 'misc' }),
-  new Item('glowstone_dust', 64, -1, { itemGroup: 'brewing' }),
-  new Item('gold_ingot', 64, -1, { itemGroup: 'misc' }),
-  new Item('gold_nugget', 64, -1, { itemGroup: 'misc' }),
-  new Item('golden_apple', 64, -1, { itemGroup: 'foodstuffs' }),
-  new Item('golden_axe', 64, -1, { itemGroup: 'tools' }),
-  new Item('golden_boots', 64, -1, { itemGroup: 'equipment' }),
-  new Item('golden_carrot', 64, -1, { itemGroup: 'foodstuffs' }),
-  new Item('golden_chestplate', 1, -1, { itemGroup: 'equipment' }),
-  new Item('golden_helmet', 1, -1, { itemGroup: 'equipment' }),
-  new Item('golden_hoe', 1, -1, { itemGroup: 'tools' }),
-  new Item('golden_horse_armor', 1, -1, { itemGroup: 'misc' }),
-  new Item('golden_leggings', 1, -1, { itemGroup: 'equipment' }),
-  new Item('golden_pickaxe', 1, -1, { itemGroup: 'tools' }),
-  new Item('golden_shovel', 1, -1, { itemGroup: 'tools' }),
-  new Item('golden_sword', 1, -1, { itemGroup: 'equipment' }),
-  new Item('gray_dye', 64, -1, { itemGroup: 'misc' }),
-  new Item('green_dye', 64, -1, { itemGroup: 'misc' }),
-  new Item('gunpowder', 64, -1, { itemGroup: 'misc' }),
-  new Item('heart_of_the_sea', 64, -1, { itemGroup: 'misc' }),
-  new Item('honey_bottle', 64, -1, { itemGroup: 'misc' }),
-  new Item('honeycomb', 64, -1, { itemGroup: 'misc' }),
-  new Item('hopper', 64, -1, { itemGroup: 'misc' }),
-  new Item('hopper_minecart', 64, -1, { itemGroup: 'misc' }),
-  new Item('ink_sac', 64, -1, { itemGroup: 'misc' }),
-  new Item('iron_axe', 1, -1, { itemGroup: 'misc' }),
-  new Item('iron_boots', 1, -1, { itemGroup: 'misc' }),
-  new Item('iron_chestplate', 1, -1, { itemGroup: 'misc' }),
-  new Item('iron_door', 64, -1, { isBlock: true, itemGroup: 'redstone' }),
-  new Item('iron_helmet', 1, -1, { itemGroup: 'misc' }),
-  new Item('iron_hoe', 1, -1, { itemGroup: 'misc' }),
-  new Item('iron_horse_armor', 1, -1, { itemGroup: 'misc' }),
-  new Item('iron_ingot', 64, -1, { itemGroup: 'misc' }),
-  new Item('iron_leggings', 1, -1, { itemGroup: 'misc' }),
-  new Item('iron_nugget', 64, -1, { itemGroup: 'misc' }),
-  new Item('iron_pickaxe', 1, -1, { itemGroup: 'equipment' }),
-  new Item('iron_shovel', 1, -1, { itemGroup: 'equipment' }),
-  new Item('iron_sword', 1, -1, { itemGroup: 'equipment' }),
-  new Item('item_frame', 64, -1, { itemGroup: 'misc' }),
-  new Item('jungle_boat', 64, -1, { itemGroup: 'misc' }),
-  new Item('jungle_door', 64, -1, { itemGroup: 'misc' }),
-  new Item('jungle_sign', 64, -1, { itemGroup: 'misc' }),
-  new Item('kelp', 64, -1, { itemGroup: 'misc' }),
-  new Item('lantern', 64, -1, { itemGroup: 'misc' }),
-  new Item('lapis_lazuli', 64, -1, { itemGroup: 'misc' }),
-  new Item('lava_bucket', 64, -1, { itemGroup: 'misc' }),
-  new Item('lead', 64, -1, { itemGroup: 'misc' }),
-  new Item('leather', 64, -1, { itemGroup: 'misc' }),
-  new Item('light_blue_dye', 64, -1, { itemGroup: 'misc' }),
-  new Item('light_gray_dye', 64, -1, { itemGroup: 'misc' }),
-  new Item('lime_dye', 64, -1, { itemGroup: 'misc' }),
-  new Item('magenta_dye', 64, -1, { itemGroup: 'misc' }),
-  new Item('magma_cream', 64, -1, { itemGroup: 'misc' }),
-  new Item('melon_seeds', 64, -1, { itemGroup: 'misc' }),
-  new Item('melon_slice', 64, -1, { itemGroup: 'misc' }),
-  new Item('milk_bucket', 64, -1, { itemGroup: 'misc' }),
-  new Item('minecart', 64, -1, { itemGroup: 'misc' }),
-  new Item('mushroom_stew', 64, -1, { itemGroup: 'misc' }),
-  new Item('music_disc_11', 64, -1, { itemGroup: 'misc' }),
-  new Item('music_disc_13', 64, -1, { itemGroup: 'misc' }),
-  new Item('music_disc_blocks', 64, -1, { itemGroup: 'misc' }),
-  new Item('music_disc_cat', 64, -1, { itemGroup: 'misc' }),
-  new Item('music_disc_chirp', 64, -1, { itemGroup: 'misc' }),
-  new Item('music_disc_far', 64, -1, { itemGroup: 'misc' }),
-  new Item('music_disc_mall', 64, -1, { itemGroup: 'misc' }),
-  new Item('music_disc_mell', 64, -1, { itemGroup: 'misc' }),
-  new Item('music_disc_pigstep', 64, -1, { itemGroup: 'misc' }),
-  new Item('music_disc_stal', 64, -1, { itemGroup: 'misc' }),
-  new Item('music_disc_strad', 64, -1, { itemGroup: 'misc' }),
-  new Item('music_disc_wait', 64, -1, { itemGroup: 'misc' }),
-  new Item('music_disc_ward', 64, -1, { itemGroup: 'misc' }),
-  new Item('mutton', 64, -1, { itemGroup: 'misc' }),
-  new Item('nametag', 64, -1, { itemGroup: 'misc' }),
-  new Item('nautilus_shell', 64, -1, { itemGroup: 'misc' }),
-  new Item('nether_brick', 64, -1, { itemGroup: 'misc' }),
-  new Item('nether_sprouts', 64, -1, { itemGroup: 'misc' }),
-  new Item('nether_star', 64, -1, { itemGroup: 'misc' }),
-  new Item('nether_wart', 64, -1, { itemGroup: 'misc' }),
-  new Item('netherite_axe', 1, -1, { itemGroup: 'misc' }),
-  new Item('netherite_boots', 1, -1, { itemGroup: 'misc' }),
-  new Item('netherite_chestplate', 1, -1, { itemGroup: 'misc' }),
-  new Item('netherite_helmet', 1, -1, { itemGroup: 'misc' }),
-  new Item('netherite_hoe', 1, -1, { itemGroup: 'misc' }),
-  new Item('netherite_ingot', 1, -1, { itemGroup: 'misc' }),
-  new Item('netherite_leggings', 1, -1, { itemGroup: 'misc' }),
-  new Item('netherite_pickaxe', 1, -1, { itemGroup: 'misc' }),
-  new Item('netherite_scrap', 1, -1, { itemGroup: 'misc' }),
-  new Item('netherite_shovel', 1, -1, { itemGroup: 'misc' }),
-  new Item('netherite_sword', 1, -1, { itemGroup: 'misc' }),
-  new Item('oak_boat', 1, -1, { itemGroup: 'misc' }),
-  new Item('oak_door', 64, -1, { itemGroup: 'misc' }),
-  new Item('oak_sign', 64, -1, { itemGroup: 'misc' }),
-  new Item('orange_dye', 64, -1, { itemGroup: 'misc' }),
-  new Item('painting', 64, -1, { itemGroup: 'misc' }),
-  new Item('paper', 64, -1, { itemGroup: 'misc' }),
-  new Item('phantom_membrane', 64, -1, { itemGroup: 'misc' }),
-  new Item('pink_dye', 64, -1, { itemGroup: 'misc' }),
-  new Item('poisonous_potato', 64, -1, { itemGroup: 'misc' }),
-  new Item('popped_chorus_fruit', 64, -1, { itemGroup: 'misc' }),
-  new Item('porkchop', 64, -1, { itemGroup: 'misc' }),
-  new Item('potato', 64, -1, { itemGroup: 'misc' }),
-  new Item('prismarine_crystals', 64, -1, { itemGroup: 'misc' }),
-  new Item('prismarine_shard', 64, -1, { itemGroup: 'misc' }),
-  new Item('pufferfish', 64, -1, { itemGroup: 'misc' }),
-  new Item('pufferfish_bucket', 64, -1, { itemGroup: 'misc' }),
-  new Item('pumpkin_pie', 64, -1, { itemGroup: 'misc' }),
-  new Item('pumpkin_seeds', 64, -1, { itemGroup: 'misc' }),
-  new Item('purple_dye', 64, -1, { itemGroup: 'misc' }),
-  new Item('quartz', 64, -1, { itemGroup: 'misc' }),
-  new Item('rabbit', 64, -1, { itemGroup: 'misc' }),
-  new Item('rabbit_foot', 64, -1, { itemGroup: 'misc' }),
-  new Item('rabbit_hide', 64, -1, { itemGroup: 'misc' }),
-  new Item('rabbit_stew', 64, -1, { itemGroup: 'misc' }),
-  new Item('red_dye', 64, -1, { itemGroup: 'misc' }),
-  new Item('redstone', 64, -1, { itemGroup: 'misc' }),
-  new Item('repeater', 64, -1, { itemGroup: 'misc' }),
-  new Item('rotten_flesh', 64, -1, { itemGroup: 'misc' }),
-  new Item('saddle', 64, -1, { itemGroup: 'misc' }),
-  new Item('salmon', 64, -1, { itemGroup: 'misc' }),
-  new Item('salmon_bucket', 64, -1, { itemGroup: 'misc' }),
-  new Item('scute', 64, -1, { itemGroup: 'misc' }),
-  new Item('sea_pickle', 64, -1, { itemGroup: 'misc' }),
-  new Item('seagrass', 64, -1, { itemGroup: 'misc' }),
-  new Item('shears', 1, -1, { itemGroup: 'tools' }),
-  new Item('shulker_shell', 64, -1, { itemGroup: 'misc' }),
-  new Item('slime_ball', 64, -1, { itemGroup: 'misc' }),
-  new Item('snowball', 16, -1, { itemGroup: 'misc' }),
-  new Item('soul_campfire', 16, -1, { itemGroup: 'misc' }),
-  new Item('soul_lantern', 16, -1, { itemGroup: 'misc' }),
-  new Item('spectral_arrow', 64, -1, { itemGroup: 'misc' }),
-  new Item('spider_eye', 64, -1, { itemGroup: 'misc' }),
-  new Item('spruce_boat', 64, -1, { itemGroup: 'misc' }),
-  new Item('spruce_door', 64, -1, { itemGroup: 'misc' }),
-  new Item('spruce_sign', 64, -1, { itemGroup: 'misc' }),
-  new Item('spruce_stick', 64, -1, { itemGroup: 'misc' }),
-  new Item('stone_axe', 64, -1, { itemGroup: 'misc' }),
-  new Item('stone_hoe', 64, -1, { itemGroup: 'misc' }),
-  new Item('stone_pickaxe', 64, -1, { itemGroup: 'misc' }),
-  new Item('stone_shovel', 64, -1, { itemGroup: 'misc' }),
-  new Item('stone_sword', 64, -1, { itemGroup: 'misc' }),
-  new Item('sugar', 64, -1, { itemGroup: 'misc' }),
-  new Item('suspicious_stew', 64, -1, { itemGroup: 'misc' }),
-  new Item('sweet_berries', 64, -1, { itemGroup: 'misc' }),
-  new Item('tnt_minecart', 64, -1, { itemGroup: 'misc' }),
-  new Item('totem_of_undying', 64, -1, { itemGroup: 'misc' }),
-  new Item('trident', 64, -1, { itemGroup: 'misc' }),
-  new Item('tropical_fish', 64, -1, { itemGroup: 'misc' }),
-  new Item('tropical_fish_bucket', 64, -1, { itemGroup: 'misc' }),
-  new Item('turtle_egg', 64, -1, { itemGroup: 'misc' }),
-  new Item('turtle_helmet', 64, -1, { itemGroup: 'misc' }),
-  new Item('warped_door', 64, -1, { itemGroup: 'misc' }),
-  new Item('warped_fungus_on_a_stick', 64, -1, { itemGroup: 'misc' }),
-  new Item('warped_sign', 64, -1, { itemGroup: 'misc' }),
-  new Item('water_bucket', 64, -1, { itemGroup: 'misc' }),
-  new Item('wheat_seeds', 64, -1, { itemGroup: 'misc' }),
-  new Item('white_dye', 64, -1, { itemGroup: 'misc' }),
-  new Item('wooden_axe', 64, -1, { itemGroup: 'misc' }),
-  new Item('wooden_hoe', 64, -1, { itemGroup: 'misc' }),
-  new Item('wooden_pickaxe', 64, -1, { itemGroup: 'misc' }),
-  new Item('wooden_shovel', 64, -1, { itemGroup: 'misc' }),
-  new Item('wooden_sword', 64, -1, { itemGroup: 'misc' }),
-  new Item('writable_book', 64, -1, { itemGroup: 'misc' }),
-  new Item('yellow_dye', 64, -1, { itemGroup: 'misc' }),
-  new Item('stick', 64, -1, { itemGroup: 'misc' }),
-  new Item('string', 64, -1, { itemGroup: 'misc' }),
-  new Item('sugar_cane', 64, -1, { isBlock: true, itemGroup: 'misc' }),
-  new Item('wheat', 64, -1, { itemGroup: 'misc' }),
-  new Item('cookie', 64, -1, { itemGroup: 'foodstuffs' })
-];
-
-/* Inventories Gen */
-class Inventory {
-  static playerHotbar() {
-    let grid = [];
-    for(let i = 0; i < 9; i++) {
-      grid.push({ Slot: i, Item: '', Damage: -1, Count: 0 })
-    }
-
-    console.log('Player hotbar created.');
-    return grid;
-  }
-
-  static playerInv() {
-    let grid = [];
-    for(let i = 9; i < 36; i++) {
-      grid.push({ Slot: i, Item: '', Damage: -1, Count: 0 })
-    }
-    console.log('Player inventory created.');
-    return grid;
-  }
-
-  static playerArmor() {
-    let grid = [];
-    for(let i = 36; i < 40; i++) {
-      grid.push({ Slot: i, Item: '', Damage: -1, Count: 0 })
-    }
-    console.log('Player armor created.');
-    return grid;
-  }
-
-  static playerOffHand() {
-    let grid = [];
-    for(let i = 40; i < 41; i++) {
-      grid.push({ Slot: i, Item: '', Damage: -1, Count: 0 })
-    }
-    console.log('Player offhand created.');
-    return grid;
-  }
-
-  static craftingSlots() {
-    let grid = [];
-    for(let i = 0; i < 9; i++) {
-      grid.push({ Slot: i, Item: '', Damage: -1,Count: 0 })
-    }
-    console.log('Crafting table grid created.');
-    return grid;
-  }
-
-  static craftingOutput() {
-    let grid = [];
-    for(let i = 0; i < 1; i++) {
-      grid.push({ Slot: i, Item: '', Damage: -1, Count: 0 })
-    }
-    console.log('Crafting table output slot created.');
-    return grid;
-  }
-
-  static furnaceGrid() {
-    let grid = [];
-    for(let i = 0; i < 3; i++) {
-      grid.push({ Slot: i, Item: '', Damage: -1, Count: 0 })
-    }
-    return grid;
+  get isDamageable() {
+    return this.#isDamageable;
   }
 }
 
-/* Slot Actions */
-class Slot {
-  static clearAllInventories() {
-    playerArmor.forEach(slot => { slot.Item = ''; slot.Count = 0; });
-    playerOffHand.forEach(slot => { slot.Item = ''; slot.Count = 0; });
-    playerInv.forEach(slot => { slot.Item = ''; slot.Count = 0; });
-    playerHotbar.forEach(slot => { slot.Item = ''; slot.Count = 0; });
-    craftingGrid.forEach(slot => { slot.Item = ''; slot.Count = 0; });
-    resultSlotGrid.forEach(slot => { slot.Item = ''; slot.Count = 0; });
-
-    localStorage.setItem('playerArmor', JSON.stringify(playerArmor));
-    localStorage.setItem('playerOffHand', JSON.stringify(playerOffHand));
-    localStorage.setItem('playerInv', JSON.stringify(playerInv));
-    localStorage.setItem('playerHotbar', JSON.stringify(playerHotbar));
-
-    Slot.redrawInventories();
-  }
-
-  static redrawInventories() {
-    localStorage.setItem('playerArmor', JSON.stringify(playerArmor));
-    localStorage.setItem('playerOffHand', JSON.stringify(playerOffHand));
-    localStorage.setItem('playerInv', JSON.stringify(playerInv));
-    localStorage.setItem('playerHotbar', JSON.stringify(playerHotbar));
-
-    drawAllItems();
-    drawArmor();
-    drawOffHand();
-    drawInv();
-    drawHotbar();
-    drawCraftingGrid();
-    drawFurnaceGrid();
-    drawResultSlotGrid();
-  }
-
-  static addOne(slotEl, slotType) {
-    slotEl.addEventListener('mousedown', (e) => {
-      if(e.button === 2 && selectedItem.getCount() > 0) {
-        slotType.Item = selectedItem.getItemID();
-        slotItem.Damage = selectedItem.Damage;
-        slotType.Count++;
-
-
-        selectedItem.set(selectedItem.Item, selectedItem.getCount() - 1);
-
-        console.log('Added 1 ' + selectedItem.getItemID() + ' with ' + selectedItem.Damage + ' of durability to Slot ' + slotType.Slot);
-
-
-        Slot.redrawInventories();
-        drawFlyingItem(e);
-      }
-    })
-
-  }
-
-  static pickStack(slotEl, slotType) {
-    if(isCreativeMode) {
-      slotEl.addEventListener('mousedown', (e) => {
-        if(e.button === 1 && selectedItem.getCount() === 0) {
-          const regItem = RegistryItems.find(item => item.identifier === slotType.Item);
-          selectedItem.set(slotType.Item, regItem.maxStackSize);
-  
-          drawFlyingItem(e);
-
-          console.log('Picked 64 ' + selectedItem.getItemID());
-        }
-      })
-    }
-  }
-
-  static pickAll(slotEl, slotType) {
-    slotEl.addEventListener('click', (e) => {
-      const regItem = RegistryItems.find(item => item.identifier === slotType.Item)
-
-      if(selectedItem.getItemID() === '') {
-        if(e.shiftKey) {
-          selectedItem.set(slotType.Item, Math.round(slotType.Count / 2));
-          slotType.Count = slotType.Count - Math.round(slotType.Count / 2);
-        } else {
-          selectedItem.set(slotType.Item, slotType.Count);
-          selectedItem.Damage = slotType.Damage;
-          slotType.Item = '';
-          slotType.Damage = -1;
-          slotType.Count = 0;
-
-        }
-        slotEl.setAttribute('data-tooltip', 'empty');
-
-        Slot.redrawInventories();
-        drawFlyingItem(e);
-
-      } else if(selectedItem.getItemID() !== '') {
-        if(slotType.Item === '') {
-          slotType.Item = selectedItem.getItemID();
-          slotType.Damage = selectedItem.Damage;
-          slotType.Count = selectedItem.getCount();
-
-          selectedItem.reset();
-          Slot.redrawInventories();
-          removeFlyingItem();
-
-        } else if(selectedItem.getItemID() === slotType.Item) {
-            if((slotType.Count + selectedItem.getCount()) <= regItem.maxStackSize) {
-              slotType.Count += selectedItem.getCount();
-              selectedItem.reset();
-              removeFlyingItem();
-
-            } else {
-              const amountAdded = regItem.maxStackSize - (regItem.maxStackSize - slotType.Count);
-
-              slotType.Count = regItem.maxStackSize;
-
-              selectedItem.set(selectedItem.getItemID(), amountAdded)
-              drawFlyingItem(e);
-
-            }
-
-
-          drawInv();
-        } else {
-          const storeSelectedItem = {
-            Item: selectedItem.getItemID(),
-            ItemDamage: selectedItem.Damage,
-            Count: selectedItem.getCount()
-          }
-
-          const storeslotType = {
-            Item: slotType.Item,
-            ItemDamage: slotType.maxDamage,
-            Count: slotType.Count 
-          }
-
-          selectedItem.Damage = storeslotType.ItemDamage;
-          selectedItem.set(storeslotType.Item, storeslotType.Count);
-          slotType.Item = storeSelectedItem.Item;
-          slotType.Damage = storeSelectedItem.ItemDamage;
-          slotType.Count = storeSelectedItem.Count;
-
-          drawFlyingItem(e);
-          Slot.redrawInventories();
-
-        }
-      }
-
-    });
-  }
-}
-
-/* Selected Item */
-const craftingGrid = Inventory.craftingSlots();
-const resultSlotGrid = Inventory.craftingOutput();
-const furnaceGrid = Inventory.furnaceGrid();
-const playerArmor = JSON.parse(localStorage.getItem('playerArmor')) || Inventory.playerArmor();
-const playerOffHand = JSON.parse(localStorage.getItem('playerOffHand')) || Inventory.playerOffHand();
-const playerInv = JSON.parse(localStorage.getItem('playerInv')) || Inventory.playerInv();
-const playerHotbar = JSON.parse(localStorage.getItem('playerHotbar')) || Inventory.playerHotbar();
-
+/* Inventories */
 let selectedItem = {
   Item: '',
-  Name: '',
-  Damage: -1,
   Count: 0,
   getItemID: () => {
     return selectedItem.Item;
@@ -579,38 +56,128 @@ let selectedItem = {
   },
   reset: () => {
     selectedItem.Item = '';
-    selectedItem.Damage = -1;
     selectedItem.Count = 0;
   }
 };
 
-function checkForDurabilityColor(value) {
-  if(value <= 100 && value > 90) return '#13cf3c';
-  if(value <= 90 && value > 80) return '#13cf3c';
-  if(value <= 80 && value > 70) return '#58cf13';
-  if(value <= 70 && value > 60) return '#7ecf13';
-  if(value <= 60 && value > 50) return '#b3cf13';
-  if(value <= 50 && value > 40) return '#cfb313';
-  if(value <= 40 && value > 30) return '#cf8d13';
-  if(value <= 30 && value > 20) return '#cf6813';
-  if(value <= 20 && value > 10) return '#cf1313';
-  if(value <= 10 && value > 0) return '#000';
+class Inventory {
+  static genPlayerArmor() {
+    let grid = [];
+    for(let i = 36; i < 40; i++) {
+      grid.push({ Slot: i, Item: '', Damage: -1, Count: 0, isArmor: true })
+    }
+    return grid;
+  }
+
+  static genPlayerOffHand() {
+    let grid = [];
+    for(let i = 40; i < 41; i++) {
+      grid.push({ Slot: i, Item: 'minecraft:diamond_helmet', Damage: -1, Count: 1 })
+    }
+    return grid;
+  }
+
+  static genPlayerInv() {
+    let grid = [];
+    for(let i = 9; i < 36; i++) {
+      grid.push({ Slot: i, Item: '', Damage: -1, Count: 0 })
+    }
+    return grid;
+  }
+
+  static genPlayerHotbar() {
+    let grid = [];
+    for(let i = 0; i < 9; i++) {
+      grid.push({ Slot: i, Item: '', Count: 0 })
+    }
+    return grid;
+  }
+
+  static genChest() {
+    let grid = [];
+    for(let i = 0; i < 27; i++) {
+      grid.push({ Slot: i, Item: '', Count: 0 })
+    }
+    return grid;
+  }
 }
 
-const armorEl = document.getElementById('armor');
-const offHandEl = document.getElementById('offhand');
-const inventoryEl = document.getElementById('inventory');
-const hotbarEl = document.getElementById('hotbar');
-const allItemsEl = document.getElementById('allitems');
-const craftingtableEl = document.getElementById('craftingtable');
-const craftinggridEl = document.getElementById('craftinggrid');
-const furnaceEl = document.getElementById('furnace');
-const furnaceinputEl = document.getElementById('furnaceinput');
-const furnacefuelEl = document.getElementById('furnacefuel');
-const furnaceoutputEl = document.getElementById('furnaceoutput');
+const playerArmor = /* JSON.parse(localStorage.getItem('playerArmor')) || */ Inventory.genPlayerArmor();
+const playerOffHand = /* JSON.parse(localStorage.getItem('playerOffHand')) || */ Inventory.genPlayerOffHand();
+const playerInventory = /* JSON.parse(localStorage.getItem('playerInv')) || */ Inventory.genPlayerInv();
+const playerHotbar = /* JSON.parse(localStorage.getItem('playerHotbar')) ||  */ Inventory.genPlayerHotbar();
+
+const invChest = /* JSON.parse(localStorage.getItem('Chest')) ||  */ Inventory.genChest();
+
+class Slot {
+  static placeItem(slotType, element, invType) {
+    slotType.Item = selectedItem.getItemID();
+    slotType.Count = selectedItem.getCount();
+
+    selectedItem.reset();
+
+    removeFlyingItem();
+    drawInv(element, invType);
+  }
+
+  static selectItem(e, slotType, element, invType) {
+    selectedItem.set(slotType.Item, slotType.Count);
+    slotType.Item = '';
+    slotType.Count = 0;
+
+    drawInv(element, invType);
+    drawFlyingItem(e);
+  }
+
+  static pickPlaceItem(slotEl, slotType, element, invType) {
+    slotEl.addEventListener('click', (e) => {
+      if(selectedItem.getItemID() === '' && slotType.Item !== '') {
+        Slot.selectItem(e, slotType, element, invType);
+      } else if(selectedItem.getItemID() !== '' && slotType.Item === '') {
+        if(slotType.Slot >= 36 && slotType.Slot <= 39) {
+          const itemRef = RegistryItems.find(item => item.identifier === selectedItem.getItemID());
+          
+          switch (slotType.Slot) {
+            case 36:
+              if(itemRef.components.armor && itemRef.components.armor.slot === 'helmet') Slot.placeItem(slotType, element, invType)
+              break;
+          
+            case 37:
+              if(itemRef.components.armor && itemRef.components.armor.slot === 'chestplate') Slot.placeItem(slotType, element, invType)
+              break;
+          
+            case 38:
+              if(itemRef.components.armor && itemRef.components.armor.slot === 'leggings') Slot.placeItem(slotType, element, invType)
+              break;
+          
+            case 39:
+              if(itemRef.components.armor && itemRef.components.armor.slot === 'boots') Slot.placeItem(slotType, element, invType)
+              break;
+          }
+
+        } else {
+          Slot.placeItem(slotType, element, invType)
+        }
+      }
+
+      
+    });
+
+    slotEl.blur();
+  }
+
+  static deleteItem(slotEl) {
+    slotEl.addEventListener('click', () => {
+      selectedItem.reset();
+
+      removeFlyingItem();
+
+    });
+  }
+}
 
 function drawFlyingItem(e) {
-  const item = RegistryItems[RegistryItems.findIndex(item => item.identifier === selectedItem.Item) || 0];
+  const refItem = RegistryItems.find(item => item.identifier === selectedItem.getItemID());
 
   removeFlyingItem();
 
@@ -620,61 +187,154 @@ function drawFlyingItem(e) {
   }
 
   if(selectedItem.getItemID() !== '') {
-    const slotItem = document.createElement('div');
-    slotItem.id = 'flyingItem';
+    const slotEl = document.createElement('div');
+    slotEl.id = 'flyingItem';
 
     const img = document.createElement('img');
-    img.src = item.texture;
-    slotItem.appendChild(img);
+    img.src = refItem.texture;
+    slotEl.appendChild(img);
 
-    if(item.isStackable) {
+    if(refItem.isStackable && selectedItem.getCount() > 0) {
       const stackSpan = document.createElement('span');
       stackSpan.classList.add('stack-size');
-      stackSpan.innerText = selectedItem.getCount() !== 1 ? selectedItem.Count : '';
-      slotItem.appendChild(stackSpan);
+      stackSpan.innerText = selectedItem.getCount() !== 1 ? selectedItem.getCount() : '';
+      slotEl.appendChild(stackSpan);
     }
     
-    if(item.maxDamage !== -1 && selectedItem.Damage < item.maxDamage) {
-      const durabilitybar = document.createElement('div');
-      const calcDurabilityPerc = (selectedItem.Damage / item.maxDamage) * 100;
+    // if(item.maxDamage !== -1 && selectedItem.Damage < item.maxDamage) {
+    //   const durabilitybar = document.createElement('div');
+    //   const calcDurabilityPerc = (selectedItem.Damage / item.maxDamage) * 100;
 
-      durabilitybar.classList.add('durabilityBar');
-      durabilitybar.innerHTML = `
-        <div class="durabilityBarInside" style="width: ${calcDurabilityPerc}%; background: ${checkForDurabilityColor(calcDurabilityPerc)}"></div>
-      `;
-      slotItem.appendChild(durabilitybar)
-    }
+    //   durabilitybar.classList.add('durabilityBar');
+    //   durabilitybar.innerHTML = `
+    //     <div class="durabilityBarInside" style="width: ${calcDurabilityPerc}%; background: ${checkForDurabilityColor(calcDurabilityPerc)}"></div>
+    //   `;
+    //   slotItem.appendChild(durabilitybar)
+    // }
 
-    slotItem.style.top = e.pageY - (8 * guiScale) + 'px';
-    slotItem.style.left = e.clientX - (8 * guiScale) + 'px';
+    slotEl.style.top = e.pageY - (8 * guiScale) + 'px';
+    slotEl.style.left = e.pageX - (8 * guiScale) + 'px';
 
-    root.appendChild(slotItem);
+    document.body.appendChild(slotEl);
   }
 }
 
 function removeFlyingItem() {
-  if(document.getElementById('flyingItem')) {
-    document.getElementById('flyingItem').remove();
-  }
+  if(document.getElementById('flyingItem')) document.getElementById('flyingItem').remove();
 }
 
-function drawAllItems() {
-  allItemsEl.innerHTML = '';
+function drawInv(element, invType) {
+  element.innerHTML = '';
+
+  invType.forEach(slot => {
+    const refItem = RegistryItems.find(item => item.identifier === slot.Item);
+
+    const slotEl = createElement('div', { class: 'slot', 'tabindex': '0' });
+
+    Slot.pickPlaceItem(slotEl, slot, element, invType);
+
+    if(slot.Item !== '') {
+      const img = document.createElement('img');
+      img.src = refItem.texture;
+      slotEl.appendChild(img);
+
+      if(refItem.isStackable && slot.Count > 0) {
+        const stackSpan = document.createElement('span');
+        stackSpan.classList.add('stack-size');
+        stackSpan.innerText = slot.Count !== 1 ? slot.Count : '';
+        slotEl.appendChild(stackSpan);
+      }
+    } else {
+      if(invType === playerArmor) {
+        const img = document.createElement('img');
+        if(slot.Slot === 36) img.src = 'assets/minecraft/textures/item/empty_armor_slot_helmet.png'
+        else if(slot.Slot === 37) img.src = 'assets/minecraft/textures/item/empty_armor_slot_chestplate.png'
+        else if(slot.Slot === 38) img.src = 'assets/minecraft/textures/item/empty_armor_slot_leggings.png'
+        else if(slot.Slot === 39) img.src = 'assets/minecraft/textures/item/empty_armor_slot_boots.png';
+        slotEl.appendChild(img);
+      } else if(invType === playerOffHand) {
+        const img = document.createElement('img');
+        img.src = 'assets/minecraft/textures/item/empty_armor_slot_shield.png';
+        slotEl.appendChild(img);
+      }
+      else slotEl.innerHTML = ''
+     
+    };
+
+    element.appendChild(slotEl);
+
+    
+  })
+}
+
+function drawAllItems(itemGroup) {
+  document.getElementsByClassName('creative-inventory-container')[0].innerHTML = '';
+  // document.getElementsByClassName('creative-scroll')[0].innerHTML = '';
+  playSound();
+
+  const aaa = createElement('div', { class: 'div-for-el-canvas-img' }, 
+    newCreateImg('creative-inv-items-txr', 0, 0, 195, 136, 256, 256)
+  );
+
+  const bbb = createElement('input', { id: 'search' });
+
+  document.getElementsByClassName('creative-inventory-container')[0].appendChild(aaa);
+  if(itemGroup === 'all') document.getElementsByClassName('creative-inventory-container')[0].appendChild(bbb);
+
+  bbb.addEventListener('input', () => {
+    const slots = document.querySelectorAll('.creative-scroll .slot');
+  });
+
+  document.getElementsByClassName('creative-inventory-container')[0].appendChild(createElement('div', { class: 'creative-items' },
+  createElement('div', { class: 'creative-scroll' })
+))
+  document.getElementsByClassName('creative-inventory-container')[0].appendChild(createElement('div', { class: 'player-hotbar creative-hotbar' }))
+  drawInv(document.getElementsByClassName('player-hotbar')[0], playerHotbar)
   
-  function drawGroupItems(itemGroup) {
+  function drawGroupItems(group) {
     RegistryItems.forEach(invSlot => {
-      if(invSlot.props.itemGroup === itemGroup) {
+      if(invSlot.itemGroup === group) {
       const itemID = invSlot.identifier;
       const itemName = invSlot.name;
       const itemTexture = invSlot.texture;
       const itemMaxStackSize = invSlot.maxStackSize;
   
-      const slotEl = document.createElement('div');
-      slotEl.classList.add('slot');
-      slotEl.tabIndex = '0';
+      const slotEl = createElement('div', { class: 'slot', 'tabindex': '0' });
 
+      slotEl.addEventListener('mousedown', (e) => {
+        if(e.button === 2) {
   
-      slotEl.setAttribute('data-tooltip', `${translateKey(`${invSlot.props.isBlock ? 'block' : 'item'}.minecraft.${itemID}`) + ',minecraft:' + itemID}`);
+          if(selectedItem.Count < itemMaxStackSize) {
+            selectedItem.set(itemID, e.shiftKey ? itemMaxStackSize : selectedItem.getCount() + 1);
+            selectedItem.Damage = invSlot.maxDamage;
+          }
+  
+          drawFlyingItem(e);
+        } else if(e.button === 1) {
+          selectedItem.set(itemID, itemMaxStackSize);
+  
+          drawFlyingItem(e);
+        }
+      })  
+  
+      slotEl.addEventListener('click', (e) => {
+        if(selectedItem.Item === '') {
+          selectedItem.set(itemID, e.shiftKey ? itemMaxStackSize : 1);
+          selectedItem.Damage = invSlot.maxDamage;
+          drawFlyingItem(e);
+        } else if(selectedItem.Item !== '') {
+          selectedItem.reset();
+          removeFlyingItem();
+        }
+
+        slotEl.blur();
+      });
+
+      const img = document.createElement('img');
+      img.src = itemTexture;
+      slotEl.appendChild(img);
+  
+    /*   slotEl.setAttribute('data-tooltip', `${translateKey(`${invSlot.isBlock ? 'block' : 'item'}.minecraft.${itemID}`) + ',minecraft:' + itemID}`); */
   
       // console.log(langFiles[langFiles.findIndex(file => file[langFiles.id] === displayLang)]);
      /*  slotEl.addEventListener('mouseenter', () => {
@@ -685,7 +345,7 @@ function drawAllItems() {
         slotEl.blur();
       }); */
   
-      slotEl.addEventListener('keydown', (e) => {
+     /*  slotEl.addEventListener('keydown', (e) => {
   
         if(e.key === '1' || e.key === '2' || e.key === '3' || e.key === '4' || e.key === '5' || e.key === '6' || e.key === '7' || e.key === '8' || e.key === '9') {
   
@@ -724,843 +384,591 @@ function drawAllItems() {
           removeFlyingItem();
         }
       });
-  
-      const img = document.createElement('img');
-      img.src = itemTexture;
-      slotEl.appendChild(img);
-  
-      allItemsEl.appendChild(slotEl);
-      }
 
+      Slot.checkForCubeIcon(slotEl, null, invSlot) */
+
+     
   
+      document.getElementsByClassName('creative-scroll')[0].appendChild(slotEl);
+      last_known_scroll_position = 0;
+      document.getElementsByClassName('creative-scroll')[0].style.top = '0px';
+      }
     });
     } 
 
-  drawGroupItems('decorations');
-  drawGroupItems('redstone');
-  drawGroupItems('transportation');
-  drawGroupItems('misc');
-  drawGroupItems('foodstuffs');
-  drawGroupItems('tools');
-  drawGroupItems('equipment');
-  drawGroupItems('brewing');
+    if(itemGroup === 'all') {
+      drawGroupItems('building');
+      drawGroupItems('decorations');
+      drawGroupItems('redstone');
+      drawGroupItems('transportation');
+      drawGroupItems('misc');
+      drawGroupItems('foodstuffs');
+      drawGroupItems('tools');
+      drawGroupItems('equipment');
+      drawGroupItems('brewing');
+    } else {
+      drawGroupItems(itemGroup);
+    }
+    const a =(9 - (document.getElementsByClassName('creative-scroll')[0].children.length % 9))
+
+    for (let i = 0; i < a; i++) {
+      const slotEl1 = createElement('div', { class: 'slot', 'tabindex': '0' });
+      document.getElementsByClassName('creative-scroll')[0].appendChild(slotEl1);
+    }
+
+    const b = 45 - document.getElementsByClassName('creative-scroll')[0].children.length;
+
+    if(document.getElementsByClassName('creative-scroll')[0].children.length < 45) {
+      for(let i = 0; i < b; i++) {
+        const slotEl1 = createElement('div', { class: 'slot', 'tabindex': '0' });
+        Slot.deleteItem(slotEl1);
+        document.getElementsByClassName('creative-scroll')[0].appendChild(slotEl1);
+      }
+    }
 }
 
+/* Create HTML Element */
+function createElement(type, props, ...children) {
+  const element = document.createElement(type);
 
-function drawArmor() {
-  armorEl.innerHTML = '';
-
-  playerArmor.forEach(armorSlot => {
-    const regItem = RegistryItems[RegistryItems.findIndex(item => item.identifier === armorSlot.Item)];
-
-    const slotEl = document.createElement('div');
-    slotEl.classList.add('slot');
-
-    if(armorSlot.Item === '') {
-      slotEl.setAttribute('data-tooltip', 'empty');
-    } else {
-      slotEl.setAttribute('data-tooltip', `${translateKey(`${regItem.props.isBlock ? 'block' : 'item'}.minecraft.${armorSlot.Item}`)}${regItem.maxDamage !== -1 ? ',Durability: ' + armorSlot.Damage + '/' + regItem.maxDamage : ''}${',minecraft:' + armorSlot.Item}`);
-    }
-
-    Slot.addOne(slotEl, armorSlot);
-    Slot.pickStack(slotEl, armorSlot);
-    Slot.pickAll(slotEl, armorSlot);
-
-    /* slotEl.addEventListener('click', (e) => {
-      let canPlaceHere = true;
-      
-      if(armorSlot.Slot === 36) {
-        canPlaceHere = (
-          selectedItem.getItemID() === 'chainmail_helmet'
-          || selectedItem.getItemID() === 'diamond_helmet');
-      } else if(armorSlot.Slot === 37) {
-        canPlaceHere = (
-          selectedItem.getItemID() === 'chainmail_chestplate'
-          || selectedItem.getItemID() === 'diamond_chestplate');
-      } else if(armorSlot.Slot === 38) {
-        canPlaceHere = (
-          selectedItem.getItemID() === 'chainmail_leggings'
-          || selectedItem.getItemID() === 'diamond_leggings');
-      } else if(armorSlot.Slot === 39) {
-        canPlaceHere = (
-          selectedItem.getItemID() === 'chainmail_boots'
-          || selectedItem.getItemID() === 'diamond_boots'
-          || selectedItem.getItemID() === 'golden_boots');
-      }
-
-      if(selectedItem.getItemID() === '') {
-        if(e.shiftKey) {
-          selectedItem.set(armorSlot.Item, Math.round(armorSlot.Count / 2));
-          armorSlot.Count = armorSlot.Count - Math.round(armorSlot.Count / 2);
-        } else {
-          selectedItem.set(armorSlot.Item, armorSlot.Count);
-          armorSlot.Item = '';
-          armorSlot.Count = 0;
-
-          localStorage.setItem('playerHotbar', JSON.stringify(playerHotbar));
-        }
-        slotEl.setAttribute('data-tooltip', 'empty');
-
-        drawArmor();
-        drawFlyingItem(e);
-
-      } else if(selectedItem.getItemID() !== '' && canPlaceHere) {
-        if(armorSlot.Item === '') {
-          armorSlot.Item = selectedItem.getItemID();
-          armorSlot.Count = selectedItem.getCount();
-
-          selectedItem.reset();
-          drawArmor();
-          removeFlyingItem();
-
-          localStorage.setItem('playerHotbar', JSON.stringify(playerHotbar));
-        } else if(selectedItem.getItemID() === armorSlot.Item) {
-            if((armorSlot.Count + selectedItem.getCount()) <= regItem.maxStackSize) {
-              armorSlot.Count += selectedItem.getCount();
-              selectedItem.reset();
-              removeFlyingItem();
-
-              localStorage.setItem('playerHotbar', JSON.stringify(playerHotbar));
-            } else {
-              const amountAdded = regItem.maxStackSize - armorSlot.Count;
-
-              armorSlot.Count = regItem.maxStackSize;
-
-              selectedItem.set(selectedItem.getItemID(), amountAdded)
-              drawFlyingItem(e);
-
-              localStorage.setItem('playerHotbar', JSON.stringify(playerHotbar));
-            }
-
-
-          drawArmor();
-        } else {
-          const storeSelectedItem = {
-            Item: selectedItem.getItemID(),
-            Count: selectedItem.getCount()
-          }
-
-          const storearmorSlot = {
-            Item: armorSlot.Item,
-            Count: armorSlot.Count 
-          }
-
-          selectedItem.set(storearmorSlot.Item, storearmorSlot.Count);
-          armorSlot.Item = storeSelectedItem.Item;
-          armorSlot.Count = storeSelectedItem.Count;
-
-          drawFlyingItem(e);
-          drawArmor();
-
-        }
-      }
-
-    }); */
-
-    const img = document.createElement('img');
-
-    if(armorSlot.Item !== '') {
-     
-      img.src = regItem.texture;
-
-      if(regItem.isStackable) {
-        const stackSpan = document.createElement('span');
-        stackSpan.classList.add('stack-size');
-        stackSpan.innerText = armorSlot.Count !== 1 ? armorSlot.Count : '';
-        slotEl.appendChild(stackSpan);
-      }
-
-      if(regItem.maxDamage !== -1 && armorSlot.Damage < regItem.maxDamage) {
-        const durabilitybar = document.createElement('div');
-        const calcDurabilityPerc = (armorSlot.Damage / regItem.maxDamage) * 100;
-        durabilitybar.classList.add('durabilityBar');
-        durabilitybar.innerHTML = `
-          <div class="durabilityBarInside" style="width: ${calcDurabilityPerc}%; background: ${checkForDurabilityColor(calcDurabilityPerc)}"></div>
-        `;
-        slotEl.appendChild(durabilitybar)
-      }
-    }
-    
-    else if(armorSlot.Slot === 36) img.src = 'assets/minecraft/textures/item/empty_armor_slot_helmet.png';
-    else if(armorSlot.Slot === 37) img.src = 'assets/minecraft/textures/item/empty_armor_slot_chestplate.png';
-    else if(armorSlot.Slot === 38) img.src = 'assets/minecraft/textures/item/empty_armor_slot_leggings.png';
-    else if(armorSlot.Slot === 39) img.src = 'assets/minecraft/textures/item/empty_armor_slot_boots.png';
-
-    slotEl.appendChild(img);
-    armorEl.appendChild(slotEl);
-
-    });
-
-   
-  }
-
-
-  function drawOffHand() {
-     offHandEl.innerHTML = '';
-  
-    playerOffHand.forEach(offhandSlot => {
-      const regItem = RegistryItems[RegistryItems.findIndex(item => item.identifier === offhandSlot.Item)];
-  
-      const slotEl = document.createElement('div');
-      slotEl.classList.add('slot');
-  
-      if(offhandSlot.Item === '') {
-        slotEl.setAttribute('data-tooltip', 'empty');
-      } else {
-        slotEl.setAttribute('data-tooltip', `${translateKey(`${regItem.props.isBlock ? 'block' : 'item'}.minecraft.${offhandSlot.Item}`)}${regItem.maxDamage !== -1 ? ',Durability: ' + offhandSlot.Damage + '/' + regItem.maxDamage : ''}${',minecraft:' + offhandSlot.Item}`);
-      }
-  
-      Slot.addOne(slotEl, offhandSlot);
-      Slot.pickStack(slotEl, offhandSlot);
-      Slot.pickAll(slotEl, offhandSlot);
-  
-      const img = document.createElement('img');
-  
-      if(offhandSlot.Item !== '') {
-       
-        img.src = regItem.texture;
-  
-        if(regItem.isStackable) {
-          const stackSpan = document.createElement('span');
-          stackSpan.classList.add('stack-size');
-          stackSpan.innerText = offhandSlot.Count !== 1 ? offhandSlot.Count : '';
-          slotEl.appendChild(stackSpan);
-        }
-
-        if(regItem.maxDamage !== -1 && offhandSlot.Damage < regItem.maxDamage) {
-          const durabilitybar = document.createElement('div');
-          const calcDurabilityPerc = (offhandSlot.Damage / regItem.maxDamage) * 100;
-          durabilitybar.classList.add('durabilityBar');
-          durabilitybar.innerHTML = `
-            <div class="durabilityBarInside" style="width: ${calcDurabilityPerc}%; background: ${checkForDurabilityColor(calcDurabilityPerc)}"></div>
-          `;
-          slotEl.appendChild(durabilitybar)
-        }
-      }
-      
-      else img.src = 'assets/minecraft/textures/item/empty_armor_slot_shield.png';
-  
-      slotEl.appendChild(img);
-      offHandEl.appendChild(slotEl);
-  
-      });
-  
-     
-    }
-
-function drawInv() {
-  inventoryEl.innerHTML = '';
-
-  playerInv.forEach(invSlot => {
-    const regItem = RegistryItems.find(item => item.identifier === invSlot.Item);
-
-    const slotEl = document.createElement('div');
-    slotEl.classList.add('slot');
-
-    if(invSlot.Item === '') {
-      slotEl.setAttribute('data-tooltip', 'empty');
-    } else {
-      slotEl.setAttribute('data-tooltip', `${translateKey(`${regItem.props.isBlock ? 'block' : 'item'}.minecraft.${invSlot.Item}`)}${regItem.maxDamage !== -1 ? ',Durability: ' + invSlot.Damage + '/' + regItem.maxDamage : ''}${',minecraft:' + invSlot.Item}`);
-    }
-
-    Slot.addOne(slotEl, invSlot);
-    Slot.pickStack(slotEl, invSlot);
-    Slot.pickAll(slotEl, invSlot);
-
-    if(invSlot.Item !== '') {
-      const img = document.createElement('img');
-      img.src = regItem.texture;
-      slotEl.appendChild(img);
-
-      if(regItem.isStackable) {
-        const stackSpan = document.createElement('span');
-        stackSpan.classList.add('stack-size');
-        stackSpan.innerText = invSlot.Count !== 1 ? invSlot.Count : '';
-        slotEl.appendChild(stackSpan);
-      }
-
-      if(regItem.maxDamage !== -1 && invSlot.Damage < regItem.maxDamage) {
-        const durabilitybar = document.createElement('div');
-        const calcDurabilityPerc = (invSlot.Damage / regItem.maxDamage) * 100;
-        durabilitybar.classList.add('durabilityBar');
-        durabilitybar.innerHTML = `
-          <div class="durabilityBarInside" style="width: ${calcDurabilityPerc}%; background: ${checkForDurabilityColor(calcDurabilityPerc)}"></div>
-        `;
-        slotEl.appendChild(durabilitybar)
-      }
-    } else slotEl.innerHTML = '';
-
-    inventoryEl.appendChild(slotEl);
+  Object.entries(props).forEach(([key, value]) => {
+    element.setAttribute(key, value);
   })
+
+  children.forEach(child => typeof child === 'string'
+    ? element.appendChild(document.createTextNode(child))
+    : element.appendChild(child)
+  )
+
+  return element;
 }
 
-
-function drawHotbar() {
-  hotbarEl.innerHTML = '';
-
-  playerHotbar.forEach(hotbarSlot => {
-    const regItem = RegistryItems.find(item => item.identifier === hotbarSlot.Item);
-
-    const slotEl = document.createElement('div');
-    slotEl.classList.add('slot');
-
-    if(hotbarSlot.Item === '') {
-      slotEl.setAttribute('data-tooltip', 'empty');
-    } else {
-      slotEl.setAttribute('data-tooltip', `${translateKey(`${regItem.props.isBlock ? 'block' : 'item'}.minecraft.${hotbarSlot.Item}`)}${regItem.maxDamage !== -1 ? ',Durability: ' + hotbarSlot.Damage + '/' + regItem.maxDamage : ''}${',minecraft:' + hotbarSlot.Item}`);
-    }
-
-    Slot.addOne(slotEl, hotbarSlot);
-    Slot.pickStack(slotEl, hotbarSlot);
-    Slot.pickAll(slotEl, hotbarSlot);
-
-    if(hotbarSlot.Item !== '') {
-      const img = document.createElement('img');
-      img.src = regItem.texture;
-
-      if(regItem.isStackable) {
-        const stackSpan = document.createElement('span');
-        stackSpan.classList.add('stack-size');
-        stackSpan.innerText = hotbarSlot.Count !== 1 ? hotbarSlot.Count : '';
-        slotEl.appendChild(stackSpan);
-      }
-
-      if(regItem.maxDamage !== -1 && hotbarSlot.Damage < regItem.maxDamage) {
-        const durabilitybar = document.createElement('div');
-        durabilitybar.classList.add('durabilityBar');
-        const calcDurabilityPerc = (hotbarSlot.Damage / regItem.maxDamage) * 100;
-
-        durabilitybar.innerHTML = `
-          <div class="durabilityBarInside" style="width: ${calcDurabilityPerc}%; background: ${checkForDurabilityColor(calcDurabilityPerc)}"></div>
-        `;
-        slotEl.appendChild(durabilitybar)
-      }
-
-      slotEl.appendChild(img);
-    } else slotEl.innerHTML = '';
-
-    hotbarEl.appendChild(slotEl);
-  })
-}
-
-function drawCraftingGrid() {
-  craftinggridEl.innerHTML = '';
-
-  craftingGrid.forEach(craftingSlot => {
-    const regItem = RegistryItems[RegistryItems.findIndex(item => item.identifier === craftingSlot.Item)];
-
-    
-    const slotEl = document.createElement('div');
-    slotEl.classList.add('slot');
-
-    if(craftingSlot.Item === '') {
-      slotEl.setAttribute('data-tooltip', 'empty');
-    } else {
-      slotEl.setAttribute('data-tooltip', translateKey(`${regItem.props.isBlock ? 'block' : 'item'}.minecraft.${craftingSlot.Item}`));
-    }
-
-    slotEl.addEventListener('mousedown', (e) => {
-      if(e.button === 2 && selectedItem.getCount() > 0) {
-        craftingSlot.Item = selectedItem.getItemID();
-        craftingSlot.Count++;
-
-        selectedItem.set(selectedItem.Item, selectedItem.getCount() - 1);
-
-        checkForRecipes();
-        drawResultSlotGrid();
-        drawCraftingGrid();
-        drawFlyingItem(e);
-      }
-    })
-
-    function checkForRecipes() {
-
-      for(let i = 0; i < recipesFiles.length; i++) {
-        const recipe = recipesFiles[i];
-
-        if(recipe['type'] && recipe['type'] === 'crafting_shapeless') {
-          let filteredCraftingGrid = craftingGrid.filter(a => a.Item !== '');
-
-          let reMadeRecipeGrid = [];
-          let reMadeCraftingGrid = [];
-          filteredCraftingGrid.forEach(slot => reMadeCraftingGrid.push(slot.Item));
-          recipe.ingredients.sort().forEach(slot => reMadeRecipeGrid.push(slot.item));
-
-          let recipeGridSorted = reMadeRecipeGrid.sort();  
-          let craftingGridGridSorted = reMadeCraftingGrid.sort();  
-
-          let goes = true;
-
-          for(let i = 0; i < recipeGridSorted.length; i++) {
-            if(recipeGridSorted[i] !== craftingGridGridSorted[i]) {
-              goes = false;
-              continue;
-            }
-          }
-
-          if(goes) {
-            resultSlotGrid.Item = recipe.result.item;
-            resultSlotGrid.Count = recipe.result.count;
-            drawResultSlotGrid();
-
-            break;
-
-          } else {
-            
-            resultSlotGrid.Item = '';
-            resultSlotGrid.Count = 0;
-            drawResultSlotGrid();
-          }
-
-         /*  if(recipe.grid.sort() === reMadeCraftingGrid.sort()) {
-            resultSlotGrid.Item = recipe.result;
-            resultSlotGrid.Count = recipe.count;
-            drawResultSlotGrid();
-
-          } else {
-            resultSlotGrid.Item = '';
-            resultSlotGrid.Count = 0;
-            drawResultSlotGrid();
-          } */
-
-        } else if(craftingGrid[0].Item === recipe.grid[0] && craftingGrid[1].Item === recipe.grid[1] && craftingGrid[2].Item === recipe.grid[2] &&
-          craftingGrid[3].Item === recipe.grid[3] && craftingGrid[4].Item === recipe.grid[4] && craftingGrid[5].Item === recipe.grid[5] &&
-          craftingGrid[6].Item === recipe.grid[6] && craftingGrid[7].Item === recipe.grid[7] && craftingGrid[8].Item === recipe.grid[8]) {
-            resultSlotGrid.Item = recipe.result;
-            resultSlotGrid.Count = recipe.count;
-
-            drawResultSlotGrid();
-            break;
-          } else {
-            resultSlotGrid.Item = '';
-            resultSlotGrid.Count = 0;
-            drawResultSlotGrid();
-          }
-      }
-    }
-
-    checkForRecipes();
-
-    slotEl.addEventListener('click', (e) => {
-      checkForRecipes()
-      if(selectedItem.getItemID() === '') {
-        if(e.shiftKey) {
-          selectedItem.set(craftingSlot.Item, Math.round(craftingSlot.Count / 2));
-          craftingSlot.Count = craftingSlot.Count - Math.round(craftingSlot.Count / 2);
-        } else {
-          selectedItem.set(craftingSlot.Item, craftingSlot.Count);
-          craftingSlot.Item = '';
-          craftingSlot.Damage = -1;
-          craftingSlot.Count = 0;
-
-          localStorage.setItem('playerHotbar', JSON.stringify(playerHotbar));
-        }
-        slotEl.setAttribute('data-tooltip', 'empty');
-
-        drawCraftingGrid();
-        drawFlyingItem(e);
-        checkForRecipes();
-
-      } else if(selectedItem.getItemID() !== '') {
-        if(craftingSlot.Item === '') {
-          craftingSlot.Item = selectedItem.getItemID();
-          craftingSlot.Damage = selectedItem.Damage;
-          craftingSlot.Count = selectedItem.getCount();
-
-          selectedItem.reset();
-
-          drawCraftingGrid();
-          removeFlyingItem();
-          checkForRecipes();
-
-          localStorage.setItem('playerHotbar', JSON.stringify(playerHotbar));
-        } else if(selectedItem.getItemID() === craftingSlot.Item) {
-            if((craftingSlot.Count + selectedItem.getCount()) <= regItem.maxStackSize) {
-              craftingSlot.Count += selectedItem.getCount();
-              selectedItem.reset();
-              removeFlyingItem();
-
-              localStorage.setItem('playerHotbar', JSON.stringify(playerHotbar));
-            } else {
-              const amountAdded = regItem.maxStackSize - craftingSlot.Count;
-
-              craftingSlot.Count = regItem.maxStackSize;
-
-              selectedItem.set(selectedItem.getItemID(), amountAdded)
-              drawFlyingItem(e);
-
-              localStorage.setItem('playerHotbar', JSON.stringify(playerHotbar));
-            }
-
-
-          drawCraftingGrid();
-          checkForRecipes();
-        } else {
-          const storeSelectedItem = {
-            Item: selectedItem.getItemID(),
-            Count: selectedItem.getCount()
-          }
-
-          const storecraftingSlot = {
-            Item: craftingSlot.Item,
-            Count: craftingSlot.Count 
-          }
-
-          selectedItem.set(storecraftingSlot.Item, storecraftingSlot.Count);
-          craftingSlot.Item = storeSelectedItem.Item;
-          craftingSlot.Count = storeSelectedItem.Count;
-
-
-          drawFlyingItem(e);
-          drawCraftingGrid();
-          checkForRecipes();
-        }
-      }});
-
-
-
-    if(craftingSlot.Item !== '') {
-      const img = document.createElement('img');
-      img.src = regItem.texture;
-
-      if(regItem.isStackable) {
-        const stackSpan = document.createElement('span');
-        stackSpan.classList.add('stack-size');
-        stackSpan.innerText = craftingSlot.Count !== 1 ? craftingSlot.Count : '';
-        slotEl.appendChild(stackSpan);
-      }
-
-      if(regItem.maxDamage !== -1 && craftingSlot.Damage < regItem.maxDamage) {
-        const durabilitybar = document.createElement('div');
-        durabilitybar.classList.add('durabilityBar');
-        const calcDurabilityPerc = (craftingSlot.Damage / regItem.maxDamage) * 100;
-
-        durabilitybar.innerHTML = `
-          <div class="durabilityBarInside" style="width: ${calcDurabilityPerc}%; background: ${checkForDurabilityColor(calcDurabilityPerc)}"></div>
-        `;
-        slotEl.appendChild(durabilitybar)
-      }
-
-      slotEl.appendChild(img);
-    } else slotEl.innerHTML = '';
-
-    craftinggridEl.appendChild(slotEl);
-  })
-}
-
-function drawResultSlotGrid() {
-  document.getElementById('resultSlot').innerHTML = '';
-  const resultSlot = document.createElement('div');
-  resultSlot.classList.add('slot');
-  resultSlot.style.width = `${26 * guiScale}px`;
-  resultSlot.style.height = `${26 * guiScale}px`;
-
-  if(resultSlotGrid.Item === '') {
-    resultSlot.setAttribute('data-tooltip', 'empty');
-  } else {
-    resultSlot.setAttribute('data-tooltip', translateKey(`item.minecraft.${resultSlotGrid.Item}`));
-  }
-
-  resultSlot.addEventListener('click', (e) => {
-    if(resultSlotGrid.Item !== '') {
-      if(selectedItem.getCount() === 0) {
-        selectedItem.set(resultSlotGrid.Item, resultSlotGrid.Count);
-      } else if(selectedItem.getCount() <= (64 - resultSlotGrid.Count)) {
-        selectedItem.set(resultSlotGrid.Item, selectedItem.getCount() + resultSlotGrid.Count);
-      } 
-
-      
-   
-
-      // craftingGrid.forEach(gridItem => {
-      //   gridItem.Item = '';
-      //   gridItem.Count = 0;
-      // })
-
-      if(selectedItem.getCount() !== 64) {
-        craftingGrid.forEach(craftingSlot => {
-          if(craftingSlot.Count > 1) {
-            craftingSlot.Count--;
-          } else {
-            craftingSlot.Item = '';
-            craftingSlot.Count = '';
-            resultSlotGrid.Item = '';
-            resultSlotGrid.Count = 0;
-          }
-        });
-      }
-
-
-      drawCraftingGrid();
-      drawResultSlotGrid();
-      drawFlyingItem(e);
-
-    }
+/* Canvas Img */
+const createImg = (txr, x, y, w, h, baseW, baseH) => {
+  const canvas = document.createElement('canvas');
+  canvas.className = 'canvas-as-img';
+  const ctx = canvas.getContext('2d');
+
+  canvas.width = w * guiScale;
+  canvas.height = h * guiScale;
+
+  const image = new Image(baseW, baseH);
+  image.src = txr;
+
+  image.addEventListener('load', (e) => {
+    ctx.imageSmoothingEnabled = false;
+    ctx.webkitImageSmoothingEnabled = false;
+  
+    ctx.drawImage(e.target, -(x * guiScale), -(y * guiScale), e.target.width * guiScale, e.target.height * guiScale);
   });
-  
 
-  if(resultSlotGrid.Count !== 0) {
-    const img = document.createElement('img');
+  return canvas;
+};
 
-    const regItem = RegistryItems[RegistryItems.findIndex(item => item.identifier === resultSlotGrid.Item)];
-    img.src = regItem.texture;
+const newCreateImg = (txrId, x, y, w, h, baseW, baseH) => {
+  const canvas = document.createElement('canvas');
+  canvas.className = 'canvas-as-img';
+  const ctx = canvas.getContext('2d');
 
-    if(regItem.isStackable) {
-      const stackSpan = document.createElement('span');
-      stackSpan.classList.add('stack-size');
-      stackSpan.innerText = resultSlotGrid.Count !== 1 ? resultSlotGrid.Count : '';
-      resultSlot.appendChild(stackSpan);
-    }
+  canvas.width = w * guiScale;
+  canvas.height = h * guiScale;
 
-    resultSlot.appendChild(img);
+  const image = document.getElementById(txrId);
 
+  ctx.imageSmoothingEnabled = false;
+  ctx.webkitImageSmoothingEnabled = false;
 
-  } else resultSlot.innerHTML = '';
+  ctx.drawImage(image, -(x * guiScale), -(y * guiScale), baseW * guiScale, baseH * guiScale);
 
-  document.getElementById('resultSlot').appendChild(resultSlot);
-}
+  return canvas;
+};
 
-document.getElementById('clearInvsBtn').addEventListener('click', () => Slot.clearAllInventories())
+const dirtBackground = () => {
+  const canvas = document.createElement('canvas');
+  canvas.style.transform = 'scale(' + 1.45 * guiScale + ')';
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  canvas.className = 'canvas-as-img';
+  const ctx = canvas.getContext('2d');
 
-function drawFurnaceGrid() {
-  furnaceinputEl.innerHTML = '';
-  furnacefuelEl.innerHTML = '';
-  furnaceoutputEl.innerHTML = '';
+  let img = new Image(16, 16);
 
-  const inputSlot = document.createElement('div'); inputSlot.classList.add('slot');
-  const fueltSlot = document.createElement('div'); fueltSlot.classList.add('slot');
-  const outputSlot = document.createElement('div'); outputSlot.classList.add('slot');
-
- /*  slotEl.addEventListener('click', (e) => {
-    if(selectedItem.getItemID() === '') {
-      if(e.shiftKey) {
-        selectedItem.set(furnaceGrid[0].Item, Math.round(furnaceGrid[0].Count / 2));
-        furnaceGrid[0].Count = furnaceGrid[0].Count - Math.round(furnaceGrid[0].Count / 2);
-      } else {
-        selectedItem.set(furnaceGrid[0].Item, furnaceGrid[0].Count);
-        furnaceGrid[0].Item = '';
-        furnaceGrid[0].Count = 0;
-
-        localStorage.setItem('playerHotbar', JSON.stringify(playerHotbar));
-      }
-
-      drawFurnaceGrid();
-      drawFlyingItem(e);
-
-    } else if(selectedItem.getItemID() !== '') {
-      if(furnaceGrid[0].Item === '') {
-        furnaceGrid[0].Item = selectedItem.getItemID();
-        furnaceGrid[0].Count = selectedItem.getCount();
-
-        selectedItem.reset();
-        drawFurnaceGrid();
-        removeFlyingItem();
-
-        localStorage.setItem('playerHotbar', JSON.stringify(playerHotbar));
-      } else if(selectedItem.getItemID() === furnaceGrid[0].Item) {
-          if((furnaceGrid[0].Count + selectedItem.getCount()) <= regItem.maxStackSize) {
-            furnaceGrid[0].Count += selectedItem.getCount();
-            selectedItem.reset();
-            removeFlyingItem();
-
-            localStorage.setItem('playerHotbar', JSON.stringify(playerHotbar));
-          } else {
-            const amountAdded = regItem.maxStackSize - furnaceGrid[0].Count;
-
-            furnaceGrid[0].Count = regItem.maxStackSize;
-
-            selectedItem.set(selectedItem.getItemID(), amountAdded)
-            drawFlyingItem(e);
-
-            localStorage.setItem('playerHotbar', JSON.stringify(playerHotbar));
-          }
-
-
-          drawFurnaceGrid();
-      }
-    }}); */
-  
-  if(furnaceGrid[0].Count !== 0) {
-    const img = document.createElement('img');
-
-    const regItem = RegistryItems[RegistryItems.findIndex(item => item.identifier === furnaceGrid[0].Item)];
-    img.src = 'assets/minecraft/textures/item/diamond_sword.png';
-
-    if(false) {
-      const stackSpan = document.createElement('span');
-      stackSpan.classList.add('stack-size');
-      stackSpan.innerText = furnaceGrid[0].Count !== 1 ? furnaceGrid[0].Count : '';
-      resultSlot.appendChild(stackSpan);
-    }
-
-    inputSlot.appendChild(img);
-
-
-  } else inputSlot.innerHTML = '';
-
-  if(furnaceGrid[1].Count !== 0) {
-    const img = document.createElement('img');
-
-    const regItem = RegistryItems[RegistryItems.findIndex(item => item.identifier === furnaceGrid[1].Item)];
-    img.src = 'assets/minecraft/textures/item/diamond_sword.png';
-
-    if(false) {
-      const stackSpan = document.createElement('span');
-      stackSpan.classList.add('stack-size');
-      stackSpan.innerText = craftingSlot.Count !== 1 ? craftingSlot.Count : '';
-      resultSlot.appendChild(stackSpan);
-    }
-
-    fueltSlot.appendChild(img);
-
-
-  } else inputSlot.innerHTML = '';
-
-  if(furnaceGrid[2].Count !== 0) {
-    const img = document.createElement('img');
-
-    const regItem = RegistryItems[RegistryItems.findIndex(item => item.identifier === furnaceGrid[2].Item)];
-    img.src = 'assets/minecraft/textures/item/diamond_sword.png';
-
-    if(false) {
-      const stackSpan = document.createElement('span');
-      stackSpan.classList.add('stack-size');
-      stackSpan.innerText = craftingSlot.Count !== 1 ? craftingSlot.Count : '';
-      resultSlot.appendChild(stackSpan);
-    }
-
-    outputSlot.appendChild(img);
-
-
-  } else inputSlot.innerHTML = '';
-
-  furnaceinputEl.appendChild(inputSlot);
-  furnacefuelEl.appendChild(fueltSlot);
-  furnaceoutputEl.appendChild(outputSlot);
-}
-
-document.getElementById('langSelection').addEventListener('change', (e) => {
-  displayLang = document.getElementById('langSelection').value;
-
-  Slot.redrawInventories();
-
-});
-
-document.getElementById('useItemBtn').addEventListener('click', () => {
-
-  if(playerHotbar[0] !== -1) {
-    if(playerHotbar[0].Damage >= 2) {
-      playerHotbar[0].Damage--;
-    } else if(playerHotbar[0].Damage === 1) {
-      playerHotbar[0].Item = '';
-      playerHotbar[0].Damage = -1;
-      playerHotbar[0].Count = 0;
-    }
+  img.src = 'assets/minecraft/textures/gui/options_background.png';
+  img.onload = function(){
+    // create pattern
+    var ptrn = ctx.createPattern(img, 'repeat'); // Create a pattern with this image, and set it to "repeat".
+    ctx.fillStyle = ptrn;
+    ctx.filter = 'brightness(50%)'
+    ctx.fillRect(0, 0, canvas.width, canvas.height); // context.fillRect(x, y, width, height);
   }
+
+  return canvas;
+}
+
+const createPlayerHeartBgIcon = () => {
+  const canvas = document.createElement('canvas');
+  canvas.className = 'canvas-as-img heart-bg';
+  const ctx = canvas.getContext('2d');
+
+  canvas.width = 9 * guiScale;
+  canvas.height = 9 * guiScale;
+
+  const image = document.getElementById('icons-txr');
+
+  ctx.imageSmoothingEnabled = false;
+  ctx.webkitImageSmoothingEnabled = false;
   
+  ctx.drawImage(image, -(16 * guiScale), 0, 256 * guiScale, 256 * guiScale);
 
-  Slot.redrawInventories();
-})
+  return canvas;
+};
 
-document.getElementById('showAdvancedTooltipBtn').addEventListener('click', () => {
-  if(!advancedTooltip) {
-    document.getElementById('showAdvancedTooltipBtn').innerText = 'Advanced Tooltips: ON';
-    advancedTooltip = true;
+const createPlayerHeartIcon = () => {
+  const canvas = document.createElement('canvas');
+  canvas.className = 'canvas-as-img heart-bg';
+  const ctx = canvas.getContext('2d');
+
+  canvas.width = 9 * guiScale;
+  canvas.height = 9 * guiScale;
+
+  const image = document.getElementById('icons-txr');
+
+  
+  ctx.imageSmoothingEnabled = false;
+  ctx.webkitImageSmoothingEnabled = false;
+
+  ctx.drawImage(image, -(52 * guiScale), 0, 256 * guiScale, 256 * guiScale);
+
+
+  return canvas;
+};
+
+const createPlayerHeartHalfIcon = () => {
+  const canvas = document.createElement('canvas');
+  canvas.className = 'canvas-as-img heart-bg';
+  const ctx = canvas.getContext('2d');
+
+  canvas.width = 9 * guiScale;
+  canvas.height = 9 * guiScale;
+
+  const image = document.getElementById('icons-txr');
+
+  ctx.imageSmoothingEnabled = false;
+  ctx.webkitImageSmoothingEnabled = false;
+
+  ctx.drawImage(image, -(61 * guiScale), 0, 256 * guiScale, 256 * guiScale);
+
+  return canvas;
+};
+
+
+const createPlayerHeartBg = () => {
+  const div = document.getElementsByClassName('hearts-bg')[0];
+  const diva = document.createElement('div');
+
+  div.innerHTML = '';
+  diva.innerHTML = '';
+  diva.className = 'hearts';
+
+  diva.style.width = (9 * 1) * guiScale;
+  diva.style.height = 9 * guiScale;
+
+  for (let i = 0; i < 10; i++) {
+    div.appendChild(createPlayerHeartBgIcon());
+  }
+
+  if((playerHealth / 2) % 1 !== 0) {
+    for (let i = 0; i < Math.floor(playerHealth / 2); i++) {
+      diva.appendChild(createPlayerHeartIcon());
+    }
+
+    diva.appendChild(createPlayerHeartHalfIcon());
   } else {
-    document.getElementById('showAdvancedTooltipBtn').innerText = 'Advanced Tooltips: OFF';
-    advancedTooltip = false;
+    for (let i = 0; i < playerHealth / 2; i++) {
+      diva.appendChild(createPlayerHeartIcon());
+    }
   }
+  
 
-  Slot.redrawInventories();
-});
+  div.appendChild(diva)
+  return div;
+};
 
-async function initMinecraft() {
-  document.getElementById('loadingPanel').style.display = 'block';
 
-  recipesFiles = await getAllFiles('./recipes.json');
-  lootTableFiles = await getAllFiles('./loot_tables.json');
-  langFiles = await getAllFiles('./languages.json');
-  tagFiles = await getAllFiles('./tags.json');
-  dummy = await getAllFiles('./dummy.json');
+/* Sounds */
+function playSound() {
+  const sound = new Audio('assets/minecraft/sounds/click_stereo.ogg');
+  sound.volume = 0.1;
+  sound.play();
+  sound.onended = () => {
+    sound.pause();
+  }
+}
 
-  Slot.redrawInventories();
-  document.getElementById('loadingPanel').style.opacity = '0';
-  document.getElementById('loadingBarInside').style.width = '100%';
-  setTimeout(() => {
-    document.getElementById('loadingPanel').style.display = 'none';
+function newPlaySound(url) {
+  const sound = new Audio(url);
+  sound.volume = 0.1;
+  sound.play();
+  sound.onended = () => {
+    sound.pause();
+  }
+}
 
-  }, 1001);
+/* Screens */
+function mainMenu() {
+  root.innerHTML = '';
+  document.title = 'Minecraft JS - Main Menu';
 
+  root.appendChild(
+    createElement('div', { id: "screen" }, 
+      createElement('button', { class: 'btn top-right', onclick: 'takeDamage()' }, 
+          createElement('div', { class: 'div-for-el-canvas-img' }, 
+            newCreateImg('widgets-txr', 0, 66, 200, 20, 256, 256)
+          ),
+          'Simulate Take Damage'
+        ),
+      createElement('div', { class: 'wrapper' }, 
+        createElement('button', { class: 'btn', onclick: 'openCreativeInventory()' }, 
+          createElement('div', { class: 'div-for-el-canvas-img' }, 
+            newCreateImg('widgets-txr', 0, 66, 200, 20, 256, 256)
+          ),
+          'Creative Inventory'
+        ),
+        createElement('button', { class: 'btn', onclick: 'openInventory()' }, 
+          createElement('div', { class: 'div-for-el-canvas-img' }, 
+            newCreateImg('widgets-txr', 0, 66, 200, 20, 256, 256)
+          ),
+          'Survival Inventory'
+        ),
+        createElement('button', { class: 'btn', onclick: 'openChest()' },
+          createElement('div', { class: 'div-for-el-canvas-img' }, 
+            newCreateImg('widgets-txr', 0, 66, 200, 20, 256, 256)
+          ),
+         'Chest'
+        ),
+        createElement('button', { class: 'btn', onclick: 'openCraftingTable()' },
+          createElement('div', { class: 'div-for-el-canvas-img' }, 
+            newCreateImg('widgets-txr', 0, 66, 200, 20, 256, 256)
+          ),
+          'Crafting Table'
+        ),
+        createElement('button', { class: 'btn', onclick: 'openSettings()' },
+          createElement('div', { class: 'div-for-el-canvas-img' }, 
+            newCreateImg('widgets-txr', 0, 66, 200, 20, 256, 256)
+          ),
+          'Settings'
+        )
+      ),
+      createElement('div', { class: 'hearts-bg' }),
+      createElement('div', { class: 'div-for-el-canvas-img hotbar' }, 
+          newCreateImg('widgets-txr', 0, 0, 182, 22, 256, 256)
+        ),
+      createElement('div', { class: 'player-hotbar bottom' }
+        
+      )
+      
+    )
+  )
+  createPlayerHeartBg(),
+
+  drawInv(document.getElementsByClassName('player-hotbar')[0], playerHotbar);
+}
+
+function takeDamage() {
+  const hitnum = Math.ceil(Math.random() * 3);
+
+  newPlaySound(`assets/minecraft/sounds/damage/hit${hitnum}.ogg`)
+
+  if(playerHealth - 1 === 0) {
+    playerHealth = 20;
+  } else {
+    playerHealth--;
+  }
+  createPlayerHeartBg()
+  
+}
+
+function openSettings() {
+  root.innerHTML = '';
+  document.title = 'Minecraft JS - Settings';
+
+  root.appendChild(
+    createElement('div', { id: "screen" }, 
+      createElement('div', { class: 'div-for-el-canvas-img' }, 
+        dirtBackground()
+      )
+    )
+  )
+}
+
+function drawtabSurvivalnv() {
+  document.getElementsByClassName('creative-inventory-container')[0].innerHTML = '';
+  const a = createElement('div', { class: 'div-for-el-canvas-img' }, 
+    createImg('assets/minecraft/textures/gui/container/creative_inventory/tab_inventory.png', 0, 0, 195, 136, 256, 256)
+  );
+  playSound();
+
+  document.getElementsByClassName('creative-inventory-container')[0].appendChild(a);
+  document.getElementsByClassName('creative-inventory-container')[0].appendChild(createElement('div', { class: 'player-inventory creative-hotbar' }))
+  document.getElementsByClassName('creative-inventory-container')[0].appendChild( createElement('div', { class: 'player-hotbar creative-hotbar' }))
+
+  const b = createElement('div', { class: 'slot', style: 'position: absolute; bottom: calc(7px * var(--guiScale)); right: calc(5px * var(--guiScale));', onclick: 'Slot.deleteItem(this)' });
+  document.getElementsByClassName('creative-inventory-container')[0].appendChild(b);
+  drawInv(document.getElementsByClassName('player-inventory')[0], playerInventory)
+  drawInv(document.getElementsByClassName('player-hotbar')[0], playerHotbar)
+}
+
+function openCreativeInventory() {
+  playSound();
+  root.innerHTML = '';
+  document.title = 'Minecraft JS - Creative Inventory';
+
+  root.appendChild(
+    createElement('div', { id: "screen" },
+      createElement('div', { class: 'creative-tab-panels' }, 
+        createElement('button', { class: 'btn-tab-creative-inv tab-top', onclick: 'drawAllItems("building")' }, 
+          createElement('div', { class: 'div-for-el-canvas-img' }, 
+            createImg('assets/minecraft/textures/gui/container/creative_inventory/tabs.png', 0, 0, 28, 32, 256, 256)
+          ),
+          'B'
+        ),
+        createElement('div', { style: 'width: calc(1px * var(--guiScale));' }),
+        createElement('button', { class: 'btn-tab-creative-inv tab-top', onclick: 'drawAllItems("decorations")' },
+          createElement('div', { class: 'div-for-el-canvas-img' }, 
+            createImg('assets/minecraft/textures/gui/container/creative_inventory/tabs.png', 0, 0, 28, 32, 256, 256)
+          ),
+          'D'
+        ),
+        createElement('div', { style: 'width: calc(1px * var(--guiScale));' }),
+        createElement('button', { class: 'btn-tab-creative-inv tab-top', onclick: 'drawAllItems("redstone")' },
+          createElement('div', { class: 'div-for-el-canvas-img' }, 
+            createImg('assets/minecraft/textures/gui/container/creative_inventory/tabs.png', 0, 0, 28, 32, 256, 256)
+          ),
+          'R'
+        ),
+        createElement('div', { style: 'width: calc(1px * var(--guiScale));' }),
+        createElement('button', { class: 'btn-tab-creative-inv tab-top', onclick: 'drawAllItems("transportation")' },
+          createElement('div', { class: 'div-for-el-canvas-img' }, 
+            createImg('assets/minecraft/textures/gui/container/creative_inventory/tabs.png', 0, 0, 28, 32, 256, 256)
+          ),
+          'T'
+        ),
+        createElement('div', { style: 'width: calc(52px * var(--guiScale));' }),
+        createElement('button', { class: 'btn-tab-creative-inv tab-top', onclick: 'drawAllItems("all")' },
+          createElement('div', { class: 'div-for-el-canvas-img' }, 
+            createImg('assets/minecraft/textures/gui/container/creative_inventory/tabs.png', 0, 0, 28, 32, 256, 256)
+          ),
+          'S'
+        ),
+      ),
+      createElement('div', { class: 'creative-inventory-container' },
+        createElement('div', { class: 'div-for-el-canvas-img' }, 
+          newCreateImg('creative-inv-items-txr', 0, 0, 195, 136, 256, 256)
+        ),
+        createElement('div', { class: 'creative-items' },
+          createElement('div', { class: 'creative-scroll' })
+        ),
+        createElement('div', { class: 'player-hotbar creative-hotbar' })
+      ),
+      createElement('div', { class: 'creative-tab-panels' }, 
+        createElement('button', { class: 'btn-tab-creative-inv', onclick: 'drawAllItems("misc")' },
+          createElement('div', { class: 'div-for-el-canvas-img' }, 
+            createImg('assets/minecraft/textures/gui/container/creative_inventory/tabs.png', 0, 64, 28, 32, 256, 256)
+          ),
+          'M'
+        ),
+        createElement('button', { class: 'btn-tab-creative-inv', onclick: 'drawAllItems("foodstuffs")' },
+          createElement('div', { class: 'div-for-el-canvas-img' }, 
+            createImg('assets/minecraft/textures/gui/container/creative_inventory/tabs.png', 0, 64, 28, 32, 256, 256)
+          ),
+          'F'
+        ),
+        createElement('button', { class: 'btn-tab-creative-inv', onclick: 'drawAllItems("tools")' },
+          createElement('div', { class: 'div-for-el-canvas-img' }, 
+            createImg('assets/minecraft/textures/gui/container/creative_inventory/tabs.png', 0, 64, 28, 32, 256, 256)
+          ),
+          'T'
+        ),
+        createElement('button', { class: 'btn-tab-creative-inv', onclick: 'drawAllItems("equipment")' },
+          createElement('div', { class: 'div-for-el-canvas-img' }, 
+            createImg('assets/minecraft/textures/gui/container/creative_inventory/tabs.png', 0, 64, 28, 32, 256, 256)
+          ),
+          'E'
+        ),
+        createElement('button', { class: 'btn-tab-creative-inv', onclick: 'drawAllItems("brewing")' },
+          createElement('div', { class: 'div-for-el-canvas-img' }, 
+            createImg('assets/minecraft/textures/gui/container/creative_inventory/tabs.png', 0, 64, 28, 32, 256, 256)
+          ),
+          'B'
+        ),
+        createElement('div', { style: 'width: calc(20px * var(--guiScale));' }),
+        createElement('button', { class: 'btn-tab-creative-inv', onclick: 'drawtabSurvivalnv()' },
+          createElement('div', { class: 'div-for-el-canvas-img' }, 
+            createImg('assets/minecraft/textures/gui/container/creative_inventory/tabs.png', 0, 64, 28, 32, 256, 256)
+          ),
+          'SI'
+        )
+      )
+    )
+  );
+
+  
+
+  document.getElementsByClassName('creative-items')[0].addEventListener('scroll', (e) => {
+   e.preventDefault()
+  });
+
+  window.addEventListener('mousewheel', (e) => {
+    if(e.deltaY < 0 && last_known_scroll_position - (18 * guiScale) <= 0 && last_known_scroll_position !== 0) {
+      last_known_scroll_position = last_known_scroll_position + (18 * guiScale); 
+      document.getElementsByClassName('creative-scroll')[0].style.top = last_known_scroll_position + 'px';
+      } else if(e.deltaY > 0 && last_known_scroll_position - 270 - (18 * guiScale) >= -(document.getElementsByClassName('creative-scroll')[0].offsetHeight)) {
+      last_known_scroll_position = last_known_scroll_position - (18 * guiScale); 
+      document.getElementsByClassName('creative-scroll')[0].style.top = last_known_scroll_position + 'px';
+    }
+
+  });
+
+  drawAllItems("building")
+  drawInv(document.getElementsByClassName('player-hotbar')[0], playerHotbar);
+}
+
+function openInventory() {
+  playSound();
+  root.innerHTML = '';
+  document.title = 'Minecraft JS - Survival Inventory';
+
+  root.appendChild(
+    createElement('div', { id: "screen" },
+      createElement('div', { class: 'inventory-container' },
+        createElement('div', { class: 'div-for-el-canvas-img' }, 
+          newCreateImg('inventory-txr', 0, 0, 176, 166, 256, 256)
+        ),
+        createElement('div', { class: 'player-armor' }),
+        createElement('div', { class: 'player-offhand' }),
+        createElement('div', { class: 'player-inventory' }),
+        createElement('div', { class: 'player-hotbar' })
+      )
+    )
+  );
+
+  drawInv(document.getElementsByClassName('player-armor')[0], playerArmor);
+  drawInv(document.getElementsByClassName('player-offhand')[0], playerOffHand);
+  drawInv(document.getElementsByClassName('player-inventory')[0], playerInventory);
+  drawInv(document.getElementsByClassName('player-hotbar')[0], playerHotbar);
+}
+
+function openChest() {
+  playSound();
+  root.innerHTML = '';
+  document.title = 'Minecraft JS - Chest';
+
+  root.appendChild(
+    createElement('div', { id: "screen" },
+      createElement('div', { class: 'chest-container' },
+        createElement('div', { class: 'div-for-el-canvas-img' }, 
+          createImg('assets/minecraft/textures/gui/shulker_box.png', 0, 0, 176, 166, 256, 256)
+        ),
+        createElement('div', { class: 'chest-inventory' }),
+        createElement('div', { class: 'player-inventory' }),
+        createElement('div', { class: 'player-hotbar' })
+      )
+    )
+  )
+
+  drawInv(document.getElementsByClassName('chest-inventory')[0], invChest);
+  drawInv(document.getElementsByClassName('player-inventory')[0], playerInventory);
+  drawInv(document.getElementsByClassName('player-hotbar')[0], playerHotbar);
+}
+
+function openCraftingTable() {
+  playSound();
+  root.innerHTML = '';
+  document.title = 'Minecraft JS - Crafting Table';
+
+  root.appendChild(
+    createElement('div', { id: "screen" },
+      createElement('div', { class: 'crafting-table-container' },
+        createElement('div', { class: 'div-for-el-canvas-img' }, 
+          createImg('assets/minecraft/textures/gui/crafting_table.png', 0, 0, 176, 166, 256, 256)
+        ),
+        createElement('div', { class: 'player-inventory' }),
+        createElement('div', { class: 'player-hotbar' })
+      )
+    )
+  )
+
+  drawInv(document.getElementsByClassName('player-inventory')[0], playerInventory);
+  drawInv(document.getElementsByClassName('player-hotbar')[0], playerHotbar);
+}
+
+/* Initiate the whole damn thing */
+async function init() {
+  
+  (async function gets() {
+    const items = await getJSONData('registry/items.json');
+
+    items.files.forEach(async file => {
+      const item = await getJSONData(`${items.directory}/${file}`);
+
+      RegistryItems.push(new Item(item.description.identifier, item.components.icon, item.description.item_group, item.components.max_stack_size, item.components.durability ? item.components.durability : -1, item.components) )
+    });
+    
+  })()
+  
+  console.log(RegistryItems);
+
+  mainMenu();
 }
 
 window.addEventListener('DOMContentLoaded', () => {
-  initMinecraft()
+  document.getElementById('txrs').lastElementChild.onload = function () {
+    init();
+  }
 });
 
-const tooltip = document.getElementById('tooltip');
+window.addEventListener('contextmenu', (e) => {
+  e.preventDefault();
+}, false);
+
+window.addEventListener('keydown', (e) => {
+  if(e.key === 'Escape') {
+    if(document.title !== 'Minecraft JS - Main Menu') {
+      mainMenu()
+    }
+  }
+})
+
+window.addEventListener('mousedown', (e) => {
+  if(e.button === 2 && playerHotbar[0].Item !== '') {
+    
+    const a = RegistryItems.find(item => item.identifier === playerHotbar[0].Item);
+   
+      if(a.components.add_health) {
+        playerHealth += a.components.add_health;
+  
+        createPlayerHeartBg()
+      }
+  }
+})
 
 window.addEventListener('mousemove', (e) => {
   if(document.getElementById('flyingItem')) {
     document.getElementById('flyingItem').style.top = e.pageY - (8 * guiScale) + 'px';
     document.getElementById('flyingItem').style.left = e.pageX - (8 * guiScale) + 'px';
   }
-
-    // // if(tooltip.getBoundingClientRect().width > 0) {
-    //   if(tooltip.getBoundingClientRect().width + tooltip.getBoundingClientRect().left > window.innerWidth) {
-    //   tooltip.style.display = 'none';
-    //     tooltip.style.top = e.pageY - 15 + 'px';
-    //     tooltip.style.left = e.pageX - 10 - tooltip.getBoundingClientRect().width + 'px';
-    //   tooltip.style.display = 'flex';
-    //   } else {
-        tooltip.style.top = e.pageY - (8 * guiScale) + 'px';
-        tooltip.style.left = e.pageX + (6 * guiScale) + 'px';
-      // }
-
-    // }
- 
-  
 });
 
 window.addEventListener('mouseover', (e) => {
-  if((e.target.dataset.tooltip && e.target.dataset.tooltip !== 'empty')) {
-    if(tooltip.getBoundingClientRect().width + tooltip.getBoundingClientRect().left > window.innerWidth) {
-      tooltip.style.top = e.pageY - (8 * guiScale) + 'px';
-      tooltip.style.left = e.pageX - (6 * guiScale) - tooltip.getBoundingClientRect().width + 'px';
-    } else {
-      tooltip.style.top = e.pageY - (8 * guiScale) + 'px';
-      tooltip.style.left = e.pageX + (6 * guiScale) + 'px';
-    }
+  if(e.target.classList.contains('btn')) {
+    e.target.firstElementChild.appendChild(newCreateImg('widgets-txr', 0, 86, 200, 20, 256, 256))
+    e.target.firstElementChild.children[0].remove();
+  }
+})
 
-    tooltip.innerHTML = '';
-    const tooltipTexts = e.target.dataset.tooltip.split(',');
-    if(advancedTooltip) {
-      tooltipTexts.forEach((text) => {
-        const p = document.createElement('p');
-        p.innerText = text;
-  
-        if(text.includes('minecraft:')) {
-          p.style.color = 'grey';
-        }
-
-        tooltip.appendChild(p);
-
-      });
-    } else {
-      tooltip.innerHTML = tooltipTexts[0];
-    }
-
-    tooltip.style.position = 'absolute';
-    tooltip.style.zIndex = '200';
-    tooltip.style.display = 'block';
-    tooltip.style.pointerEvents = 'none';
-    tooltip.style.padding = '0.2rem 0.9rem 0.4rem 0.9rem';
-    tooltip.style.cursor = 'none';
-    tooltip.style.background = 'rgba(16, 0, 16, 0.90)';
-    tooltip.style.boxShadow = `inset ${0.5 * guiScale}px ${0.5 * guiScale}px 0px 1px rgba(48, 0, 160, 0.45), inset -${0.5 * guiScale}px -${0.5 * guiScale}px 0px 1px rgba(48, 0, 160, 0.45)`;
-    tooltip.style.color = 'white';
-    
-  } else {
-    tooltip.innerHTML = '';
-    tooltip.style.display = 'none';
+window.addEventListener('mouseout', (e) => {
+  if(e.target.classList.contains('btn')) {
+    e.target.firstElementChild.appendChild(newCreateImg('widgets-txr', 0, 66, 200, 20, 256, 256))
+    e.target.firstElementChild.children[0].remove();
   }
 })

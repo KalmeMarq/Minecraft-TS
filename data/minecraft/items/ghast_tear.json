@@ -1,0 +1,11 @@
+{
+  "description": {
+    "identifier": "minecraft:ghast_tear",
+    "item_group": "brewing"
+  },
+  "components": {
+    "icon": "assets/minecraft/textures/item/ghast_tear",
+    "display_name": "item.minecraft.ghast_tear",
+    "max_stack_size": 64
+  }
+}

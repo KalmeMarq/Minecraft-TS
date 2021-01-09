@@ -1,0 +1,12 @@
+{
+  "description": {
+    "identifier": "minecraft:flint_and_steel",
+    "item_group": "tools"
+  },
+  "components": {
+    "icon": "assets/minecraft/textures/item/flint_and_steel",
+    "display_name": "item.minecraft.flint_and_steel",
+    "max_stack_size": 1,
+    "durability": 64
+  }
+}

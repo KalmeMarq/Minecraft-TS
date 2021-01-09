@@ -1,0 +1,11 @@
+{
+  "description": {
+    "identifier": "minecraft:sugar_cane",
+    "item_group": "misc"
+  },
+  "components": {
+    "icon": "assets/minecraft/textures/item/sugar_cane",
+    "display_name": "item.minecraft.sugar_cane",
+    "max_stack_size": 64
+  }
+}

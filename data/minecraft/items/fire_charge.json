@@ -1,0 +1,11 @@
+{
+  "description": {
+    "identifier": "minecraft:fire_charge",
+    "item_group": "misc"
+  },
+  "components": {
+    "icon": "assets/minecraft/textures/item/fire_charge",
+    "display_name": "item.minecraft.fire_charge",
+    "max_stack_size": 64
+  }
+}

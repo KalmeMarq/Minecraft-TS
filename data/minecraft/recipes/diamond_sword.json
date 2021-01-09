@@ -1,10 +1,19 @@
 {
-  "type": "crafting_table",
-  "grid": [
-    "diamond", "", "",
-    "diamond", "", "",
-    "stick", "", ""
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "X",
+    "X",
+    "#"
   ],
-  "result": "diamond_sword",
-  "count": 1
+  "key": {
+    "#": {
+      "item": "minecraft:stick"
+    },
+    "X": {
+      "item": "minecraft:diamond"
+    }
+  },
+  "result": {
+    "item": "minecraft:diamond_sword"
+  }
 }

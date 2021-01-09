@@ -1,0 +1,12 @@
+{
+  "description": {
+    "identifier": "minecraft:dark_oak_boat",
+    "item_group": "transportation",
+    "type_group": "boat"
+  },
+  "components": {
+    "icon": "assets/minecraft/textures/item/dark_oak_boat",
+    "display_name": "item.minecraft.dark_oak_boat",
+    "max_stack_size": 1
+  }
+}

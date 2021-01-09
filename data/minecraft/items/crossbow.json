@@ -1,0 +1,13 @@
+{
+  "description": {
+    "identifier": "minecraft:crossbow",
+    "item_group": "equipment",
+    "type_group": "diamond_armor"
+  },
+  "components": {
+    "icon": "assets/minecraft/textures/item/crossbow_standby",
+    "display_name": "item.minecraft.crossbow",
+    "max_stack_size": 1,
+    "durability": 326
+  }
+}

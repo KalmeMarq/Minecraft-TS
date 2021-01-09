@@ -1,0 +1,11 @@
+{
+  "description": {
+    "identifier": "minecraft:lava_bucket",
+    "item_group": "misc"
+  },
+  "components": {
+    "icon": "assets/minecraft/textures/item/lava_bucket",
+    "display_name": "item.minecraft.lava_bucket",
+    "max_stack_size": 1
+  }
+}

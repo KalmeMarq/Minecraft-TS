@@ -1,0 +1,12 @@
+{
+  "description": {
+    "identifier": "minecraft:warped_sign",
+    "item_group": "decorations",
+    "type_group": "sign"
+  },
+  "components": {
+    "icon": "assets/minecraft/textures/item/warped_sign",
+    "display_name": "item.minecraft.warped_sign",
+    "max_stack_size": 16
+  }
+}

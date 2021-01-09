@@ -1,0 +1,11 @@
+{
+  "description": {
+    "identifier": "minecraft:compass",
+    "item_group": "tools"
+  },
+  "components": {
+    "icon": "assets/minecraft/textures/item/compass",
+    "display_name": "item.minecraft.compass",
+    "max_stack_size": 64
+  }
+}

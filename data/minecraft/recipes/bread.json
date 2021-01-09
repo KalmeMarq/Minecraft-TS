@@ -1,10 +1,14 @@
 {
-  "type": "crafting_table",
-  "grid": [
-    "", "", "",
-    "wheat", "wheat", "wheat",
-    "", "", ""
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "###"
   ],
-  "result": "bread",
-  "count": 1
+  "key": {
+    "#": {
+      "item": "minecraft:wheat"
+    }
+  },
+  "result": {
+    "item": "minecraft:bread"
+  }
 }

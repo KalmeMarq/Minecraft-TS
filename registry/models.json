@@ -1,0 +1,8 @@
+{
+  "directory": "assets/minecraft/models",
+  "files": [
+    "item/apple.json",
+    "item/diamond_sword.json",
+    "item/snowball.json"
+  ]
+}

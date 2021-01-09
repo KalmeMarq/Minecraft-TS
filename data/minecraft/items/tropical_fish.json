@@ -1,0 +1,11 @@
+{
+  "description": {
+    "identifier": "minecraft:tropical_fish",
+    "item_group": "foodstuffs"
+  },
+  "components": {
+    "icon": "assets/minecraft/textures/item/tropical_fish",
+    "display_name": "item.minecraft.tropical_fish",
+    "max_stack_size": 64
+  }
+}

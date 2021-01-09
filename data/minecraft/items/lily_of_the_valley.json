@@ -1,0 +1,12 @@
+{
+  "description": {
+    "identifier": "minecraft:lily_of_the_valley",
+    "item_group": "decorations",
+    "type_group": "flower"
+  },
+  "components": {
+    "icon": "assets/minecraft/textures/block/lily_of_the_valley",
+    "display_name": "block.minecraft.lily_of_the_valley",
+    "max_stack_size": 64
+  }
+}

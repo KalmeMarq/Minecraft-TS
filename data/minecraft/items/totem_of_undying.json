@@ -1,0 +1,11 @@
+{
+  "description": {
+    "identifier": "minecraft:totem_of_undying",
+    "item_group": "tools"
+  },
+  "components": {
+    "icon": "assets/minecraft/textures/item/totem_of_undying",
+    "display_name": "item.minecraft.totem_of_undying",
+    "max_stack_size": 1
+  }
+}

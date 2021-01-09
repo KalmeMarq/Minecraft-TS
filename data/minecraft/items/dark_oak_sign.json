@@ -1,0 +1,12 @@
+{
+  "description": {
+    "identifier": "minecraft:dark_oak_sign",
+    "item_group": "redstone",
+    "type_group": "sign"
+  },
+  "components": {
+    "icon": "assets/minecraft/textures/item/dark_oak_sign",
+    "display_name": "item.minecraft.dark_oak_sign",
+    "max_stack_size": 16
+  }
+}

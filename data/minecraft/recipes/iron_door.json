@@ -1,10 +1,17 @@
 {
-  "type": "crafting_table",
-  "grid": [
-    "iron_ingot", "iron_ingot", "",
-    "iron_ingot", "iron_ingot", "",
-    "iron_ingot", "iron_ingot", ""
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "##",
+    "##",
+    "##"
   ],
-  "result": "iron_door",
-  "count": 3
+  "key": {
+    "#": {
+      "item": "minecraft:iron_ingot"
+    }
+  },
+  "result": {
+    "item": "minecraft:iron_door",
+    "count": 3
+  }
 }

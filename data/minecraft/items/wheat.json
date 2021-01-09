@@ -1,0 +1,11 @@
+{
+  "description": {
+    "identifier": "minecraft:wheat",
+    "item_group": "misc"
+  },
+  "components": {
+    "icon": "assets/minecraft/textures/item/wheat",
+    "display_name": "item.minecraft.wheat",
+    "max_stack_size": 64
+  }
+}

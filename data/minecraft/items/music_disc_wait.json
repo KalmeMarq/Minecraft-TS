@@ -1,0 +1,11 @@
+{
+  "description": {
+    "identifier": "minecraft:music_disc_wait",
+    "item_group": "misc"
+  },
+  "components": {
+    "icon": "assets/minecraft/textures/item/music_disc_wait",
+    "display_name": "item.minecraft.music_disc_wait",
+    "max_stack_size": 64
+  }
+}

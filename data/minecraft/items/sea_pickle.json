@@ -1,0 +1,11 @@
+{
+  "description": {
+    "identifier": "minecraft:sea_pickle",
+    "item_group": "misc"
+  },
+  "components": {
+    "icon": "assets/minecraft/textures/item/sea_pickle",
+    "display_name": "item.minecraft.sea_pickle",
+    "max_stack_size": 64
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "description": {
+    "identifier": "minecraft:stone_axe",
+    "item_group": "tools"
+  },
+  "components": {
+    "icon": "assets/minecraft/textures/item/stone_axe",
+    "display_name": "item.minecraft.stone_axe",
+    "max_stack_size": 1,
+    "durability": 131
+  }
+}

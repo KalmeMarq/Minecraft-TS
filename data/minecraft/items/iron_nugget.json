@@ -1,0 +1,11 @@
+{
+  "description": {
+    "identifier": "minecraft:iron_nugget",
+    "item_group": "misc"
+  },
+  "components": {
+    "icon": "assets/minecraft/textures/item/iron_nugget",
+    "display_name": "item.minecraft.iron_nugget",
+    "max_stack_size": 64
+  }
+}

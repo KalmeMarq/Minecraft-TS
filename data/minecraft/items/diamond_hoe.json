@@ -1,0 +1,13 @@
+{
+  "description": {
+    "identifier": "minecraft:diamond_hoe",
+    "item_group": "tools",
+    "type_group": "diamond_tools"
+  },
+  "components": {
+    "icon": "assets/minecraft/textures/item/diamond_hoe",
+    "display_name": "item.minecraft.diamond_hoe",
+    "max_stack_size": 1,
+    "durability": 1561
+  }
+}

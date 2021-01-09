@@ -1,0 +1,11 @@
+{
+  "description": {
+    "identifier": "minecraft:shulker_shell",
+    "item_group": "misc"
+  },
+  "components": {
+    "icon": "assets/minecraft/textures/item/shulker_shell",
+    "display_name": "item.minecraft.shulker_shell",
+    "max_stack_size": 64
+  }
+}

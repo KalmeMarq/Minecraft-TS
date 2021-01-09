@@ -1,0 +1,11 @@
+{
+  "description": {
+    "identifier": "minecraft:iron_door",
+    "item_group": "redstone"
+  },
+  "components": {
+    "icon": "assets/minecraft/textures/item/iron_door",
+    "display_name": "item.minecraft.iron_door",
+    "max_stack_size": 64
+  }
+}

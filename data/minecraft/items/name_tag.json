@@ -1,0 +1,11 @@
+{
+  "description": {
+    "identifier": "minecraft:name_tag",
+    "item_group": "misc"
+  },
+  "components": {
+    "icon": "assets/minecraft/textures/item/name_tag",
+    "display_name": "item.minecraft.name_tag",
+    "max_stack_size": 64
+  }
+}

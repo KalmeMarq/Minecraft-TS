@@ -1,10 +1,19 @@
 {
-  "type": "crafting_table",
-  "grid": [
-    "gold_ingot", "gold_ingot", "gold_ingot",
-    "gold_ingot", "apple", "gold_ingot",
-    "gold_ingot", "gold_ingot", "gold_ingot"
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "###",
+    "#X#",
+    "###"
   ],
-  "result": "golden_apple",
-  "count": 1
+  "key": {
+    "#": {
+      "item": "minecraft:gold_ingot"
+    },
+    "X": {
+      "item": "minecraft:apple"
+    }
+  },
+  "result": {
+    "item": "minecraft:golden_apple"
+  }
 }

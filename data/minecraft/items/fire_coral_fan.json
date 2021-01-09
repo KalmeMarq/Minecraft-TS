@@ -1,0 +1,12 @@
+{
+  "description": {
+    "identifier": "minecraft:fire_coral_fan",
+    "item_group": "decorations",
+    "type_group": "coral"
+  },
+  "components": {
+    "icon": "assets/minecraft/textures/block/fire_coral_fan",
+    "display_name": "block.minecraft.fire_coral_fan",
+    "max_stack_size": 64
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "description": {
+    "identifier": "minecraft:flower_pot",
+    "item_group": "misc"
+  },
+  "components": {
+    "icon": "assets/minecraft/textures/item/flower_pot",
+    "display_name": "item.minecraft.flower_pot",
+    "max_stack_size": 64
+  }
+}
