@@ -8,6 +8,8 @@
     <link rel="stylesheet" href="index.min.css">
   </head>
   <body>
+    <p id="fps-counter"></p>
+    <div id="panoramas"></div>
     <div id="txrs">
       <img src="./assets/minecraft/textures/gui/container/creative_inventory/tab_inventory.png" width="0" height="0" id="creative-inv-inv-txr">
       <img src="./assets/minecraft/textures/gui/container/creative_inventory/tab_item_search.png" width="0" height="0" id="creative-inv-search-txr">
@@ -23,7 +25,164 @@
         <div id="loadingBarInside"></div>
       </div>
     </div>
-    <div id="root"></div>  
+    <div id="root"></div>
+    <script type="module">
+
+			import * as THREE from './three.js/build/three.module.js';
+
+			import { CSS3DRenderer, CSS3DObject } from './three.js/examples/jsm/renderers/CSS3DRenderer.js';
+
+			let camera, scene, renderer;
+			const target = new THREE.Vector3();
+
+			let lon = 90, lat = 0;
+			let phi = 0, theta = 0;
+
+			let pointerX, pointerY;
+
+			init();
+			animate();
+
+			function init() {
+
+				camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 1000 );
+
+				scene = new THREE.Scene();
+
+				const sides = [
+					{
+						url: 'assets/minecraft/textures/gui/panorama_1.png',
+						position: [ - 512, 0, 0 ],
+						rotation: [ 0, Math.PI / 2, 0 ]
+					},
+					{
+						url: 'assets/minecraft/textures/gui/panorama_3.png',
+						position: [ 512, 0, 0 ],
+						rotation: [ 0, - Math.PI / 2, 0 ]
+					},
+					{
+						url: 'assets/minecraft/textures/gui/panorama_4.png',
+						position: [ 0, 512, 0 ],
+						rotation: [ Math.PI / 2, 0, Math.PI ]
+					},
+					{
+						url: 'assets/minecraft/textures/gui/panorama_5.png',
+						position: [ 0, - 512, 0 ],
+						rotation: [ - Math.PI / 2, 0, Math.PI ]
+					},
+					{
+						url: 'assets/minecraft/textures/gui/panorama_0.png',
+						position: [ 0, 0, 512 ],
+						rotation: [ 0, Math.PI, 0 ]
+					},
+					{
+						url: 'assets/minecraft/textures/gui/panorama_2.png',
+						position: [ 0, 0, - 512 ],
+						rotation: [ 0, 0, 0 ]
+					}
+				];
+
+				for ( let i = 0; i < sides.length; i ++ ) {
+
+					const side = sides[ i ];
+
+					const element = document.createElement( 'img' );
+					element.draggable = false;
+					element.width = 1026; // 2 pixels extra to close the gap.
+					element.src = side.url;
+
+					const object = new CSS3DObject( element );
+					object.position.fromArray( side.position );
+					object.rotation.fromArray( side.rotation );
+					scene.add( object );
+
+				}
+
+				renderer = new CSS3DRenderer();
+				renderer.setSize( window.innerWidth, window.innerHeight );
+				document.getElementById('panoramas').appendChild( renderer.domElement );
+
+				//
+
+				document.body.style.touchAction = 'none';
+
+				window.addEventListener( 'resize', onWindowResize, false );
+
+			}
+
+			function onWindowResize() {
+
+				camera.aspect = window.innerWidth / window.innerHeight;
+				camera.updateProjectionMatrix();
+
+				renderer.setSize( window.innerWidth, window.innerHeight );
+
+			}
+
+			function onPointerDown( event ) {
+
+				if ( event.isPrimary === false ) return;
+
+				pointerX = event.clientX;
+				pointerY = event.clientY;
+
+				document.addEventListener( 'pointermove', onPointerMove, false );
+				document.addEventListener( 'pointerup', onPointerUp, false );
+
+			}
+
+			function onPointerMove( event ) {
+
+				if ( event.isPrimary === false ) return;
+
+				lon -= ( event.clientX - pointerX ) * 0.1;
+				lat += ( event.clientY - pointerY ) * 0.1;
+
+				pointerX = event.clientX;
+				pointerY = event.clientY;
+
+			}
+
+			function onPointerUp() {
+
+				if ( event.isPrimary === false ) return;
+
+				document.removeEventListener( 'pointermove', onPointerMove );
+				document.removeEventListener( 'pointerup', onPointerUp );
+
+			}
+
+			function onDocumentMouseWheel( event ) {
+
+				const fov = camera.fov + event.deltaY * 0.05;
+
+				camera.fov = THREE.MathUtils.clamp( fov, 10, 75 );
+
+				camera.updateProjectionMatrix();
+
+			}
+
+			function animate() {
+
+				requestAnimationFrame( animate );
+
+				lon += 0.075;
+				lat = Math.max( - 85, Math.min( 85, lat ) );
+				phi = THREE.MathUtils.degToRad( 90 - lat );
+				theta = THREE.MathUtils.degToRad( lon );
+
+				target.x = Math.sin( phi ) * Math.cos( theta );
+				target.y = Math.cos( phi );
+				target.z = Math.sin( phi ) * Math.sin( theta );
+
+				camera.lookAt( target );
+
+				renderer.render( scene, camera );
+
+			}
+
+		</script>
     <script src="index.js"></script>
+  
   </body>
 </html>

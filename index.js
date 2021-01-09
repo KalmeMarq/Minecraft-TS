@@ -1,13 +1,22 @@
 const root = document.getElementById('root');
-const guiScale = 3;
-
 let last_known_scroll_position = 0;
+
+/* Fetch Storage variables */
+let splashTexts = []; 
+
+/* Settings */
+const guiScale = 3;
 
 let playerHealth = 20;
 
 async function getJSONData(url) {
   const res = await fetch(url);
   return await res.json(); 
+}
+
+async function getTextData(url) {
+  const res = await fetch(url);
+  return await res.text(); 
 }
 
 /* Items Registry */
@@ -660,6 +669,7 @@ function mainMenu() {
         )
       ),
       createElement('div', { class: 'hearts-bg' }),
+      createElement('h2', { id: 'splash-texts' }),
       createElement('div', { class: 'div-for-el-canvas-img hotbar' }, 
           newCreateImg('widgets-txr', 0, 0, 182, 22, 256, 256)
         ),
@@ -668,10 +678,25 @@ function mainMenu() {
       )
       
     )
-  )
+  ) 
   createPlayerHeartBg(),
 
   drawInv(document.getElementsByClassName('player-hotbar')[0], playerHotbar);
+
+  (async function() {
+    const splashes = await getTextData('assets/minecraft/texts/splashes.txt');
+    const splash = [];
+
+
+    splashes.split(/\r?\n/).forEach(line => {
+      splash.push(line);
+    });
+
+    const randSplashIdx = ~~(Math.random() * (splash.length - 1));
+    document.getElementById('splash-texts').innerText = splash[randSplashIdx];
+  })();
+
+  
 }
 
 function takeDamage() {
@@ -903,7 +928,7 @@ function openCraftingTable() {
 }
 
 /* Initiate the whole damn thing */
-async function init() {
+async function initApp() {
   
   (async function gets() {
     const items = await getJSONData('registry/items.json');
@@ -913,17 +938,20 @@ async function init() {
 
       RegistryItems.push(new Item(item.description.identifier, item.components.icon, item.description.item_group, item.components.max_stack_size, item.components.durability ? item.components.durability : -1, item.components) )
     });
-    
-  })()
   
-  console.log(RegistryItems);
+
+  })();
+
+  
+
+
 
   mainMenu();
 }
 
 window.addEventListener('DOMContentLoaded', () => {
-  document.getElementById('txrs').lastElementChild.onload = function () {
-    init();
+  document.getElementById('txrs').lastElementChild.onload = function() {
+    initApp();
   }
 });
 
@@ -972,3 +1000,22 @@ window.addEventListener('mouseout', (e) => {
     e.target.firstElementChild.children[0].remove();
   }
 })
+
+/* Fps */
+const fpsEl = document.getElementById('fps-counter');
+var before,now,fps;
+before=Date.now();
+fps=0;
+requestAnimationFrame(
+    function loop(){
+        now=Date.now();
+        fps=Math.round(1000/(now-before));
+        before=now;
+        requestAnimationFrame(loop);
+        
+    }
+ );
+
+ setInterval(() => {
+  fpsEl.innerText = fps;
+ }, 125)

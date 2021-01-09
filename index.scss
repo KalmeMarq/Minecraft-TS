@@ -335,3 +335,37 @@ canvas {
   top: 0;
   left: 0;
 }
+
+#fps-counter {
+  position: fixed;
+  top: 0;
+  right: 0;
+  color: white;
+  font-size: calc(8px * var(--guiScale));
+}
+
+#splash-texts {
+  position: absolute;
+  top: 100px;
+  left: 50%;
+  width: max-content;
+  transform: translate(-50%, 100%) rotateZ(-20deg);
+  color: #ebeb41;
+  text-shadow: #3a3a10 calc(1px * var(--guiScale))  calc(1px * var(--guiScale));
+  animation: splashAnim 260ms alternate infinite;
+}
+
+@keyframes splashAnim {
+  0% {
+    font-size: calc(8.4px * var(--guiScale));
+  }
+
+  100% {
+    font-size: calc(8.6px * var(--guiScale));
+  }
+}
+
+#panoramas {
+  position: absolute;
+  z-index: -1000;
+}
