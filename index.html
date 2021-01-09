@@ -25,7 +25,7 @@
         <div id="loadingBarInside"></div>
       </div>
     </div>
-    <div id="root"></div>
+    <div id="root-div"></div>
     <script type="module">
 
 			import * as THREE from './three.js/build/three.module.js';
@@ -104,7 +104,7 @@
 
 				//
 
-				document.body.style.touchAction = 'none';
+				document.getElementById('panoramas').touchAction = 'none';
 
 				window.addEventListener( 'resize', onWindowResize, false );
 
@@ -119,49 +119,7 @@
 
 			}
 
-			function onPointerDown( event ) {
-
-				if ( event.isPrimary === false ) return;
-
-				pointerX = event.clientX;
-				pointerY = event.clientY;
-
-				document.addEventListener( 'pointermove', onPointerMove, false );
-				document.addEventListener( 'pointerup', onPointerUp, false );
-
-			}
-
-			function onPointerMove( event ) {
-
-				if ( event.isPrimary === false ) return;
-
-				lon -= ( event.clientX - pointerX ) * 0.1;
-				lat += ( event.clientY - pointerY ) * 0.1;
-
-				pointerX = event.clientX;
-				pointerY = event.clientY;
-
-			}
-
-			function onPointerUp() {
-
-				if ( event.isPrimary === false ) return;
-
-				document.removeEventListener( 'pointermove', onPointerMove );
-				document.removeEventListener( 'pointerup', onPointerUp );
-
-			}
-
-			function onDocumentMouseWheel( event ) {
-
-				const fov = camera.fov + event.deltaY * 0.05;
-
-				camera.fov = THREE.MathUtils.clamp( fov, 10, 75 );
-
-				camera.updateProjectionMatrix();
-
-			}
-
+      
 			function animate() {
 
 				requestAnimationFrame( animate );
@@ -182,7 +140,7 @@
 			}
 
 		</script>
-    <script src="index.js"></script>
+    <script type="module" src="index.js"></script>
   
   </body>
 </html>

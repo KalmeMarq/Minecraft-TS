@@ -1,4 +1,4 @@
-const root = document.getElementById('root');
+const root = document.getElementById('root-div');
 let last_known_scroll_position = 0;
 
 /* Fetch Storage variables */
@@ -950,9 +950,9 @@ async function initApp() {
 }
 
 window.addEventListener('DOMContentLoaded', () => {
-  document.getElementById('txrs').lastElementChild.onload = function() {
+
     initApp();
-  }
+
 });
 
 window.addEventListener('contextmenu', (e) => {
