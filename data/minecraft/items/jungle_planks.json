@@ -1,0 +1,11 @@
+{
+  "description": {
+    "identifier": "minecraft:jungle_planks",
+    "item_group": "building"
+  },
+  "components": {
+    "icon": "assets/minecraft/textures/block/jungle_planks",
+    "display_name": "block.minecraft.jungle_planks",
+    "max_stack_size": 64
+  }
+}

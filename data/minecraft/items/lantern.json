@@ -5,7 +5,7 @@
   },
   "components": {
     "icon": "assets/minecraft/textures/item/lantern",
-    "display_name": "item.minecraft.lantern",
+    "display_name": "block.minecraft.lantern",
     "max_stack_size": 64
   }
 }

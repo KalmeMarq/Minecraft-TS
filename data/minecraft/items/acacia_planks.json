@@ -1,0 +1,11 @@
+{
+  "description": {
+    "identifier": "minecraft:acacia_planks",
+    "item_group": "building"
+  },
+  "components": {
+    "icon": "assets/minecraft/textures/block/acacia_planks",
+    "display_name": "block.minecraft.acacia_planks",
+    "max_stack_size": 64
+  }
+}

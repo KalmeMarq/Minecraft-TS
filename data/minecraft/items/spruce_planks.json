@@ -1,0 +1,11 @@
+{
+  "description": {
+    "identifier": "minecraft:spruce_planks",
+    "item_group": "building"
+  },
+  "components": {
+    "icon": "assets/minecraft/textures/block/spruce_planks",
+    "display_name": "block.minecraft.spruce_planks",
+    "max_stack_size": 64
+  }
+}

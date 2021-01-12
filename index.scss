@@ -4,7 +4,7 @@
 }
 
 :root {
-  --guiScale: 3; 
+  --guiScale: 3;
 }
 
 * {
@@ -19,18 +19,26 @@
 }
 
 body {
-  display: grid;
-  place-content: center;
-  place-items: center;
+  width: 100vw;
   height: 100vh;
   background-color: rgb(34, 34, 34);
   overflow: hidden;
+}
+
+#root {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
 }
 
 /* Loading Panel */
 #loadingPanel {
   display: none;
   position: fixed;
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
   background: rgb(255, 0, 0);
@@ -58,17 +66,19 @@ body {
   transition: width 800ms;
 }
 
-/* Main Stuff */
-img {
-  image-rendering: -moz-crisp-edges;          /* Firefox                        */
-  image-rendering: -o-crisp-edges;            /* Opera                          */
-  image-rendering: -webkit-optimize-contrast; /* Chrome (and eventually Safari) */
-  image-rendering: pixelated; /* Chrome */
-  image-rendering: optimize-contrast;         /* CSS3 Proposed                  */
-  -ms-interpolation-mode: nearest-neighbor;   /* IE8+         */
+/* Death screen bg */
+.death-gradi-bg {
+  position: absolute;
+  z-index: -1;
+  width: 100vw;
+  height: 100vh;
+  top: 0;
+  left: 0;
+  background-image: linear-gradient(to right top, #eb000044, #eb050544, #eb0a0944, #eb0e0e33, #eb121233);
 }
 
-canvas {
+/* Main Stuff */
+img, .classic-btn, .mc-title-minec, .mc-title-raft, canvas {
   image-rendering: -moz-crisp-edges;          /* Firefox                        */
   image-rendering: -o-crisp-edges;            /* Opera                          */
   image-rendering: -webkit-optimize-contrast; /* Chrome (and eventually Safari) */
@@ -86,6 +96,18 @@ canvas {
   z-index: -1;
 }
 
+#tooltip {
+  position: absolute;
+  display: none;
+  pointer-events: none;
+  padding: 0.1rem 0.6rem 0.2rem 0.6rem;
+  cursor: none;
+  background: rgba(16, 0, 16, 0.90);
+  border: calc(1px * var(--guiScale)) solid rgba(48, 0, 160, 0.45);
+  color: white;
+  z-index: 200;
+}
+
 .canvas-as-img {
   cursor: none;
   pointer-events: none;
@@ -98,8 +120,7 @@ canvas {
 .wrapper {
   display: flex;
   flex-direction: column;
-  width: max-content;
-  gap: 20px;
+  gap: calc(4px * var(--guiScale));
 }
 
 .btn {
@@ -115,12 +136,84 @@ canvas {
   text-shadow: calc(1px * var(--guiScale) - (0.125px * var(--guiScale))) calc(1px * var(--guiScale) - (0.125px * var(--guiScale))) #2b2b2b;
 }
 
+.classic-btn {
+  position: relative;
+  width: calc(200px * var(--guiScale));
+  height: calc(20px * var(--guiScale));
+  border: none;
+  background: none;
+  outline: none;
+  color: white;
+  text-rendering: optimizeLegibility;
+  font-size: calc(7px  * var(--guiScale));
+  text-shadow: calc(1px * var(--guiScale) - (0.125px * var(--guiScale))) calc(1px * var(--guiScale) - (0.125px * var(--guiScale))) #2b2b2b;
+  background-image: url(/assets/minecraft/textures/gui/widgets.png);
+  background-repeat: no-repeat;
+  background-size: calc(256px * var(--guiScale));
+  background-position-y: calc(-66px * var(--guiScale));
+}
+
+.classic-btn:hover {
+  background-position-y: calc(-86px * var(--guiScale));
+}
+
+.classic-btn:disabled {
+  background-position-y: calc(-46px * var(--guiScale));
+}
+
+.slider-box {
+  position: relative;
+  width: calc(200px * var(--guiScale));
+  height: calc(20px * var(--guiScale));
+
+  label {
+    position: absolute;
+    cursor: none;
+    pointer-events: none;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: calc(8px * var(--guiScale));
+    color: white;
+    text-shadow: #2b2b2b calc(1px * var(--guiScale))  calc(1px * var(--guiScale));
+  }
+}
+
+.classic-slider {
+  outline: none;
+  -webkit-appearance: none;
+  width: calc(200px * var(--guiScale));
+  height: calc(20px * var(--guiScale));
+  background-image: url(/assets/minecraft/textures/gui/widgets.png);
+  background-repeat: no-repeat;
+  background-size: calc(256px * var(--guiScale));
+  background-position-y: calc(-46px * var(--guiScale));
+}
+
+.classic-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: calc(8px * var(--guiScale));
+  height: calc(20px * var(--guiScale));
+  background-image: url(/assets/minecraft/textures/gui/widgets.png);
+  background-repeat: no-repeat;
+  background-size: calc(256px * var(--guiScale));
+  background-position-y: calc(-66px * var(--guiScale));
+}
+
+.classic-slider::-moz-range-thumb {
+  width: calc(8px * var(--guiScale));
+  height: calc(20px * var(--guiScale));
+  background-image: url(/assets/minecraft/textures/gui/widgets.png);
+  background-repeat: no-repeat;
+  background-size: calc(256px * var(--guiScale));
+  background-position-y: calc(-66px * var(--guiScale));
+}
+
 .screen {
-  display: grid;
-  place-content: center;
-  place-items: center;
   width: 100vw;
   height: 100vh;
+  background: green;
 }
 
 .inventory-container, .chest-container, .crafting-table-container, .creative-inventory-container {
@@ -220,6 +313,15 @@ canvas {
   z-index: 100;
 }
 
+.centerer {
+  position: relative;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: grid;
+  place-content: center;
+}
+
 .slot::after {
   cursor: none;
   pointer-events: none;
@@ -262,6 +364,11 @@ canvas {
   color: white;
   text-shadow: #2b2b2b calc(1px * var(--guiScale))  calc(1px * var(--guiScale));
   z-index: 10
+}
+
+.tooltip-text {
+  font-size: calc(7px * var(--guiScale));
+  text-shadow: #2b2b2b calc(1px * var(--guiScale))  calc(1px * var(--guiScale));
 }
 
 .creative-tab-panels {
@@ -342,12 +449,13 @@ canvas {
   right: 0;
   color: white;
   font-size: calc(8px * var(--guiScale));
+  z-index: 200;
 }
 
 #splash-texts {
   position: absolute;
-  top: 100px;
-  left: 50%;
+  top: 25%;
+  left: 75%;
   width: max-content;
   transform: translate(-50%, 100%) rotateZ(-20deg);
   color: #ebeb41;
@@ -368,4 +476,223 @@ canvas {
 #panoramas {
   position: absolute;
   z-index: -1000;
+}
+
+.dirt-bg {
+  background-image: url(/assets/minecraft/textures/gui/options_background.png);
+}
+
+.mc-title-box {
+  position: absolute;
+  width: calc(274px * var(--guiScale));
+  height: calc(44px * var(--guiScale));
+  top: calc(30px * var(--guiScale));
+  left: 50%;
+  transform: translate(-50%);
+}
+
+.mc-title-minec {
+  position: relative;
+  top: 0;
+  left: 0;
+  width: calc(155px * var(--guiScale));
+  height: calc(44px * var(--guiScale));
+  background-image: url(/assets/minecraft/textures/gui/title/minecraft.png);
+  background-repeat: no-repeat;
+  background-size: calc(256px * var(--guiScale));
+}
+
+.mc-title-raft {
+  position: relative;
+  top: 0;
+  left: calc(155px * var(--guiScale));
+  width: calc(119px * var(--guiScale));
+  height: calc(44px * var(--guiScale));
+  background-image: url(/assets/minecraft/textures/gui/title/minecraft.png);
+  background-repeat: no-repeat;
+  background-size: calc(256px * var(--guiScale));
+  background-position-y: calc(-45px * var(--guiScale));
+}
+
+.info-bottom-right {
+  position: absolute;
+  font-size: calc(8px * var(--guiScale));
+  color: white;
+  text-shadow: #2b2b2b calc(1px * var(--guiScale))  calc(1px * var(--guiScale));
+  left: calc(2px * var(--guiScale));
+  bottom: calc(2px * var(--guiScale) / 8);
+}
+
+#chat-input-box {
+  display: none;
+  position: absolute;
+  width: calc(100% - (4px * var(--guiScale)));
+  height: calc(12px * var(--guiScale));
+  left: calc(2px * var(--guiScale));
+  bottom: calc(2px * var(--guiScale));
+  z-index: 100;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+#chat-box {
+  display: none;
+  flex-direction: column;
+  position: absolute;
+  width: calc(360px * var(--guiScale));
+  overflow: hidden;
+  left: calc(2px * var(--guiScale));
+  bottom: calc(16px * var(--guiScale));
+  z-index: 100;
+}
+
+#chat-box p {
+  color: white;
+  font-size: calc(8px * var(--guiScale));
+  opacity: 1;
+  max-width: 100%;
+  width: 100%;
+  transition: 1000ms opacity;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+#chat-input {
+  position: absolute;
+  width: calc(100% - (4px * var(--guiScale)));
+  left: calc(2px * var(--guiScale));
+  height: 100%;
+  background: none;
+  outline: none;
+  font-family: 'MinecraftiaRegular';
+  font-size: calc(8px * var(--guiScale));
+  color: white;
+  text-shadow: #3a3a10 calc(1px * var(--guiScale))  calc(1px * var(--guiScale));
+  border: none;
+  z-index: 100;
+}
+
+
+#chat-input::selection {
+  background: rgb(69, 72, 236);
+}
+
+#title-title {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  font-size: calc(24px * var(--guiScale));
+  text-shadow: #131313 calc(3px * var(--guiScale))  calc(3px * var(--guiScale));
+  z-index: 1000;
+  opacity: 0;
+  display: none;
+  transition: 2000ms opacity;
+}
+
+.space3d {
+  position: absolute;
+  cursor: none;
+  pointer-events: none;
+  perspective: 1000px;
+  width: calc(18px * var(--guiScale));
+  height: calc(18px * var(--guiScale));
+  text-align: center;
+  display: inline-block;
+  transform: scale(0.55);
+}
+
+._3dbox {
+  display: inline-block;
+  text-align: center;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transform: rotateX(-30deg) rotateY(45deg);
+}
+
+._3dface {
+  overflow: hidden;
+  position: absolute;
+  line-height: calc(18px * var(--guiScale));
+  image-rendering: crisp-edges;
+  image-rendering: pixelated;
+}
+
+._3dface--front {
+  width: calc(18px * var(--guiScale));
+  height: calc(18px * var(--guiScale));
+  box-shadow: inset 0 0 610px rgba(0, 0, 0, 0.45), 0 0 510px rgba(0, 0, 0, 0.45);
+  transform: translate3d(0, 0, calc(9px * var(--guiScale)));
+}
+
+._3dface--top {
+  width: calc(18px * var(--guiScale));
+  height: calc(18px * var(--guiScale));
+  transform: rotateX(90deg) translate3d(0, 0, calc(9px * var(--guiScale)));
+
+}
+
+._3dface--bottom {
+  width: calc(18px * var(--guiScale));
+  height: calc(18px * var(--guiScale));
+  transform: rotateX(-90deg) translate3d(0, 0, calc(9px * var(--guiScale)));
+}
+
+._3dface--left {
+  width: calc(18px * var(--guiScale));
+  height: calc(18px * var(--guiScale));
+  left: 50%;
+  margin-left: calc(-9px * var(--guiScale));
+  transform: rotateY(-90deg) translate3d(0, 0, calc(9px * var(--guiScale)));
+  box-shadow: inset 0 0 610px rgba(0, 0, 0, 0.2), 0 0 510px rgba(0, 0, 0, 0.2);
+}
+
+._3dface--right {
+  width: calc(18px * var(--guiScale));
+  height: calc(18px * var(--guiScale));
+  left: 50%;
+  margin-left: calc(-9px * var(--guiScale));
+  transform: rotateY(90deg) translate3d(0, 0, calc(9px * var(--guiScale)));
+}
+
+._3dface--back {
+  width: calc(18px * var(--guiScale));
+  height: calc(18px * var(--guiScale));
+  transform: rotateY(180deg) translate3d(0, 0, calc(9px * var(--guiScale)));
+}
+
+._3dface--front {
+  background: url(https://2.bp.blogspot.com/-JxKfUObT4L8/UYYaRhRNJmI/AAAAAAAAAUY/243IlIOKj2c/s320/brahama.jpg);
+  background-size: 100%;
+}
+
+._3dface--left {
+  background: url(https://4.bp.blogspot.com/-HGFGdCGFTkw/UXVq6PNmS4I/AAAAAAAAAUE/hBNmVCOVlu4/s400/durga+wm.jpg);
+  background-size: 100%;
+  background-repeat: no-repeat;
+}
+
+._3dface--right {
+  background: url(https://2.bp.blogspot.com/-yrnBD8wJ-g0/UNRtPF8pR7I/AAAAAAAAATE/YSpLvqTNyoQ/s320/A+P+J+abdul+kalam_+swm+.jpg);
+  background-size: 100%;
+  background-repeat: no-repeat;
+}
+
+._3dface--top {
+  background: url(https://3.bp.blogspot.com/-mySu8dy4ux4/ULiVKS4YBbI/AAAAAAAAAR0/vBMi_4dAPDE/s400/rajiv+dixit+s.jpg);
+  background-size: 100%;
+  background-repeat: no-repeat;
+}
+
+._3dface--bottom {
+  background: url(https://2.bp.blogspot.com/-B9QWFtc9bVY/UHFs7y9GqkI/AAAAAAAAARI/YLDkoHYr3g4/s400/Gau+wm.jpg);
+  background-size: 100%;
+  background-repeat: no-repeat;
+}
+
+._3dface--back {
+  background: url(https://3.bp.blogspot.com/-ofufG97PpiU/UBzXu-1AisI/AAAAAAAAAP0/iDnhOh-vrb8/s400/shiv+ji.jpg);
+  background-size: 100%;
+  background-repeat: no-repeat;
 }

@@ -5,7 +5,7 @@
   },
   "components": {
     "icon": "assets/minecraft/textures/item/barrier",
-    "display_name": "item.minecraft.barrier",
+    "display_name": "block.minecraft.barrier",
     "max_stack_size": 64
   }
 }

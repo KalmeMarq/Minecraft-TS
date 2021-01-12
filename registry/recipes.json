@@ -1,7 +1,4 @@
 {
   "directory": "data/minecraft/recipes",
-  "files": [
-    "arrow.json",
-    "shears.json"
-  ]
+  "files": []
 }

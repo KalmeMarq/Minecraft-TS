@@ -1,0 +1,11 @@
+{
+  "description": {
+    "identifier": "minecraft:white_wool",
+    "item_group": "building"
+  },
+  "components": {
+    "icon": "assets/minecraft/textures/block/white_wool",
+    "display_name": "block.minecraft.white_wool",
+    "max_stack_size": 64
+  }
+}
