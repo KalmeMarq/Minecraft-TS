@@ -1,0 +1,11 @@
+{
+  "description": {
+    "identifier": "minecraft:brewing_stand",
+    "item_group": "brewing"
+  },
+  "components": {
+    "icon": "assets/minecraft/textures/item/brewing_stand",
+    "display_name": "item.minecraft.brewing_stand",
+    "max_stack_size": 64
+  }
+}

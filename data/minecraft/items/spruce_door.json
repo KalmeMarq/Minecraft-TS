@@ -1,0 +1,12 @@
+{
+  "description": {
+    "identifier": "minecraft:spruce_door",
+    "item_group": "redstone",
+    "type_group": "door"
+  },
+  "components": {
+    "icon": "assets/minecraft/textures/item/spruce_door",
+    "display_name": "item.minecraft.spruce_door",
+    "max_stack_size": 64
+  }
+}

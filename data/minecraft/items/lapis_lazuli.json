@@ -1,0 +1,11 @@
+{
+  "description": {
+    "identifier": "minecraft:lapis_lazuli",
+    "item_group": "misc"
+  },
+  "components": {
+    "icon": "assets/minecraft/textures/item/lapis_lazuli",
+    "display_name": "item.minecraft.lapis_lazuli",
+    "max_stack_size": 64
+  }
+}

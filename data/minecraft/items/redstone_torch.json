@@ -1,0 +1,11 @@
+{
+  "description": {
+    "identifier": "minecraft:redstone_torch",
+    "item_group": "redstone"
+  },
+  "components": {
+    "icon": "assets/minecraft/textures/block/redstone_torch",
+    "display_name": "block.minecraft.redstone_torch",
+    "max_stack_size": 64
+  }
+}

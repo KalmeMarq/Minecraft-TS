@@ -1,0 +1,11 @@
+{
+  "description": {
+    "identifier": "minecraft:cooked_rabbit",
+    "item_group": "foodstuffs"
+  },
+  "components": {
+    "icon": "assets/minecraft/textures/item/cooked_rabbit",
+    "display_name": "item.minecraft.cooked_rabbit",
+    "max_stack_size": 64
+  }
+}

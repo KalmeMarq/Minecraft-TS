@@ -1,0 +1,11 @@
+{
+  "description": {
+    "identifier": "minecraft:kelp",
+    "item_group": "foodstuffs"
+  },
+  "components": {
+    "icon": "assets/minecraft/textures/item/kelp",
+    "display_name": "item.minecraft.kelp",
+    "max_stack_size": 64
+  }
+}

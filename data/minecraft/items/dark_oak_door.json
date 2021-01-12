@@ -1,0 +1,12 @@
+{
+  "description": {
+    "identifier": "minecraft:dark_oak_door",
+    "item_group": "redstone",
+    "type_group": "door"
+  },
+  "components": {
+    "icon": "assets/minecraft/textures/item/dark_oak_door",
+    "display_name": "item.minecraft.dark_oak_door",
+    "max_stack_size": 64
+  }
+}

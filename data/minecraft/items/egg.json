@@ -1,0 +1,11 @@
+{
+  "description": {
+    "identifier": "minecraft:egg",
+    "item_group": "misc"
+  },
+  "components": {
+    "icon": "assets/minecraft/textures/item/egg",
+    "display_name": "item.minecraft.egg",
+    "max_stack_size": 16
+  }
+}

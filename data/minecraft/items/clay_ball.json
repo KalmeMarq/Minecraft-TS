@@ -1,0 +1,11 @@
+{
+  "description": {
+    "identifier": "minecraft:clay_ball",
+    "item_group": "misc"
+  },
+  "components": {
+    "icon": "assets/minecraft/textures/item/clay_ball",
+    "display_name": "item.minecraft.clay_ball",
+    "max_stack_size": 64
+  }
+}

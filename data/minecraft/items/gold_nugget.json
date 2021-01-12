@@ -1,0 +1,11 @@
+{
+  "description": {
+    "identifier": "minecraft:gold_nugget",
+    "item_group": "misc"
+  },
+  "components": {
+    "icon": "assets/minecraft/textures/item/gold_nugget",
+    "display_name": "item.minecraft.gold_nugget",
+    "max_stack_size": 64
+  }
+}

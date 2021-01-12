@@ -1,0 +1,11 @@
+{
+  "description": {
+    "identifier": "minecraft:cod",
+    "item_group": "foodstuffs"
+  },
+  "components": {
+    "icon": "assets/minecraft/textures/item/cod",
+    "display_name": "item.minecraft.cod",
+    "max_stack_size": 64
+  }
+}

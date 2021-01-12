@@ -1,0 +1,11 @@
+{
+  "description": {
+    "identifier": "minecraft:tropical_fish_bucket",
+    "item_group": "misc"
+  },
+  "components": {
+    "icon": "assets/minecraft/textures/item/tropical_fish_bucket",
+    "display_name": "item.minecraft.tropical_fish_bucket",
+    "max_stack_size": 64
+  }
+}

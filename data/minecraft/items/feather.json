@@ -1,0 +1,11 @@
+{
+  "description": {
+    "identifier": "minecraft:feather",
+    "item_group": "misc"
+  },
+  "components": {
+    "icon": "assets/minecraft/textures/item/feather",
+    "display_name": "item.minecraft.feather",
+    "max_stack_size": 64
+  }
+}

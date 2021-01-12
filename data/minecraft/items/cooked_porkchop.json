@@ -1,0 +1,11 @@
+{
+  "description": {
+    "identifier": "minecraft:cooked_porkchop",
+    "item_group": "foodstuffs"
+  },
+  "components": {
+    "icon": "assets/minecraft/textures/item/cooked_porkchop",
+    "display_name": "item.minecraft.cooked_porkchop",
+    "max_stack_size": 64
+  }
+}

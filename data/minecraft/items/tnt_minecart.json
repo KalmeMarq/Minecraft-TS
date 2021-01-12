@@ -1,0 +1,11 @@
+{
+  "description": {
+    "identifier": "minecraft:tnt_minecart",
+    "item_group": "misc"
+  },
+  "components": {
+    "icon": "assets/minecraft/textures/item/tnt_minecart",
+    "display_name": "item.minecraft.tnt_minecart",
+    "max_stack_size": 1
+  }
+}

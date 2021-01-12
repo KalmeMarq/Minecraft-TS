@@ -1,0 +1,12 @@
+{
+  "description": {
+    "identifier": "minecraft:orange_tulip",
+    "item_group": "decorations",
+    "type_group": "flower"
+  },
+  "components": {
+    "icon": "assets/minecraft/textures/block/orange_tulip",
+    "display_name": "block.minecraft.orange_tulip",
+    "max_stack_size": 64
+  }
+}

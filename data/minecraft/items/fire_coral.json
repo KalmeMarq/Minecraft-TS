@@ -1,0 +1,12 @@
+{
+  "description": {
+    "identifier": "minecraft:fire_coral",
+    "item_group": "decorations",
+    "type_group": "coral"
+  },
+  "components": {
+    "icon": "assets/minecraft/textures/block/fire_coral",
+    "display_name": "block.minecraft.fire_coral",
+    "max_stack_size": 64
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "description": {
+    "identifier": "minecraft:music_disc_pigstep",
+    "item_group": "misc"
+  },
+  "components": {
+    "icon": "assets/minecraft/textures/item/music_disc_pigstep",
+    "display_name": "item.minecraft.music_disc_pigstep",
+    "max_stack_size": 64
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "description": {
+    "identifier": "minecraft:ink_sac",
+    "item_group": "misc"
+  },
+  "components": {
+    "icon": "assets/minecraft/textures/item/ink_sac",
+    "display_name": "item.minecraft.ink_sac",
+    "max_stack_size": 64
+  }
+}

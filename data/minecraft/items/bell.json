@@ -1,0 +1,11 @@
+{
+  "description": {
+    "identifier": "minecraft:bell",
+    "item_group": "redstone"
+  },
+  "components": {
+    "icon": "assets/minecraft/textures/item/bell",
+    "display_name": "item.minecraft.bell",
+    "max_stack_size": 64
+  }
+}

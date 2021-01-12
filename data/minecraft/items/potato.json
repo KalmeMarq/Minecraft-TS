@@ -1,0 +1,11 @@
+{
+  "description": {
+    "identifier": "minecraft:potato",
+    "item_group": "foodstuffs"
+  },
+  "components": {
+    "icon": "assets/minecraft/textures/item/potato",
+    "display_name": "item.minecraft.potato",
+    "max_stack_size": 64
+  }
+}

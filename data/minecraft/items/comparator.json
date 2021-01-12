@@ -1,0 +1,11 @@
+{
+  "description": {
+    "identifier": "minecraft:comparator",
+    "item_group": "redstone"
+  },
+  "components": {
+    "icon": "assets/minecraft/textures/item/comparator",
+    "display_name": "item.minecraft.comparator",
+    "max_stack_size": 64
+  }
+}

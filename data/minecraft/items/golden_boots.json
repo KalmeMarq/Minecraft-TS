@@ -1,0 +1,16 @@
+{
+  "description": {
+    "identifier": "minecraft:golden_boots",
+    "item_group": "equipment",
+    "type_group": "golden_armor"
+  },
+  "components": {
+    "icon": "assets/minecraft/textures/item/golden_boots",
+    "display_name": "item.minecraft.golden_boots",
+    "max_stack_size": 1,
+    "durability": 91,
+    "armor": {
+      "slot": "boots"
+    }
+  }
+}

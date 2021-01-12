@@ -1,0 +1,11 @@
+{
+  "description": {
+    "identifier": "minecraft:black_wool",
+    "item_group": "building"
+  },
+  "components": {
+    "icon": "assets/minecraft/textures/block/black_wool",
+    "display_name": "block.minecraft.black_wool",
+    "max_stack_size": 64
+  }
+}

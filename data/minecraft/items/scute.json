@@ -1,0 +1,11 @@
+{
+  "description": {
+    "identifier": "minecraft:scute",
+    "item_group": "misc"
+  },
+  "components": {
+    "icon": "assets/minecraft/textures/item/scute",
+    "display_name": "item.minecraft.scute",
+    "max_stack_size": 64
+  }
+}

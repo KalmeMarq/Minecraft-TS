@@ -1,0 +1,11 @@
+{
+  "description": {
+    "identifier": "minecraft:phantom_membrane",
+    "item_group": "misc"
+  },
+  "components": {
+    "icon": "assets/minecraft/textures/item/phantom_membrane",
+    "display_name": "item.minecraft.phantom_membrane",
+    "max_stack_size": 64
+  }
+}

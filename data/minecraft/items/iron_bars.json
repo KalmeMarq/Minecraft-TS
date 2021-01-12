@@ -1,0 +1,11 @@
+{
+  "description": {
+    "identifier": "minecraft:iron_bars",
+    "item_group": "decorations"
+  },
+  "components": {
+    "icon": "assets/minecraft/textures/block/iron_bars",
+    "display_name": "block.minecraft.iron_bars",
+    "max_stack_size": 64
+  }
+}

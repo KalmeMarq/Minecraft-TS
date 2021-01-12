@@ -1,0 +1,11 @@
+{
+  "description": {
+    "identifier": "minecraft:baked_potato",
+    "item_group": "foodstuffs"
+  },
+  "components": {
+    "icon": "assets/minecraft/textures/item/baked_potato",
+    "display_name": "item.minecraft.baked_potato",
+    "max_stack_size": 64
+  }
+}

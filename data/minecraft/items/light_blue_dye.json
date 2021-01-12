@@ -1,0 +1,12 @@
+{
+  "description": {
+    "identifier": "minecraft:light_blue_dye",
+    "item_group": "misc",
+    "type_group": "dye"
+  },
+  "components": {
+    "icon": "assets/minecraft/textures/item/light_blue_dye",
+    "display_name": "item.minecraft.light_blue_dye",
+    "max_stack_size": 64
+  }
+}

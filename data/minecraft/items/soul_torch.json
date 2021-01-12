@@ -1,0 +1,11 @@
+{
+  "description": {
+    "identifier": "minecraft:soul_torch",
+    "item_group": "misc"
+  },
+  "components": {
+    "icon": "assets/minecraft/textures/block/soul_torch",
+    "display_name": "block.minecraft.soul_torch",
+    "max_stack_size": 64
+  }
+}

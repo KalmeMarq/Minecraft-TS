@@ -1,0 +1,11 @@
+{
+  "description": {
+    "identifier": "minecraft:magma_cream",
+    "item_group": "misc"
+  },
+  "components": {
+    "icon": "assets/minecraft/textures/item/magma_cream",
+    "display_name": "item.minecraft.magma_cream",
+    "max_stack_size": 64
+  }
+}

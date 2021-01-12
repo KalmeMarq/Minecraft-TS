@@ -1,0 +1,11 @@
+{
+  "description": {
+    "identifier": "minecraft:snowball",
+    "item_group": "misc"
+  },
+  "components": {
+    "icon": "assets/minecraft/textures/item/snowball",
+    "display_name": "item.minecraft.snowball",
+    "max_stack_size": 16
+  }
+}

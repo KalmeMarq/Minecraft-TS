@@ -1,0 +1,11 @@
+{
+  "description": {
+    "identifier": "minecraft:spectral_arrow",
+    "item_group": "misc"
+  },
+  "components": {
+    "icon": "assets/minecraft/textures/item/spectral_arrow",
+    "display_name": "item.minecraft.spectral_arrow",
+    "max_stack_size": 64
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "description": {
+    "identifier": "minecraft:rabbit",
+    "item_group": "foodstuffs"
+  },
+  "components": {
+    "icon": "assets/minecraft/textures/item/rabbit",
+    "display_name": "item.minecraft.rabbit",
+    "max_stack_size": 64
+  }
+}

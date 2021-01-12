@@ -1,0 +1,11 @@
+{
+  "description": {
+    "identifier": "minecraft:turtle_egg",
+    "item_group": "misc"
+  },
+  "components": {
+    "icon": "assets/minecraft/textures/item/turtle_egg",
+    "display_name": "item.minecraft.turtle_egg",
+    "max_stack_size": 64
+  }
+}

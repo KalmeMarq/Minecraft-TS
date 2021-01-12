@@ -1,0 +1,12 @@
+{
+  "description": {
+    "identifier": "minecraft:birch_sign",
+    "item_group": "decorations",
+    "type_group": "sign"
+  },
+  "components": {
+    "icon": "assets/minecraft/textures/item/birch_sign",
+    "display_name": "item.minecraft.birch_sign",
+    "max_stack_size": 16
+  }
+}

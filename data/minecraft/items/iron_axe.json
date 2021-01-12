@@ -1,0 +1,12 @@
+{
+  "description": {
+    "identifier": "minecraft:iron_axe",
+    "item_group": "tools"
+  },
+  "components": {
+    "icon": "assets/minecraft/textures/item/iron_axe",
+    "display_name": "item.minecraft.iron_axe",
+    "max_stack_size": 1,
+    "durability": 250
+  }
+}

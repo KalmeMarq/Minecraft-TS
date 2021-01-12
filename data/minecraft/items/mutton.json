@@ -1,0 +1,11 @@
+{
+  "description": {
+    "identifier": "minecraft:mutton",
+    "item_group": "foodstuffs"
+  },
+  "components": {
+    "icon": "assets/minecraft/textures/item/mutton",
+    "display_name": "item.minecraft.mutton",
+    "max_stack_size": 64
+  }
+}

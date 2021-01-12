@@ -1,0 +1,11 @@
+{
+  "description": {
+    "identifier": "minecraft:popped_chorus_fruit",
+    "item_group": "foodstuffs"
+  },
+  "components": {
+    "icon": "assets/minecraft/textures/item/popped_chorus_fruit",
+    "display_name": "item.minecraft.popped_chorus_fruit",
+    "max_stack_size": 64
+  }
+}

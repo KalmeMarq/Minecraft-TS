@@ -1,0 +1,11 @@
+{
+  "description": {
+    "identifier": "minecraft:nether_wart",
+    "item_group": "misc"
+  },
+  "components": {
+    "icon": "assets/minecraft/textures/item/nether_wart",
+    "display_name": "item.minecraft.nether_wart",
+    "max_stack_size": 64
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "description": {
+    "identifier": "minecraft:netherite_sword",
+    "item_group": "tools"
+  },
+  "components": {
+    "icon": "assets/minecraft/textures/item/netherite_sword",
+    "display_name": "item.minecraft.netherite_sword",
+    "max_stack_size": 1,
+    "durability": 2031
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "description": {
+    "identifier": "minecraft:nautilus_shell",
+    "item_group": "misc"
+  },
+  "components": {
+    "icon": "assets/minecraft/textures/item/nautilus_shell",
+    "display_name": "item.minecraft.nautilus_shell",
+    "max_stack_size": 64
+  }
+}

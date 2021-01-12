@@ -1,0 +1,11 @@
+{
+  "description": {
+    "identifier": "minecraft:beetroot_soup",
+    "item_group": "foodstuffs"
+  },
+  "components": {
+    "icon": "assets/minecraft/textures/item/beetroot_soup",
+    "display_name": "item.minecraft.beetroot_soup",
+    "max_stack_size": 1
+  }
+}

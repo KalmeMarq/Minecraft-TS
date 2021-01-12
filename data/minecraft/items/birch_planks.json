@@ -1,0 +1,11 @@
+{
+  "description": {
+    "identifier": "minecraft:birch_planks",
+    "item_group": "building"
+  },
+  "components": {
+    "icon": "assets/minecraft/textures/block/birch_planks",
+    "display_name": "block.minecraft.birch_planks",
+    "max_stack_size": 64
+  }
+}

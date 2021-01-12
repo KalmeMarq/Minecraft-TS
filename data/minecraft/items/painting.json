@@ -1,0 +1,11 @@
+{
+  "description": {
+    "identifier": "minecraft:painting",
+    "item_group": "misc"
+  },
+  "components": {
+    "icon": "assets/minecraft/textures/item/painting",
+    "display_name": "item.minecraft.painting",
+    "max_stack_size": 64
+  }
+}

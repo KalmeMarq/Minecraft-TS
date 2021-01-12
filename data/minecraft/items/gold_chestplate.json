@@ -1,0 +1,16 @@
+{
+  "description": {
+    "identifier": "minecraft:gold_chestplate",
+    "item_group": "equipment",
+    "type_group": "golden_armor"
+  },
+  "components": {
+    "icon": "assets/minecraft/textures/item/golden_chestplate",
+    "display_name": "item.minecraft.gold_chestplate",
+    "max_stack_size": 1,
+    "durability": 112,
+    "armor": {
+      "slot": "chestplate"
+    }
+  }
+}

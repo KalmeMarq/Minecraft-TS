@@ -1,0 +1,11 @@
+{
+  "description": {
+    "identifier": "minecraft:wheat",
+    "item_group": "foodstuffs"
+  },
+  "components": {
+    "icon": "assets/minecraft/textures/item/cookie",
+    "display_name": "item.minecraft.cookie",
+    "max_stack_size": 64
+  }
+}

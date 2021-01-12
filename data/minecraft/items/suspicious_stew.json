@@ -1,0 +1,11 @@
+{
+  "description": {
+    "identifier": "minecraft:suspicious_stew",
+    "item_group": "foodstuffs"
+  },
+  "components": {
+    "icon": "assets/minecraft/textures/item/suspicious_stew",
+    "display_name": "item.minecraft.suspicious_stew",
+    "max_stack_size": 1
+  }
+}

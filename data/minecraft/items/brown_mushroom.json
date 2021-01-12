@@ -1,0 +1,12 @@
+{
+  "description": {
+    "identifier": "minecraft:brown_mushroom",
+    "item_group": "misc",
+    "type_group": "mushroom"
+  },
+  "components": {
+    "icon": "assets/minecraft/textures/block/brown_mushroom",
+    "display_name": "block.minecraft.brown_mushroom",
+    "max_stack_size": 64
+  }
+}

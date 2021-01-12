@@ -1,0 +1,11 @@
+{
+  "description": {
+    "identifier": "minecraft:iron_ingot",
+    "item_group": "misc"
+  },
+  "components": {
+    "icon": "assets/minecraft/textures/item/iron_ingot",
+    "display_name": "item.minecraft.iron_ingot",
+    "max_stack_size": 64
+  }
+}

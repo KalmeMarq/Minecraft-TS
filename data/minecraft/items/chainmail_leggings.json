@@ -1,0 +1,16 @@
+{
+  "description": {
+    "identifier": "minecraft:chainmail_leggings",
+    "item_group": "equipment",
+    "type_group": "chainmail_armor"
+  },
+  "components": {
+    "icon": "assets/minecraft/textures/item/chainmail_leggings",
+    "display_name": "item.minecraft.chainmail_leggings",
+    "max_stack_size": 1,
+    "durability": 225,
+    "armor": {
+      "slot": "leggings"
+    }
+  }
+}

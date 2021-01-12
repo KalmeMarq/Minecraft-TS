@@ -1,0 +1,12 @@
+{
+  "description": {
+    "identifier": "minecraft:iron_shovel",
+    "item_group": "tools"
+  },
+  "components": {
+    "icon": "assets/minecraft/textures/item/iron_shovel",
+    "display_name": "item.minecraft.iron_shovel",
+    "max_stack_size": 1,
+    "durability": 250
+  }
+}

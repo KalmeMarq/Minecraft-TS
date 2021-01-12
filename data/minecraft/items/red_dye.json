@@ -1,0 +1,12 @@
+{
+  "description": {
+    "identifier": "minecraft:red_dye",
+    "item_group": "misc",
+    "type_group": "dye"
+  },
+  "components": {
+    "icon": "assets/minecraft/textures/item/red_dye",
+    "display_name": "item.minecraft.red_dye",
+    "max_stack_size": 64
+  }
+}

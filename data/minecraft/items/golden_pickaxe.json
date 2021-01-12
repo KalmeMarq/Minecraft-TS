@@ -1,0 +1,12 @@
+{
+  "description": {
+    "identifier": "minecraft:golden_pickaxe",
+    "item_group": "tools"
+  },
+  "components": {
+    "icon": "assets/minecraft/textures/item/golden_pickaxe",
+    "display_name": "item.minecraft.golden_pickaxe",
+    "max_stack_size": 1,
+    "durability": 32
+  }
+}

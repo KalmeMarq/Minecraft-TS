@@ -1,0 +1,11 @@
+{
+  "description": {
+    "identifier": "minecraft:glistering_melon_slice",
+    "item_group": "brewing"
+  },
+  "components": {
+    "icon": "assets/minecraft/textures/item/glistering_melon_slice",
+    "display_name": "item.minecraft.glistering_melon_slice",
+    "max_stack_size": 64
+  }
+}

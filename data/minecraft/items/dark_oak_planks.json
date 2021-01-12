@@ -1,0 +1,11 @@
+{
+  "description": {
+    "identifier": "minecraft:dark_oak_planks",
+    "item_group": "building"
+  },
+  "components": {
+    "icon": "assets/minecraft/textures/block/dark_oak_planks",
+    "display_name": "block.minecraft.dark_oak_planks",
+    "max_stack_size": 64
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "description": {
+    "identifier": "minecraft:bubble_coral",
+    "item_group": "decorations",
+    "type_group": "coral"
+  },
+  "components": {
+    "icon": "assets/minecraft/textures/block/bubble_coral",
+    "display_name": "block.minecraft.bubble_coral",
+    "max_stack_size": 64
+  }
+}

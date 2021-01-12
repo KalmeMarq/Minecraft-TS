@@ -1,0 +1,12 @@
+{
+  "description": {
+    "identifier": "minecraft:warped_fungus",
+    "item_group": "decorations",
+    "type_group": "flower"
+  },
+  "components": {
+    "icon": "assets/minecraft/textures/block/warped_fungus",
+    "display_name": "block.minecraft.warped_fungus",
+    "max_stack_size": 64
+  }
+}

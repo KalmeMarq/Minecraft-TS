@@ -1,0 +1,12 @@
+{
+  "description": {
+    "identifier": "minecraft:warped_door",
+    "item_group": "redstone",
+    "type_group": "door"
+  },
+  "components": {
+    "icon": "assets/minecraft/textures/item/warped_door",
+    "display_name": "item.minecraft.warped_door",
+    "max_stack_size": 64
+  }
+}

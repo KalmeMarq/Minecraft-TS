@@ -1,0 +1,11 @@
+{
+  "description": {
+    "identifier": "minecraft:cyan_wool",
+    "item_group": "building"
+  },
+  "components": {
+    "icon": "assets/minecraft/textures/block/cyan_wool",
+    "display_name": "block.minecraft.cyan_wool",
+    "max_stack_size": 64
+  }
+}

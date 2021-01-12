@@ -1,0 +1,12 @@
+{
+  "description": {
+    "identifier": "minecraft:spruce_sign",
+    "item_group": "decorations",
+    "type_group": "sign"
+  },
+  "components": {
+    "icon": "assets/minecraft/textures/item/spruce_sign",
+    "display_name": "item.minecraft.spruce_sign",
+    "max_stack_size": 16
+  }
+}
