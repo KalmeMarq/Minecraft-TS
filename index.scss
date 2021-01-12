@@ -7,7 +7,7 @@
   font-family: 'Minecraft Regular';
   font-style: normal;
   font-weight: normal;
-  src: local('Minecraft Regular'), url(/Minecraftia.ttf);
+  src: local('Minecraft Regular'), url('./Minecraftia.ttf');
 }
 
 * {
@@ -29,7 +29,8 @@ img,
 .health-bar,
 .armor-bar,
 .hunger-bar,
-.hopper-container {
+.hopper-container,
+.dirt-bg {
   image-rendering: -moz-crisp-edges; 
   image-rendering: -o-crisp-edges;
   image-rendering: -webkit-optimize-contrast;
@@ -56,7 +57,7 @@ img,
   width: calc(200px * var(--gui-scale));
   height: calc(20px * var(--gui-scale));
 
-  background: url(/widgets.png) no-repeat;
+  background: url('./widgets.png') no-repeat;
   background-size: calc(256px * var(--gui-scale));
   background-position-y: calc(-66px * var(--gui-scale));
   border: none;
@@ -109,7 +110,7 @@ img,
         position: absolute;
         width: 50%;
         height: 100%;
-        background: url(/widgets.png) no-repeat;
+        background: url('./widgets.png') no-repeat;
         background-size: calc(256px * var(--gui-scale));
         background-position-y: calc(-66px * var(--gui-scale));
         z-index: 2;
@@ -121,7 +122,7 @@ img,
         height: 100%;
         right: 0;
         float: right;
-        background: url(/widgets.png) no-repeat;
+        background: url('./widgets.png') no-repeat;
         background-size: calc(256px * var(--gui-scale));
         background-position-y: calc(-66px * var(--gui-scale));
       }
@@ -135,7 +136,7 @@ img,
   width: calc(182px * var(--gui-scale));
   height: calc(22px * var(--gui-scale));
 
-  background: url(/widgets.png) no-repeat;
+  background: url('./widgets.png') no-repeat;
   background-size: calc(256px * var(--gui-scale));
   background-position-y: 0;
   border: none;
@@ -154,7 +155,7 @@ img,
       width: calc(24px * var(--gui-scale));
       height: calc(24px * var(--gui-scale));
 
-      background: url(/widgets.png) no-repeat;
+      background: url('./widgets.png') no-repeat;
       background-size: calc(256px * var(--gui-scale));
       background-position-y: calc(-22px * var(--gui-scale));
      
@@ -175,7 +176,7 @@ img,
     width: 100%;
     height: 100%;
 
-    background: url(/icons.png) no-repeat;
+    background: url('./icons.png') no-repeat;
     background-size: calc(256px * var(--gui-scale));
     background-position-y: calc(-64px * var(--gui-scale));
   }
@@ -186,7 +187,7 @@ img,
     width: 69%;
     height: 100%;
 
-    background: url(/icons.png) no-repeat;
+    background: url('./icons.png') no-repeat;
     background-size: calc(256px * var(--gui-scale));
     background-position-y: calc(-69px * var(--gui-scale));
   }
@@ -241,7 +242,7 @@ img,
       height: calc(9px * var(--gui-scale));
       margin-left: calc(-1px * var(--gui-scale));
 
-      background: url(/icons.png) no-repeat;
+      background: url('./icons.png') no-repeat;
       background-size: calc(256px * var(--gui-scale));
       background-position-x: calc(-52px * var(--gui-scale));
       background-position-y: calc(-9px * var(--gui-scale));
@@ -268,7 +269,7 @@ img,
       height: calc(9px * var(--gui-scale));
       margin-left: calc(-1px * var(--gui-scale));
 
-      background: url(/icons.png) no-repeat;
+      background: url('./icons.png') no-repeat;
       background-size: calc(256px * var(--gui-scale));
       background-position-x: calc(-52px * var(--gui-scale));
       background-position-y: 0;
@@ -305,7 +306,7 @@ img,
       height: calc(9px * var(--gui-scale));
       margin-left: calc(-1px * var(--gui-scale));
 
-      background: url(/icons.png) no-repeat;
+      background: url('./icons.png') no-repeat;
       background-size: calc(256px * var(--gui-scale));
       background-position-x: calc(-16px * var(--gui-scale));
       background-position-y: calc(-9px * var(--gui-scale));
@@ -326,7 +327,7 @@ img,
       height: calc(9px * var(--gui-scale));
       margin-left: calc(-1px * var(--gui-scale));
 
-      background: url(/icons.png) no-repeat;
+      background: url('./icons.png') no-repeat;
       background-size: calc(256px * var(--gui-scale));
       background-position-x: calc(-34px * var(--gui-scale));
       background-position-y: calc(-9px * var(--gui-scale));
@@ -359,7 +360,7 @@ img,
       height: calc(9px * var(--gui-scale));
       margin-left: calc(-1px * var(--gui-scale));
 
-      background: url(/icons.png) no-repeat;
+      background: url('./icons.png') no-repeat;
       background-size: calc(256px * var(--gui-scale));
       background-position-x: calc(-16px * var(--gui-scale));
       background-position-y: calc(-27px * var(--gui-scale));
@@ -382,7 +383,7 @@ img,
       height: calc(9px * var(--gui-scale));
       margin-right: calc(-1px * var(--gui-scale));
 
-      background: url(/icons.png) no-repeat;
+      background: url('./icons.png') no-repeat;
       background-size: calc(256px * var(--gui-scale));
       background-position-x: calc(-52px * var(--gui-scale));
       background-position-y: calc(-27px * var(--gui-scale));
@@ -462,4 +463,17 @@ img,
 
   background-image: url(/hopper.png);
   background-size: calc(256px * var(--gui-scale));
+}
+
+.dirt-bg {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  z-index: -5;
+
+  background: url('./options_background.png');
+  background-size: calc((16px / 2) * 3 * var(--gui-scale));
+
+  background-color: rgba(0, 0, 0, 0.6);
+  background-blend-mode: multiply;
 }

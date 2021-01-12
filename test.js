@@ -197,7 +197,9 @@ const displaySettingsScreen = (where) => {
   window.location.hash = `${window.location.hash === '#hud' ? '#hud-' : ''}settings`;
 
   where.innerHTML = `
-    ${where === overRoot ? '<div class="dark-overlay"></div>' : ''}
+    ${where === overRoot
+      ? '<div class="dark-overlay"></div>'
+      : '<div class="dirt-bg"></div>'}
 
     <button class="classic-btn" id="back-btn">Back</button> 
   `;
