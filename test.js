@@ -55,9 +55,6 @@ const selectHotbarwithNums = (e) => {
   }
 }
 
-window.addEventListener('mousewheel', selectHotbarWithWheel)
-window.addEventListener('keydown', selectHotbarwithNums);
-
 /* Xp bar */
 let xpLevel = 0;
 
@@ -153,13 +150,31 @@ const root = document.getElementById('root');
 const overRoot = document.getElementById('overlay-root');
 
 const showOverRoot = (e) => {
-  if(window.location.hash === '#hud' && e.key === 'Escape') {
-    if(!displayingOverRoot && overRoot.innerHTML === '') displayPauseScreen(overRoot);
-    undisplayOverRootScreen();
-  } else if(window.location.hash === '#hud' && e.key === 'h') {
-    if(!displayingOverRoot && overRoot.innerHTML === '') displayHopperScreen(); 
-    undisplayOverRootScreen();
+  const keyOpenInv = localStorage.getItem('keyOpenInv') || 'e';
+  const keyOpenHopper = localStorage.getItem('keyOpenHopper') || 'h';
+  const keyOpenCTable = localStorage.getItem('keyOpenCTable') || 'c';
+  const keyOpenStonecutter = localStorage.getItem('keyOpenStonecutter') || 's';
+
+  if(window.location.hash === '#hud') {
+    if(e.key === 'Escape') {
+      if(!displayingOverRoot && overRoot.innerHTML === '') displayPauseScreen(overRoot);
+      undisplayOverRootScreen();
+    } else if(e.key === keyOpenHopper) {
+      if(!displayingOverRoot && overRoot.innerHTML === '') displayHopperScreen(); 
+      undisplayOverRootScreen();
+    } else if(e.key === keyOpenInv) {
+      if(!displayingOverRoot && overRoot.innerHTML === '') displaySurInventoryScreen(); 
+      undisplayOverRootScreen();
+    } else if(e.key === keyOpenCTable) {
+      if(!displayingOverRoot && overRoot.innerHTML === '') displayCraftingTableScreen(); 
+      undisplayOverRootScreen();
+    } else if(e.key === keyOpenStonecutter) {
+      if(!displayingOverRoot && overRoot.innerHTML === '') displayStonecutterScreen(); 
+      undisplayOverRootScreen();
+    }
   }
+
+  console.log(e.key);
 }
 
 window.addEventListener('keydown', showOverRoot);
@@ -180,8 +195,19 @@ const displayMainScreen = () => {
   window.location.hash = 'main';
 
   root.innerHTML = `
-    <button class="classic-btn" id="hud-btn">Hud</button> 
-    <button class="classic-btn" id="settings-btn">Settings</button> 
+    <div class="mc-title-box">
+      <div class="mc-title-minec"></div>
+      <div class="mc-title-raft"></div>
+      <h2 id="splash-texts">SSSefdh f esd fsedgs</h2>
+    </div>
+
+    <button class="classic-btn" id="hud-btn" style="top: calc(25% + 40px * var(--gui-scale)); left: 50%; transform: translate(-50%)">Hud</button> 
+    <button class="classic-btn" id="settings-btn" style="top: calc(25% + 64px * var(--gui-scale)); left: 50%; transform: translate(-50%)">Settings</button>
+
+    <div class="bottom-text">
+      <span>Minecraft JS (Rewritten)</span>
+      <span>Damn</span>
+    </div>
   `;
 
   document.getElementById('hud-btn').addEventListener('click', () => {
@@ -194,19 +220,95 @@ const displayMainScreen = () => {
 }
 
 const displaySettingsScreen = (where) => {
-  window.location.hash = `${window.location.hash === '#hud' ? '#hud-' : ''}settings`;
+  if(window.location.hash === '#hud' || window.location.hash === '#hud-settings') {
+    window.location.hash = '#hud-settings'
+  } else {
+    window.location.hash = '#settings'
+  }
 
   where.innerHTML = `
     ${where === overRoot
       ? '<div class="dark-overlay"></div>'
       : '<div class="dirt-bg"></div>'}
 
-    <button class="classic-btn" id="back-btn">Back</button> 
+    <h2 class="str-centered" style="top: calc(15px * var(--gui-scale)">Options</h2>
+
+    <button class="classic-btn" id="controls-btn" style="top: calc(100% / 6 + 12px * var(--gui-scale)); left: 50%; transform: translate(-50%)">Controls</button> 
+    <button class="classic-btn" id="back-btn" style="top: calc(100% / 6 + 120px * var(--gui-scale)); left: 50%; transform: translate(-50%)">Back</button>
   `;
+
+  document.getElementById('controls-btn').addEventListener('click', () => {
+    displaySettingsControlsScreen(where);
+  });
 
   document.getElementById('back-btn').addEventListener('click', () => {
     if(window.location.hash !== '#hud-settings') displayMainScreen();
     else displayPauseScreen(overRoot);
+  });
+}
+
+const displaySettingsControlsScreen = (where) => {
+  where.innerHTML = `
+    <div class="dirt-bg"></div>
+
+    <h2 class="str-centered" style="top: calc(12px * var(--gui-scale)">Controls</h2>
+
+    <div class="keybindings">
+      <div class="keybinding-box">
+        <span class="keybind-label">Open Inventory</span>
+        <button class="classic-btn keybind-btn" data-localstorekey="keyOpenInv">e</button>
+      </div>
+      <div class="keybinding-box">
+        <span class="keybind-label">Open Crafting Table</span>
+        <button class="classic-btn keybind-btn" data-localstorekey="keyOpenCTable">c</button>
+      </div>
+      <div class="keybinding-box">
+        <span class="keybind-label">Open Stonecutter</span>
+        <button class="classic-btn keybind-btn" data-localstorekey="keyOpenStonecutter">s</button>
+      </div>
+      <div class="keybinding-box">
+        <span class="keybind-label">Open Hopper</span>
+        <button class="classic-btn keybind-btn" data-localstorekey="keyOpenHopper">h</button>
+      </div>
+    </div>
+
+    <button class="classic-btn" id="reset-keybinds-btn" style="bottom: calc(32px * var(--gui-scale)); left: 50%; transform: translate(-50%)">Reset Keys</button> 
+    <button class="classic-btn" id="back-btn" style="bottom: calc(7px * var(--gui-scale)); left: 50%; transform: translate(-50%)">Back</button> 
+  `;
+
+  document.getElementById('back-btn').addEventListener('click', () => {
+    displaySettingsScreen(where);
+  });
+
+  const keybindBtns = document.querySelectorAll('.keybind-btn');
+
+  for(const keybindBtn of keybindBtns) {
+    if(localStorage.getItem(keybindBtn.getAttribute('data-localstorekey'))) keybindBtn.textContent = localStorage.getItem(keybindBtn.getAttribute('data-localstorekey')); 
+
+    keybindBtn.addEventListener('click', (e) => {
+      keybindBtn.classList.add('keybind-btn-selected');
+
+      const aaa = (e) => {
+        localStorage.setItem(keybindBtn.getAttribute('data-localstorekey'), e.key);
+        keybindBtn.classList.remove('keybind-btn-selected');
+        keybindBtn.textContent =  localStorage.getItem(keybindBtn.getAttribute('data-localstorekey'));
+
+        window.removeEventListener('keypress', aaa);
+      }
+
+      window.addEventListener('keypress', aaa);
+    })
+  }
+
+  document.getElementById('reset-keybinds-btn').addEventListener('click', () => {
+    localStorage.setItem('keyOpenInv', 'e');
+    localStorage.setItem('keyOpenCTable', 'c');
+    localStorage.setItem('keyOpenHopper', 'h');
+    localStorage.setItem('keyOpenStonecutter', 's');
+
+    for(var i = 0; i < keybindBtns.length; i++) {
+      keybindBtns[i].textContent = localStorage.getItem(keybindBtns[i].getAttribute('data-localstorekey'))
+    }
   });
 }
 
@@ -296,7 +398,7 @@ const displayHudScreen = () => {
     </div>
   `;
 
-  giveHotbarFunc()
+  giveHotbarFunc();
 
   window.addEventListener('keydown', selectHotbarwithNums);
   window.addEventListener('mousewheel', selectHotbarWithWheel);
@@ -316,9 +418,11 @@ const displayPauseScreen = (where) => {
 
     <div class="dark-overlay"></div>
 
-    <button class="classic-btn" id="return-btn">Return</button>
-    <button class="classic-btn" id="settings-btn">Settings</button>
-    <button class="classic-btn" id="back-title-btn">Back To Title</button>
+    <h2 class="str-centered" style="top: calc(40px * var(--gui-scale));">Game Menu</h2>
+
+    <button class="classic-btn" id="return-btn" style="top: calc(25% + (24px - 16px) * var(--gui-scale)); left: 50%; transform: translate(-50%)">Return</button>
+    <button class="classic-btn" id="settings-btn" style="top: calc(25% + (96px - 16px) * var(--gui-scale)); left: 50%; transform: translate(-50%)">Settings</button>
+    <button class="classic-btn" id="back-title-btn" style="top: calc(25% + (120px - 16px) * var(--gui-scale)); left: 50%; transform: translate(-50%)">Back To Title</button>
 
   `;
 
@@ -329,6 +433,8 @@ const displayPauseScreen = (where) => {
   document.getElementById('back-title-btn').addEventListener('click', () => {
     undisplayOverRootScreen();
 
+    window.removeEventListener('keydown', selectHotbarwithNums);
+    window.removeEventListener('mousewheel', selectHotbarWithWheel);
     displayMainScreen();
   });
 
@@ -344,11 +450,44 @@ const displayHopperScreen = () => {
   window.removeEventListener('mousewheel', selectHotbarWithWheel);
 
   overRoot.innerHTML = `
-
     <div class="dark-overlay"></div>
+    <div class="container hopper-container"></div>
+  `;
+}
 
-    <div class="hopper-container"></div>
+const displaySurInventoryScreen = () => {
+  window.location.hash = '#hud';
 
+  window.removeEventListener('keydown', selectHotbarwithNums);
+  window.removeEventListener('mousewheel', selectHotbarWithWheel);
+
+  overRoot.innerHTML = `
+    <div class="dark-overlay"></div>
+    <div class="container inventory-container"></div>
+  `;
+}
+
+const displayCraftingTableScreen = () => {
+  window.location.hash = '#hud';
+
+  window.removeEventListener('keydown', selectHotbarwithNums);
+  window.removeEventListener('mousewheel', selectHotbarWithWheel);
+
+  overRoot.innerHTML = `
+    <div class="dark-overlay"></div>
+    <div class="container crafting-table-container"></div>
+  `;
+}
+
+const displayStonecutterScreen = () => {
+  window.location.hash = '#hud';
+
+  window.removeEventListener('keydown', selectHotbarwithNums);
+  window.removeEventListener('mousewheel', selectHotbarWithWheel);
+
+  overRoot.innerHTML = `
+    <div class="dark-overlay"></div>
+    <div class="container stonecutter-container"></div>
   `;
 }
 
