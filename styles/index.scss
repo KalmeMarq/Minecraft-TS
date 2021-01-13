@@ -7,7 +7,7 @@
   font-family: 'Minecraft Regular';
   font-style: normal;
   font-weight: normal;
-  src: local('Minecraft Regular'), url('./assets/minecraft/font/Minecraftia.ttf');
+  src: local('Minecraft Regular'), url('../assets/minecraft/font/Minecraftia.ttf');
 }
 
 * {
@@ -15,11 +15,12 @@
   padding: 0;
   box-sizing: border-box;
   font-family: 'Minecraft Regular';
+  font-weight: 100;
 }
 
 body {
   overflow: hidden;
-  background: #cccccc;
+  background: #a03333;
 }
 
 /* pixelated */
@@ -32,7 +33,8 @@ img,
 .hunger-bar,
 .container,
 .dirt-bg,
-.mc-title-box {
+.mc-title-box,
+.bossbars-list {
   image-rendering: -moz-crisp-edges; 
   image-rendering: -o-crisp-edges;
   image-rendering: -webkit-optimize-contrast;
@@ -69,7 +71,7 @@ img,
   width: calc(200px * var(--gui-scale));
   height: calc(20px * var(--gui-scale));
 
-  background: url('./assets/minecraft/textures/gui/widgets.png') no-repeat;
+  background: url('../assets/minecraft/textures/gui/widgets.png') no-repeat;
   background-size: calc(256px * var(--gui-scale));
   background-position-y: calc(-66px * var(--gui-scale));
   border: none;
@@ -122,7 +124,7 @@ img,
         position: absolute;
         width: 50%;
         height: 100%;
-        background: url('./assets/minecraft/textures/gui/widgets.png') no-repeat;
+        background: url('../assets/minecraft/textures/gui/widgets.png') no-repeat;
         background-size: calc(256px * var(--gui-scale));
         background-position-y: calc(-66px * var(--gui-scale));
         z-index: 2;
@@ -134,7 +136,7 @@ img,
         height: 100%;
         right: 0;
         float: right;
-        background: url('./assets/minecraft/textures/gui/widgets.png') no-repeat;
+        background: url('../assets/minecraft/textures/gui/widgets.png') no-repeat;
         background-size: calc(256px * var(--gui-scale));
         background-position-y: calc(-66px * var(--gui-scale));
       }
@@ -148,7 +150,7 @@ img,
   width: calc(182px * var(--gui-scale));
   height: calc(22px * var(--gui-scale));
 
-  background: url('./assets/minecraft/textures/gui/widgets.png') no-repeat;
+  background: url('../assets/minecraft/textures/gui/widgets.png') no-repeat;
   background-size: calc(256px * var(--gui-scale));
   background-position-y: 0;
   border: none;
@@ -167,7 +169,7 @@ img,
       width: calc(24px * var(--gui-scale));
       height: calc(24px * var(--gui-scale));
 
-      background: url('./assets/minecraft/textures/gui/widgets.png') no-repeat;
+      background: url('../assets/minecraft/textures/gui/widgets.png') no-repeat;
       background-size: calc(256px * var(--gui-scale));
       background-position-y: calc(-22px * var(--gui-scale));
      
@@ -188,7 +190,7 @@ img,
     width: 100%;
     height: 100%;
 
-    background: url('./assets/minecraft/textures/gui/icons.png') no-repeat;
+    background: url('../assets/minecraft/textures/gui/icons.png') no-repeat;
     background-size: calc(256px * var(--gui-scale));
     background-position-y: calc(-64px * var(--gui-scale));
   }
@@ -199,7 +201,7 @@ img,
     width: 69%;
     height: 100%;
 
-    background: url('./assets/minecraft/textures/gui/icons.png') no-repeat;
+    background: url('../assets/minecraft/textures/gui/icons.png') no-repeat;
     background-size: calc(256px * var(--gui-scale));
     background-position-y: calc(-69px * var(--gui-scale));
   }
@@ -254,7 +256,7 @@ img,
       height: calc(9px * var(--gui-scale));
       margin-left: calc(-1px * var(--gui-scale));
 
-      background: url('./assets/minecraft/textures/gui/icons.png') no-repeat;
+      background: url('../assets/minecraft/textures/gui/icons.png') no-repeat;
       background-size: calc(256px * var(--gui-scale));
       background-position-x: calc(-52px * var(--gui-scale));
       background-position-y: calc(-9px * var(--gui-scale));
@@ -281,7 +283,7 @@ img,
       height: calc(9px * var(--gui-scale));
       margin-left: calc(-1px * var(--gui-scale));
 
-      background: url('./assets/minecraft/textures/gui/icons.png') no-repeat;
+      background: url('../assets/minecraft/textures/gui/icons.png') no-repeat;
       background-size: calc(256px * var(--gui-scale));
       background-position-x: calc(-52px * var(--gui-scale));
       background-position-y: 0;
@@ -318,7 +320,7 @@ img,
       height: calc(9px * var(--gui-scale));
       margin-left: calc(-1px * var(--gui-scale));
 
-      background: url('./assets/minecraft/textures/gui/icons.png') no-repeat;
+      background: url('../assets/minecraft/textures/gui/icons.png') no-repeat;
       background-size: calc(256px * var(--gui-scale));
       background-position-x: calc(-16px * var(--gui-scale));
       background-position-y: calc(-9px * var(--gui-scale));
@@ -339,7 +341,7 @@ img,
       height: calc(9px * var(--gui-scale));
       margin-left: calc(-1px * var(--gui-scale));
 
-      background: url('./assets/minecraft/textures/gui/icons.png') no-repeat;
+      background: url('../assets/minecraft/textures/gui/icons.png') no-repeat;
       background-size: calc(256px * var(--gui-scale));
       background-position-x: calc(-34px * var(--gui-scale));
       background-position-y: calc(-9px * var(--gui-scale));
@@ -372,7 +374,7 @@ img,
       height: calc(9px * var(--gui-scale));
       margin-left: calc(-1px * var(--gui-scale));
 
-      background: url('./assets/minecraft/textures/gui/icons.png') no-repeat;
+      background: url('../assets/minecraft/textures/gui/icons.png') no-repeat;
       background-size: calc(256px * var(--gui-scale));
       background-position-x: calc(-16px * var(--gui-scale));
       background-position-y: calc(-27px * var(--gui-scale));
@@ -395,7 +397,7 @@ img,
       height: calc(9px * var(--gui-scale));
       margin-right: calc(-1px * var(--gui-scale));
 
-      background: url('./assets/minecraft/textures/gui/icons.png') no-repeat;
+      background: url('../assets/minecraft/textures/gui/icons.png') no-repeat;
       background-size: calc(256px * var(--gui-scale));
       background-position-x: calc(-52px * var(--gui-scale));
       background-position-y: calc(-27px * var(--gui-scale));
@@ -425,20 +427,20 @@ img,
 }
 
 .inventory-container {
-  background-image: url('./assets/minecraft/textures/gui/container/inventory.png');
+  background-image: url('../assets/minecraft/textures/gui/container/inventory.png');
 }
 
 .crafting-table-container {
-  background-image: url('./assets/minecraft/textures/gui/container/crafting_table.png');
+  background-image: url('../assets/minecraft/textures/gui/container/crafting_table.png');
 }
 
 .stonecutter-container {
-  background-image: url('./assets/minecraft/textures/gui/container/stonecutter.png');
+  background-image: url('../assets/minecraft/textures/gui/container/stonecutter.png');
 }
 
 .hopper-container {
   height: calc(133px * var(--gui-scale));
-  background-image: url('./assets/minecraft/textures/gui/container/hopper.png');
+  background-image: url('../assets/minecraft/textures/gui/container/hopper.png');
 }
 
 /* Controls */
@@ -489,6 +491,57 @@ img,
     }
   }
 }
+
+/* Bossbar */
+.bossbars-list {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  top: 0;
+  left: 50%;
+  transform: translate(-50%);
+  width: calc(182px * var(--gui-scale));
+
+  .bossbar-item {
+    position: relative;
+    width: calc(182px * var(--gui-scale));
+    height: calc(18px * var(--gui-scale));
+
+    span {
+      position: absolute;
+      color: white;
+      left: 50%;
+      top: calc(1px * var(--gui-scale));
+      transform: translate(-50%);
+      font-size: calc(7.335px * var(--gui-scale));
+      text-shadow: calc(1px * var(--gui-scale) - (0.1px * var(--gui-scale))) calc(1px * var(--gui-scale) - (0.1px * var(--gui-scale))) rgb(31, 31, 31);
+    }
+
+    .bossbar-empty {
+      position: absolute;
+      width: 100%;
+      height: calc(5px * var(--gui-scale));
+      bottom: 0;
+  
+      background: url('../assets/minecraft/textures/gui/bars.png');
+      background-size: calc(256px * var(--gui-scale));
+    }
+
+    .bossbar-full {
+      position: absolute;
+      width: 76%;
+      height: calc(5px * var(--gui-scale));
+      bottom: 0;
+  
+      background: url('../assets/minecraft/textures/gui/bars.png');
+      background-size: calc(256px * var(--gui-scale));
+      background-position-y: calc(-5px * var(--gui-scale));
+    }
+  }
+}
+
+
+
 
 /*  */
 
@@ -560,7 +613,7 @@ img,
   height: 100%;
   z-index: -5;
 
-  background: url('./assets/minecraft/textures/gui/options_background.png');
+  background: url('../assets/minecraft/textures/gui/options_background.png');
   background-size: calc((16px / 2) * 3 * var(--gui-scale));
 
   background-color: rgba(0, 0, 0, 0.6);
@@ -584,7 +637,7 @@ img,
   left: 0;
   width: calc(155px * var(--gui-scale));
   height: calc(44px * var(--gui-scale));
-  background-image: url('./assets/minecraft/textures/gui/title/minecraft.png');
+  background-image: url('../assets/minecraft/textures/gui/title/minecraft.png');
   background-repeat: no-repeat;
   background-size: calc(256px * var(--gui-scale))
 }
@@ -593,7 +646,7 @@ img,
   top: 0;
   width: calc(119px * var(--gui-scale));
   height: calc(44px * var(--gui-scale));
-  background-image: url('./assets/minecraft/textures/gui/title/minecraft.png');
+  background-image: url('../assets/minecraft/textures/gui/title/minecraft.png');
   background-repeat: no-repeat;
   background-size: calc(256px * var(--gui-scale));background-position-y:calc(-45px * var(--gui-scale))
 }
@@ -606,7 +659,7 @@ img,
   transform: translate(-50%, 100%) rotateZ(-20deg);
   color: #ebeb41;
   text-shadow: #3a3a10 calc(1px * var(--gui-scale)) calc(1px * var(--gui-scale));
-  animation: splashAnim 260ms alternate infinite
+  animation: splashAnim 260ms alternate infinite;
 }
   
 @keyframes splashAnim {
@@ -642,4 +695,109 @@ img,
     font-size: calc(7.335px * var(--gui-scale));
     text-shadow: calc(1px * var(--gui-scale) - (0.1px * var(--gui-scale))) calc(1px * var(--gui-scale) - (0.1px * var(--gui-scale))) rgb(31, 31, 31);
   }
+}
+
+#panoramas {
+  position: absolute;
+  z-index: -100;
+}
+
+#chat-input-box {
+  position: absolute;
+  width: calc(100% - (4px * var(--gui-scale)));
+  height: calc(12px * var(--gui-scale));
+  left: calc(2px * var(--gui-scale));
+  bottom: calc(2px * var(--gui-scale));
+  z-index: 100;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+#chat-box {
+  flex-direction: column;
+  position: absolute;
+  width: calc(320px * var(--gui-scale));
+  max-height: calc(180px * var(--gui-scale));
+  overflow-y: auto;
+  display: grid;
+  place-items: center;
+  left: calc(2px * var(--gui-scale));
+  bottom: calc(16px * var(--gui-scale));
+  z-index: 100;
+
+  &::-webkit-scrollbar {
+    width: calc(1px * var(--gui-scale));
+    background: none;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: grey;
+  }
+}
+
+#chat-box p {
+  color: white;
+  font-size: calc(8px * var(--gui-scale));
+  opacity: 1;
+  max-width: 100%;
+  width: 100%;
+  transition: 1000ms opacity;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+#chat-input {
+  position: relative;
+  width: calc(100% - (4px * var(--gui-scale)));
+  top: calc(1px * var(--gui-scale));
+  left: calc(2px * var(--gui-scale));
+  height: calc(100% - (2px * var(--gui-scale)) );
+  background: none;
+  outline: none;
+  font-size: calc(8px * var(--gui-scale));
+  color: white;
+  text-shadow: #3a3a10 calc(1px * var(--gui-scale))  calc(1px * var(--gui-scale));
+  border: none;
+  z-index: 100;
+}
+
+#chat-input::selection {
+  background: rgb(69, 72, 236);
+}
+
+.tooltip {
+  pointer-events: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+
+  background-color: #100010f2;
+  padding: 0.3em 0.4em 0.9rem 0.4em;
+  margin: 0 0.125em;
+
+  word-spacing: 4px;
+  line-height: 1.25em;
+  font-size: calc(8px * var(--gui-scale));
+  color: white;
+  text-shadow: #3f3f3f calc(1px * var(--gui-scale))  calc(1px * var(--gui-scale));
+  z-index: 500
+}
+
+.tooltip::before {
+  content: '';
+  position: absolute;
+  top: 0.125em;
+  right: -0.125em;
+  bottom: 0.125em;
+  left: -0.125em;
+  border: 0.125em solid #100010f2;
+}
+
+.tooltip::after {
+  content: '';
+  position: absolute;
+  top: 0.125em;
+  right: 0;
+  bottom: 0.125em;
+  left: 0;
+  border: 0.125em solid #2D0A63;
+  border-image: linear-gradient(#5000ff4f, #28007f4f) 1
 }

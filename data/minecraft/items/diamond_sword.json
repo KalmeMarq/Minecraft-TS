@@ -1,0 +1,31 @@
+{
+  "identifier": {
+    "number_id": 276,
+    "item_id": "minecraft:diamond_sword"
+  },
+  "item_group": {
+    "shows_on_all": true,
+    "name": "equipment"
+  },
+  "regdt": {
+    "icon": {
+      "texture": "sword",
+      "index": 5
+    },
+    "display_name": {
+      "text": "item.minecraft.diamond_sword",
+      "rarity": "common"
+    },
+    "stack_size": {
+      "is_stackable": false
+    },
+    "durability": {
+      "is_damageable": true,
+      "max_value": 1562
+    },
+    "repair": {
+      "is_repairable": true,
+      "repair_items": ["minecraft:diamond"]
+    }
+  }
+}

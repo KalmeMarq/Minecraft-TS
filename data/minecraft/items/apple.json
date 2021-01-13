@@ -1,0 +1,26 @@
+{
+  "identifier": {
+    "number_id": 260,
+    "item_id": "minecraft:apple"
+  },
+  "item_group": {
+    "shows_on_all": true,
+    "name": "foodstuffs"
+  },
+  "regdt": {
+    "icon": {
+      "texture": "apple"
+    },
+    "display_name": {
+      "text": "item.minecraft.apple",
+      "rarity": "common"
+    },
+    "stack_size": {
+      "is_stackable": true,
+      "max_value": 64
+    },
+    "durability": {
+      "is_damageable": false
+    }
+  }
+}

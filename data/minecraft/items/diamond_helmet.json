@@ -1,0 +1,33 @@
+{
+  "identifier": {
+    "number_id": 310,
+    "item_id": "minecraft:diamond_helmet"
+  },
+  "item_group": {
+    "shows_on_all": true,
+    "name": "equipment"
+  },
+  "regdt": {
+    "icon": {
+      "texture": "diamond_helmet"
+    },
+    "display_name": {
+      "text": "item.minecraft.diamond_helmet",
+      "rarity": "common"
+    },
+    "stack_size": {
+      "is_stackable": false
+    },
+    "durability": {
+      "is_damageable": true,
+      "max_value": 363
+    },
+    "only_place_on_slot": {
+      "name": "slot.armor.head"
+    },
+    "repair": {
+      "is_repairable": true,
+      "repair_items": ["minecraft:diamond"]
+    }
+  }
+}

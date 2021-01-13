@@ -1,0 +1,32 @@
+{
+  "apple": {
+    "textures": [
+      "assets/minecraft/textures/item/apple"
+    ]
+  },
+  "stick": {
+    "textures": [
+      "assets/minecraft/textures/item/stick"
+    ]
+  },
+  "pickaxe": {
+    "textures": [
+      "assets/minecraft/textures/item/wooden_pickaxe",
+      "assets/minecraft/textures/item/stone_pickaxe",
+      "assets/minecraft/textures/item/iron_pickaxe",
+      "assets/minecraft/textures/item/golden_pickaxe",
+      "assets/minecraft/textures/item/diamond_pickaxe",
+      "assets/minecraft/textures/item/netherite_pickaxe"
+    ]
+  },
+  "sword": {
+    "textures": [
+      "assets/minecraft/textures/item/wooden_sword",
+      "assets/minecraft/textures/item/stone_sword",
+      "assets/minecraft/textures/item/iron_sword",
+      "assets/minecraft/textures/item/golden_sword",
+      "assets/minecraft/textures/item/diamond_sword",
+      "assets/minecraft/textures/item/netherite_sword"
+    ]
+  }
+}

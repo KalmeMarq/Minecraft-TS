@@ -2,6 +2,10 @@
   e.preventDefault();
 }); */
 
+import { initPanorama } from '../panorama_scripts/panorama.js';
+import { displayChatOverlay } from './index.js';
+let historyHash = [];
+
 /* Hud Hotbar */
 let selectedSlot = 0;
 
@@ -155,7 +159,7 @@ const showOverRoot = (e) => {
   const keyOpenCTable = localStorage.getItem('keyOpenCTable') || 'c';
   const keyOpenStonecutter = localStorage.getItem('keyOpenStonecutter') || 's';
 
-  if(window.location.hash === '#hud') {
+ /*  if(window.location.hash === '#hud') {
     if(e.key === 'Escape') {
       if(!displayingOverRoot && overRoot.innerHTML === '') displayPauseScreen(overRoot);
       undisplayOverRootScreen();
@@ -171,10 +175,58 @@ const showOverRoot = (e) => {
     } else if(e.key === keyOpenStonecutter) {
       if(!displayingOverRoot && overRoot.innerHTML === '') displayStonecutterScreen(); 
       undisplayOverRootScreen();
+    } else if(e.key === 't') {
+      if(!displayingOverRoot && overRoot.innerHTML === '') displayChatOverlay(); 
+      undisplayOverRootScreen();
     }
   }
 
-  console.log(e.key);
+  if(e.key === 'Escape') {
+    if(historyHash[historyHash.length - 1] !== '#hud' && !displayingOverRoot) {
+      switch (historyHash[historyHash.length - 2]) {
+        case '#main':
+          historyHash = [];
+          displayMainScreen();
+          break;
+      
+        case '#settings':
+          historyHash.pop();
+          historyHash.pop();
+          displaySettingsScreen(root);
+          break;
+      
+        default:
+          break;
+      }
+    } 
+  } else if(historyHash[historyHash.length - 1] === '#hud' && e.key === 'Escape') {
+    undisplayOverRootScreen(); 
+  } else {
+    
+  }
+
+  if(e.key === 'Escape') {
+    if(!displayingOverRoot && overRoot.innerHTML === '') {
+    displayPauseScreen(overRoot);
+  } else if(e.key === keyOpenHopper) {
+    if(!displayingOverRoot && overRoot.innerHTML === '') displayHopperScreen(); 
+    undisplayOverRootScreen();
+  } else if(e.key === keyOpenInv) {
+    if(!displayingOverRoot && overRoot.innerHTML === '') displaySurInventoryScreen(); 
+    undisplayOverRootScreen();
+  } else if(e.key === keyOpenCTable) {
+    if(!displayingOverRoot && overRoot.innerHTML === '') displayCraftingTableScreen(); 
+    undisplayOverRootScreen();
+  } else if(e.key === keyOpenStonecutter) {
+    if(!displayingOverRoot && overRoot.innerHTML === '') displayStonecutterScreen(); 
+    undisplayOverRootScreen();
+  } else if(e.key === 't') {
+    if(!displayingOverRoot && overRoot.innerHTML === '') displayChatOverlay(); 
+    undisplayOverRootScreen();
+  }
+  }
+
+  console.log(e.key); */
 }
 
 window.addEventListener('keydown', showOverRoot);
@@ -193,12 +245,16 @@ const undisplayOverRootScreen = () => {
 
 const displayMainScreen = () => {
   window.location.hash = 'main';
+  historyHash.push(window.location.hash);
+  console.log(historyHash);
 
   root.innerHTML = `
+    <div id="panoramas"></div>
+
     <div class="mc-title-box">
       <div class="mc-title-minec"></div>
       <div class="mc-title-raft"></div>
-      <h2 id="splash-texts">SSSefdh f esd fsedgs</h2>
+      <h2 id="splash-texts">Have a great day!</h2>
     </div>
 
     <button class="classic-btn" id="hud-btn" style="top: calc(25% + 40px * var(--gui-scale)); left: 50%; transform: translate(-50%)">Hud</button> 
@@ -216,15 +272,15 @@ const displayMainScreen = () => {
 
   document.getElementById('settings-btn').addEventListener('click', () => {
     displaySettingsScreen(root);
-  })
+  });
+
+  initPanorama();
 }
 
 const displaySettingsScreen = (where) => {
-  if(window.location.hash === '#hud' || window.location.hash === '#hud-settings') {
-    window.location.hash = '#hud-settings'
-  } else {
-    window.location.hash = '#settings'
-  }
+  window.location.hash = '#settings'
+  historyHash.push(window.location.hash);
+  console.log(historyHash);
 
   where.innerHTML = `
     ${where === overRoot
@@ -242,12 +298,20 @@ const displaySettingsScreen = (where) => {
   });
 
   document.getElementById('back-btn').addEventListener('click', () => {
-    if(window.location.hash !== '#hud-settings') displayMainScreen();
+    if(window.location.hash === '#settings') {
+      historyHash.pop();
+      historyHash.pop();
+      displayMainScreen();
+    }
     else displayPauseScreen(overRoot);
   });
 }
 
 const displaySettingsControlsScreen = (where) => {
+  window.location.hash = '#settings-controls';
+  historyHash.push(window.location.hash);
+  console.log(historyHash);
+
   where.innerHTML = `
     <div class="dirt-bg"></div>
 
@@ -277,6 +341,8 @@ const displaySettingsControlsScreen = (where) => {
   `;
 
   document.getElementById('back-btn').addEventListener('click', () => {
+    historyHash.pop();
+    historyHash.pop();
     displaySettingsScreen(where);
   });
 
@@ -313,9 +379,15 @@ const displaySettingsControlsScreen = (where) => {
 }
 
 const displayHudScreen = () => {
-  window.location.hash = 'hud';
+  window.location.hash = '#hud';
+  historyHash.push(window.location.hash);
+  console.log(historyHash);
 
   root.innerHTML = `
+    <button class="classic-btn" id="open-chat-btn">Open Chat</button>
+    <div class="bossbars-list" id="bossbars-container">
+    </div>
+
     <div class="hotbar">
       <div class="hotbar-slot"></div>
       <div class="hotbar-slot"></div>
@@ -402,6 +474,10 @@ const displayHudScreen = () => {
 
   window.addEventListener('keydown', selectHotbarwithNums);
   window.addEventListener('mousewheel', selectHotbarWithWheel);
+
+  document.getElementById('open-chat-btn').addEventListener('click', () => {
+    displayChatOverlay();
+  });
 
   setHealth(maxHealth);
   setHunger(maxHunger);
@@ -528,3 +604,8 @@ window.addEventListener('keyup', (e) => {
     displayPos(posZLabel, posZ);
   }
 }); */
+
+export {
+  selectHotbarWithWheel,
+  selectHotbarwithNums
+}
