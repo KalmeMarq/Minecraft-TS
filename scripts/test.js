@@ -3,7 +3,7 @@
 }); */
 
 import { initPanorama } from '../panorama_scripts/panorama.js';
-import { displayChatOverlay } from './index.js';
+import { displayChatOverlay, displayMainScreen, renderBossbars } from './index.js';
 let historyHash = [];
 
 /* Hud Hotbar */
@@ -62,26 +62,30 @@ const selectHotbarwithNums = (e) => {
 /* Xp bar */
 let xpLevel = 0;
 
-function setXP(type, value) {
-  const xpBarLevel = document.querySelectorAll('.xp-level');
-  const xpBarFull = document.getElementById('xp-bar-full');
-
+function setXP(type, value, levelOrPoints) {
   if(type === 'add') {
-    xpLevel = xpLevel < 1 ? xpLevel + (value / 10) : xpLevel + (value / (xpLevel * 2));
+    if(levelOrPoints === 'points') xpLevel = xpLevel < 1 ? xpLevel + (value / 10) : xpLevel + (value / (xpLevel * 2));
+    else if(levelOrPoints === 'levels') xpLevel += value;
   } else if(type === 'remove') {
-    xpLevel -= value;
+    if(levelOrPoints === 'points') xpLevel = xpLevel < 1 ? xpLevel - (value / 10) : xpLevel - (value / (xpLevel * 2));
+    else if(levelOrPoints === 'levels') xpLevel -= value;
+  } else if(type === 'set') {
+    if(levelOrPoints === 'points') xpLevel = xpLevel < 1 ? value / 10 : value / (xpLevel * 2);
+    else if(levelOrPoints === 'levels') xpLevel = value;
   }
 
-  console.clear();
-  console.log(xpLevel.toFixed('2'));
-
-  for(var i = 0; i < xpBarLevel.length; i++) {
-    if(parseInt(xpLevel) !== 0) xpBarLevel[i].innerText = parseInt(xpLevel);
-    else xpBarLevel[i].innerText = '';
-
-    const widthPer = (xpLevel - Math.floor(xpLevel)) * 100;
-
-    xpBarFull.style.width = widthPer + '%';
+  if(document.querySelectorAll('.xp-level') && document.getElementById('xp-bar-full')) {
+    const xpBarLevel = document.querySelectorAll('.xp-level');
+    const xpBarFull = document.getElementById('xp-bar-full');
+    
+    for(var i = 0; i < xpBarLevel.length; i++) {
+      if(parseInt(xpLevel) !== 0) xpBarLevel[i].innerText = parseInt(xpLevel);
+      else xpBarLevel[i].innerText = '';
+  
+      const widthPer = (xpLevel - Math.floor(xpLevel)) * 100;
+  
+      xpBarFull.style.width = widthPer + '%';
+    }
   }
 }
 
@@ -94,9 +98,6 @@ function setHealth(currvalue) {
   const healthBarOverlay = document.querySelectorAll('.health-bar-overlay')[0];
 
   currentHealth = currvalue;
-
-  console.clear();
-  console.log('Current Health: ' + currentHealth + ' (' + currentHealth / 2 + ' hearts)');
 
   healthBarBg.innerHTML = '';
   healthBarOverlay.innerHTML = '';
@@ -131,9 +132,6 @@ function setHunger(currvalue) {
   const hungerBarOverlay = document.querySelectorAll('.hunger-bar-overlay')[0];
 
   currentHunger = currvalue;
-
-  console.clear();
-  console.log('Current Hunger: ' + currentHunger + ' (' + currentHunger / 2 + ' hunger thing idk)');
 
   hungerBarOverlay.innerHTML = '';
   for(var i = 0; i < Math.ceil(currvalue / 2); i++) {
@@ -243,40 +241,6 @@ const undisplayOverRootScreen = () => {
   }
 }
 
-const displayMainScreen = () => {
-  window.location.hash = 'main';
-  historyHash.push(window.location.hash);
-  console.log(historyHash);
-
-  root.innerHTML = `
-    <div id="panoramas"></div>
-
-    <div class="mc-title-box">
-      <div class="mc-title-minec"></div>
-      <div class="mc-title-raft"></div>
-      <h2 id="splash-texts">Have a great day!</h2>
-    </div>
-
-    <button class="classic-btn" id="hud-btn" style="top: calc(25% + 40px * var(--gui-scale)); left: 50%; transform: translate(-50%)">Hud</button> 
-    <button class="classic-btn" id="settings-btn" style="top: calc(25% + 64px * var(--gui-scale)); left: 50%; transform: translate(-50%)">Settings</button>
-
-    <div class="bottom-text">
-      <span>Minecraft JS (Rewritten)</span>
-      <span>Damn</span>
-    </div>
-  `;
-
-  document.getElementById('hud-btn').addEventListener('click', () => {
-    displayHudScreen();
-  });
-
-  document.getElementById('settings-btn').addEventListener('click', () => {
-    displaySettingsScreen(root);
-  });
-
-  initPanorama();
-}
-
 const displaySettingsScreen = (where) => {
   window.location.hash = '#settings'
   historyHash.push(window.location.hash);
@@ -310,7 +274,6 @@ const displaySettingsScreen = (where) => {
 const displaySettingsControlsScreen = (where) => {
   window.location.hash = '#settings-controls';
   historyHash.push(window.location.hash);
-  console.log(historyHash);
 
   where.innerHTML = `
     <div class="dirt-bg"></div>
@@ -378,15 +341,31 @@ const displaySettingsControlsScreen = (where) => {
   });
 }
 
-const displayHudScreen = () => {
-  window.location.hash = '#hud';
-  historyHash.push(window.location.hash);
-  console.log(historyHash);
+export function openChat(e) {
+  if(e.key === 't') {
+    displayChatOverlay();
+    window.removeEventListener('keydown', openChat);
+  }
+}
 
+const displayHudScreen = () => {
   root.innerHTML = `
-    <button class="classic-btn" id="open-chat-btn">Open Chat</button>
-    <div class="bossbars-list" id="bossbars-container">
+    <div class="bossbars-list" id="bossbars-container"></div>
+    <h1 id="title-title"></h1>
+    <h1 id="title-subtitle"></h1>
+    <h1 id="title-actionbar"></h1>
+    <div class="scoreboard-box" id="scoreboard-container">
+      <div class="sb-header">
+        <span>Title</span>
+      </div>
+      <div class="sb-players">
+        <div class="sb-players-item">
+          <span>Jez</span>
+          <span>1</span>
+        </div>
+      </div>
     </div>
+    <div id="chat-hud"></div>
 
     <div class="hotbar">
       <div class="hotbar-slot"></div>
@@ -399,7 +378,6 @@ const displayHudScreen = () => {
       <div class="hotbar-slot"></div>
       <div class="hotbar-slot"></div>
     </div>
-
 
     <div class="xp-bar">
       <p class="xp-level border-top">0</p>
@@ -475,13 +453,12 @@ const displayHudScreen = () => {
   window.addEventListener('keydown', selectHotbarwithNums);
   window.addEventListener('mousewheel', selectHotbarWithWheel);
 
-  document.getElementById('open-chat-btn').addEventListener('click', () => {
-    displayChatOverlay();
-  });
+  window.addEventListener('keydown', openChat);
 
+  renderBossbars();
   setHealth(maxHealth);
   setHunger(maxHunger);
-  setXP(xpLevel);
+  setXP('add', xpLevel);
 }
 
 const displayPauseScreen = (where) => {
@@ -567,7 +544,6 @@ const displayStonecutterScreen = () => {
   `;
 }
 
-displayMainScreen()
 
 
 /*  */
@@ -607,5 +583,9 @@ window.addEventListener('keyup', (e) => {
 
 export {
   selectHotbarWithWheel,
-  selectHotbarwithNums
+  selectHotbarwithNums,
+  displayHudScreen,
+  displaySettingsScreen,
+  setXP,
+  xpLevel
 }

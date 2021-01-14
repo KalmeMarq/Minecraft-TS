@@ -216,7 +216,7 @@ img,
     font-size: calc(7.335px * var(--gui-scale));
     text-rendering: optimizeLegibility;
 
-    z-index: 10;
+    z-index: 140;
 
     &.border-top {
       color: black;
@@ -243,6 +243,7 @@ img,
   display: grid;
   width: calc((9px * 10 - (40px / 3)) * var(--gui-scale));
   min-height: calc(9px * var(--gui-scale));
+  z-index: -1;
 
   &-bg {
     position: relative;
@@ -309,6 +310,7 @@ img,
   display: grid;
   width: calc((9px * 10- (40px / 3)) * var(--gui-scale));
   height: calc(9px * var(--gui-scale));
+  z-index: -1;
 
   &-bg {
     position: relative;
@@ -363,6 +365,7 @@ img,
   display: grid;
   width: calc((9px * 10 - (40px / 3)) * var(--gui-scale));
   height: calc(9px * var(--gui-scale));
+  z-index: -1;
 
   &-bg {
     position: relative;
@@ -525,21 +528,135 @@ img,
   
       background: url('../assets/minecraft/textures/gui/bars.png');
       background-size: calc(256px * var(--gui-scale));
+      background-position-y: 0;
+
+      &.barcolor-blue {
+        background-position-y: calc(-10px * var(--gui-scale));
+      }
+
+      &.barcolor-red {
+        background-position-y: calc(-20px * var(--gui-scale));
+      }
+
+      &.barcolor-green {
+        background-position-y: calc(-30px * var(--gui-scale));
+      }
+
+      &.barcolor-yellow {
+        background-position-y: calc(-40px * var(--gui-scale));
+      }
+
+      &.barcolor-purple {
+        background-position-y: calc(-50px * var(--gui-scale));
+      }
+
+      &.barcolor-white {
+        background-position-y: calc(-60px * var(--gui-scale));
+      }
     }
 
     .bossbar-full {
       position: absolute;
-      width: 76%;
+      width: 100%;
       height: calc(5px * var(--gui-scale));
       bottom: 0;
   
       background: url('../assets/minecraft/textures/gui/bars.png');
       background-size: calc(256px * var(--gui-scale));
       background-position-y: calc(-5px * var(--gui-scale));
+
+      &.barcolor-blue {
+        background-position-y: calc(-15px * var(--gui-scale));
+      }
+
+      &.barcolor-red {
+        background-position-y: calc(-25px * var(--gui-scale));
+      }
+
+      &.barcolor-green {
+        background-position-y: calc(-35px * var(--gui-scale));
+      }
+
+      &.barcolor-yellow {
+        background-position-y: calc(-45px * var(--gui-scale));
+      }
+
+      &.barcolor-purple {
+        background-position-y: calc(-55px * var(--gui-scale));
+      }
+
+      &.barcolor-white {
+        background-position-y: calc(-65px * var(--gui-scale));
+      }
+    }
+
+    .bossbar-style {
+      position: absolute;
+      width: 100%;
+      height: calc(5px * var(--gui-scale));
+      bottom: 0;
+  
+      background: url('../assets/minecraft/textures/gui/bars.png');
+      background-size: calc(256px * var(--gui-scale));
+      background-position-y: calc(-70px * var(--gui-scale));
+
+      &.barstyle-progress {
+        background-position-y: calc(-70px * var(--gui-scale));
+      }
+
+      &.barstyle-notched_6 {
+        background-position-y: calc(-80px * var(--gui-scale));
+      }
+
+      &.barstyle-notched_10 {
+        background-position-y: calc(-90px * var(--gui-scale));
+      }
+
+      &.barstyle-notched_12 {
+        background-position-y: calc(-100px * var(--gui-scale));
+      }
+
+      &.barstyle-notched_20 {
+        background-position-y: calc(-110px * var(--gui-scale));
+      }
     }
   }
 }
 
+.scoreboard-box {
+  position: fixed;
+  top: 50%;
+  right: calc(1px * var(--gui-scale));
+  transform: translate(0, -50%);
+  display: flex;
+  flex-direction: column;
+  width: max-content;
+  background: rgba(0, 0, 0, 0.6);
+
+  .sb-header {
+    position: relative;
+    span {
+      position: relative;
+      text-align: center;
+      color: white;
+      font-size: calc(7.335px * var(--gui-scale));
+    }
+  }
+
+  .sb-players {
+    position: relative;
+    &-item {
+      span {
+        color: white;
+        font-size: calc(7.335px * var(--gui-scale));
+      }
+
+      span:last-child {
+        color: red;
+      }
+    }
+  }
+}
 
 
 
@@ -712,7 +829,8 @@ img,
   background: rgba(0, 0, 0, 0.5);
 }
 
-#chat-box {
+#chat-box,
+#chat-hud {
   flex-direction: column;
   position: absolute;
   width: calc(320px * var(--gui-scale));
@@ -732,17 +850,18 @@ img,
   &::-webkit-scrollbar-thumb {
     background: grey;
   }
+
+  p {
+    color: white;
+    font-size: calc(8px * var(--gui-scale));
+    opacity: 1;
+    max-width: 100%;
+    width: 100%;
+    transition: 1000ms opacity;
+    background: rgba(0, 0, 0, 0.5);
+  } 
 }
 
-#chat-box p {
-  color: white;
-  font-size: calc(8px * var(--gui-scale));
-  opacity: 1;
-  max-width: 100%;
-  width: 100%;
-  transition: 1000ms opacity;
-  background: rgba(0, 0, 0, 0.5);
-}
 
 #chat-input {
   position: relative;
@@ -800,4 +919,46 @@ img,
   left: 0;
   border: 0.125em solid #2D0A63;
   border-image: linear-gradient(#5000ff4f, #28007f4f) 1
+}
+
+#title-title {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  font-size: calc(24px * var(--gui-scale));
+  text-shadow: #131313 calc(3px * var(--gui-scale))  calc(3px * var(--gui-scale));
+  z-index: 1000;
+  opacity: 0;
+  display: none;
+  transition: 1000ms opacity;
+}
+
+#title-subtitle {
+  position: fixed;
+  top: 60%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  font-size: calc(16px * var(--gui-scale));
+  text-shadow: #131313 calc(3px * var(--gui-scale))  calc(3px * var(--gui-scale));
+  z-index: 1000;
+  opacity: 0;
+  display: none;
+  transition: 1000ms opacity;
+}
+
+#title-actionbar {
+  position: fixed;
+  left: 50%;
+  bottom: calc(52px * var(--gui-scale));
+  transform: translate(-50%, -50%);
+
+  color: white;
+  font-size: calc(7.3333px * var(--gui-scale));
+
+  opacity: 0;
+  display: none;
+  transition: 1000ms opacity;
 }
