@@ -1,7 +1,0 @@
-{
-  "root": "data",
-  "namespace": "minecraft",
-  "values": [
-    "tags/test.json"
-  ]
-}

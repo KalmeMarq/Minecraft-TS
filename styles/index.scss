@@ -1,0 +1,93 @@
+@font-face {
+  font-family: 'Minecraft Regular';
+  font-style: normal;
+  font-weight: normal;
+  src: local('Minecraft Regular'), url('../resources/Minecraftia.ttf');
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Minecraft Regular';
+  font-weight: 100;
+}
+
+body {
+  background: #232323;
+}
+
+img {
+  image-rendering: crisp-edges;
+  image-rendering: pixelated;
+  image-rendering: optimizeQuality;
+}
+
+body {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+}
+
+#root {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+}
+
+button {
+  border: 2px solid black;
+  background: rgb(85, 85, 85);
+  color: white;
+  font-size: calc(7.5px * 2.5);
+  padding-bottom: calc(1px * 2.5);
+  text-shadow: calc(1px * 2.5 - (0.1px * 2.5)) calc(1px * 2.5 - (0.1px * 2.5)) rgb(31, 31, 31);
+  box-shadow: 
+    inset calc(-1px * 2.5) calc(-2px * 2.5) 0px rgb(66, 66, 66),
+    inset calc(-1px * 2.5) calc(-1px * 2.5) 0px rgb(66, 66, 66),
+    inset calc(1px * 2.5) calc(1px * 2.5) 0px rgb(141, 141, 141);
+}
+
+button::selection {
+  background: none;
+}
+
+button:hover {
+  border-color: white;
+}
+
+button:focus {
+  outline: none;
+}
+
+.disabled {
+  pointer-events: none;
+  background: #303030;
+  box-shadow: none;
+  color: rgb(167, 167, 167);
+}
+
+.splash-texts {
+  --init: 9.8px;
+  --end: 10px;
+  position: absolute;
+  width: max-content;
+  transform: translate(-50%, 100%) rotateZ(-20deg);
+  color: #ebeb41;
+  text-shadow: #3a3a10 calc(1px * var(--gui-scale)) calc(1px * var(--gui-scale));
+  animation: splashAnim 260ms alternate infinite;
+}
+
+.splash-texts::selection {
+  background: none;
+}
+
+@keyframes splashAnim {
+  0% {
+    font-size: calc(var(--init) * 2.5)
+  }
+  100% {
+    font-size: calc(var(--end) * 2.5)
+  }
+}
