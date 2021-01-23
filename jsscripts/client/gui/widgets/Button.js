@@ -1,3 +1,4 @@
+import { widgetsImg } from "../../../index.js";
 class Button {
     constructor(x, y, width, height, text, clickAction) {
         this.x = x;
@@ -22,20 +23,17 @@ class Button {
         btnBg.style.transform = 'scale(2.55)';
         btnBg.width = this.width;
         btnBg.height = this.height;
-        const image = new Image();
-        image.src = './resources/assets/minecraft/textures/gui/widgets.png';
+        const image = widgetsImg;
         function drawBtnBg(uv, img, cnv, cont) {
             cont.drawImage(img, uv.x, uv.y, cnv.width / 2, 20, 0, 0, cnv.width / 2, cnv.height);
             cont.drawImage(img, 164 - ((cnv.width - 72) / 2), uv.y, cnv.width / 2, 20, cnv.width / 2, 0, cnv.width / 2, cnv.height);
         }
-        image.onload = function () {
-            if (!btn.classList.contains('disabled')) {
-                drawBtnBg({ x: 0, y: 66 }, image, btnBg, ctx);
-            }
-            else {
-                drawBtnBg({ x: 0, y: 46 }, image, btnBg, ctx);
-            }
-        };
+        if (!btn.classList.contains('disabled')) {
+            drawBtnBg({ x: 0, y: 66 }, image, btnBg, ctx);
+        }
+        else {
+            drawBtnBg({ x: 0, y: 46 }, image, btnBg, ctx);
+        }
         btn.addEventListener('mouseenter', () => {
             if (!btn.classList.contains('disabled')) {
                 drawBtnBg({ x: 0, y: 86 }, image, btnBg, ctx);
