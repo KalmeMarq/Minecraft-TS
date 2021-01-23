@@ -40,8 +40,8 @@ class Button {
     btnBg.width = this.width;
     btnBg.height = this.height;
 
-    const image = widgetsImg;
-    // image.src = '../../../resources/assets/minecraft/textures/gui/widgets.png';
+    const image = new Image();
+    image.src = '../../../resources/assets/minecraft/textures/gui/widgets.png';
 
     function drawBtnBg(uv: {x: number, y: number}, img: any, cnv: HTMLCanvasElement, cont: any) {
       cont.drawImage(img, uv.x, uv.y, cnv.width / 2, 20, 0, 0, cnv.width / 2, cnv.height)
