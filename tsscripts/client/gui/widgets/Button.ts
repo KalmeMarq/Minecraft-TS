@@ -1,4 +1,3 @@
-import { widgetsImg } from '../../../index.js';
 
 class Button {
   public x
