@@ -3,8 +3,8 @@ import MainMenuScreen from './client/gui/screens/MainMenuScreen.js';
 var langs: {}[] = [];
 var splashes: {}[] = [];
 
-export const widgetsImg = new Image(256, 256);
-export const optionsBackgroundImg = new Image(256, 256);
+export let widgetsImg = new Image(256, 256);
+export let optionsBackgroundImg = new Image(256, 256);
 
 export let currentScreen: any = null;
 
@@ -41,7 +41,7 @@ window.addEventListener('DOMContentLoaded', function aysnc() {
   (async function() {
     widgetsImg.src = '../resources/assets/minecraft/textures/gui/widgets.png';
     optionsBackgroundImg.src = '../resources/assets/minecraft/textures/gui/options_background.png';
-    
+
     const req = await fetch('./resources/assets/minecraft/lang/en_us.json');
     const req2 = await fetch('./resources/assets/minecraft/lang/pt_pt.json');
     const req1 = await fetch('./resources/assets/minecraft/texts/splashes.txt');

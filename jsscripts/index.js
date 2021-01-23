@@ -1,8 +1,8 @@
 import MainMenuScreen from './client/gui/screens/MainMenuScreen.js';
 var langs = [];
 var splashes = [];
-export const widgetsImg = new Image(256, 256);
-export const optionsBackgroundImg = new Image(256, 256);
+export let widgetsImg = new Image(256, 256);
+export let optionsBackgroundImg = new Image(256, 256);
 export let currentScreen = null;
 class Minecraft {
     static getLang() {
