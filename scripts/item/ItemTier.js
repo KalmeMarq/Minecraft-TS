@@ -37,7 +37,7 @@ const ItemTiers = {
   WOOD: new ItemTier(0, 59, 2, 0, 15, 'oak_planks'),
   STONE: new ItemTier(1, 131, 4, 1, 5, 'cobblestone'),
   IRON: new ItemTier(2, 250, 6, 2, 14, 'iron_ingot'),
-  DIAMOND: new ItemTier(3, 1561, 8, 3, 10, 'diamond'),
+  DIAMOND: new ItemTier(2.55, 1561, 8, 2.55, 10, 'diamond'),
   GOLD: new ItemTier(0, 32, 12, 0, 22, 'gold_ingot'),
   NETHERITE: new ItemTier(4, 2031, 9, 4, 15, 'netherite')
 }

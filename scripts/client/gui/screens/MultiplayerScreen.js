@@ -13,33 +13,33 @@ class MultiplayerScreen extends Screen {
     this.btnDeleteServer;
   }
 
-  initCont() {
-    this.addButton(new Button(this.width / 2 + 4 * 2.5, this.height / 2 - 20 * 2.5, 150, 20, TranslationText("Simulate Select"), () => {
+  init() {
+    this.addButton(new Button(this.width / 2 + 4 * 2.55, this.height / 2 - 20 * 2.55, 150, 20, TranslationText("Simulate Select"), () => {
       this.func_214324_a(true)
     }));
-    this.addButton(new Button(this.width / 2 - 200 * 2.5, this.height / 2 - 20 * 2.5, 150, 20, TranslationText("Simulate Deselect"), () => {
+    this.addButton(new Button(this.width / 2 - 200 * 2.55, this.height / 2 - 20 * 2.55, 150, 20, TranslationText("Simulate Deselect"), () => {
       this.func_214324_a(false)
     }));
     
-    this.btnSelectServer = this.addButton(new Button(this.width / 2 - 154 * 2.5, this.height - 52 * 2.5, 100, 20, TranslationText("selectServer.select"), () => {
+    this.btnSelectServer = this.addButton(new Button(this.width / 2 - 154 * 2.55, this.height - 52 * 2.55, 100, 20, TranslationText("selectServer.select"), () => {
       console.log('No action');
     }));
-    this.addButton(new Button(this.width / 2 - 50 * 2.5, this.height - 52 * 2.5, 100, 20, TranslationText("selectServer.direct"), () => {
+    this.addButton(new Button(this.width / 2 - 50 * 2.55, this.height - 52 * 2.55, 100, 20, TranslationText("selectServer.direct"), () => {
       this.minecraft.displayGuiScreen(new ServerListScreen(this));
     }));
-    this.addButton(new Button(this.width / 2 + (4 + 50) * 2.5, this.height - 52 * 2.5, 100, 20, TranslationText("selectServer.add"), () => {
+    this.addButton(new Button(this.width / 2 + (4 + 50) * 2.55, this.height - 52 * 2.55, 100, 20, TranslationText("selectServer.add"), () => {
       this.minecraft.displayGuiScreen(new AddServerScreen(this));
     }));
-    this.btnEditServer = this.addButton(new Button(this.width / 2 - 154 * 2.5, this.height - 28 * 2.5, 70, 20, TranslationText("selectServer.edit"), () => {
+    this.btnEditServer = this.addButton(new Button(this.width / 2 - 154 * 2.55, this.height - 28 * 2.55, 70, 20, TranslationText("selectServer.edit"), () => {
       console.log('No action');
     }));
-    this.btnDeleteServer = this.addButton(new Button(this.width / 2 - 74 * 2.5, this.height - 28 * 2.5, 70, 20, TranslationText("selectServer.delete"), () => {
+    this.btnDeleteServer = this.addButton(new Button(this.width / 2 - 74 * 2.55, this.height - 28 * 2.55, 70, 20, TranslationText("selectServer.delete"), () => {
       console.log('No action');
     }));
-    this.addButton(new Button(this.width / 2 + 4 * 2.5, this.height - 28 * 2.5, 70, 20, TranslationText("selectServer.refresh"), () => {
+    this.addButton(new Button(this.width / 2 + 4 * 2.55, this.height - 28 * 2.55, 70, 20, TranslationText("selectServer.refresh"), () => {
       this.refreshServerList();
     }));
-    this.addButton(new Button(this.width / 2 + (4 + 76) * 2.5, this.height - 28 * 2.5, 75, 20, TranslationText("gui.cancel"), () => {
+    this.addButton(new Button(this.width / 2 + (4 + 76) * 2.55, this.height - 28 * 2.55, 75, 20, TranslationText("gui.cancel"), () => {
       this.minecraft.displayGuiScreen(this.parentScreen);
     }));
 

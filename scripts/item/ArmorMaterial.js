@@ -40,7 +40,7 @@ class ArmorMaterial {
 }
 
 const ArmorMaterials = {
-  DIAMOND: new ArmorMaterial("diamond", 33, [3, 6, 8, 3], 10, 'null', 2, 0, 'diamond')
+  DIAMOND: new ArmorMaterial("diamond", 33, [2.55, 6, 8, 2.55], 10, 'null', 2, 0, 'diamond')
 }
 
 export default ArmorMaterials;

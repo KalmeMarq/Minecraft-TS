@@ -8,36 +8,36 @@ class WorldSelectionScreen extends Screen {
     this.prevScreen = screenIn;
   }
 
-  initCont() {
+  init() {
     let deleteButton;
     let selectButton;
     let renameButton;
     let copyButton;
 
-    this.addButton(new Button(this.width / 2 + 4 * 2.5, this.height / 2 - 20 * 2.5, 150, 20, TranslationText("Simulate Select"), () => {
+    this.addButton(new Button(this.width / 2 + 4 * 2.55, this.height / 2 - 20 * 2.55, 150, 20, TranslationText("Simulate Select"), () => {
       this.func_214324_a(true)
     }));
-    this.addButton(new Button(this.width / 2 - 200 * 2.5, this.height / 2 - 20 * 2.5, 150, 20, TranslationText("Simulate Deselect"), () => {
+    this.addButton(new Button(this.width / 2 - 200 * 2.55, this.height / 2 - 20 * 2.55, 150, 20, TranslationText("Simulate Deselect"), () => {
       this.func_214324_a(false)
     }));
 
-    this.selectButton = this.addButton(new Button(this.width / 2 - 154 * 2.5, this.height - 52 * 2.5, 150, 20, TranslationText("selectWorld.select"), () => {
+    this.selectButton = this.addButton(new Button(this.width / 2 - 154 * 2.55, this.height - 52 * 2.55, 150, 20, TranslationText("selectWorld.select"), () => {
       console.log('No action');
     }));
-    this.addButton(new Button(this.width / 2 + 4 * 2.5, this.height - 52 * 2.5, 150, 20, TranslationText("selectWorld.create"), () => {
+    this.addButton(new Button(this.width / 2 + 4 * 2.55, this.height - 52 * 2.55, 150, 20, TranslationText("selectWorld.create"), () => {
       console.log('No action');
     }));
-    this.renameButton = this.addButton(new Button(this.width / 2 - 154 * 2.5, this.height - 28 * 2.5, 72, 20, TranslationText("selectWorld.edit"), () => {
+    this.renameButton = this.addButton(new Button(this.width / 2 - 154 * 2.55, this.height - 28 * 2.55, 72, 20, TranslationText("selectWorld.edit"), () => {
       console.log('No action');
     }));
-    this.deleteButton = this.addButton(new Button(this.width / 2 - 76 * 2.5, this.height - 28 * 2.5, 72, 20, TranslationText("selectWorld.delete"), () => {
+    this.deleteButton = this.addButton(new Button(this.width / 2 - 76 * 2.55, this.height - 28 * 2.55, 72, 20, TranslationText("selectWorld.delete"), () => {
       console.log('No action');
     }));
 
-    this.copyButton = this.addButton(new Button(this.width / 2 + 4 * 2.5, this.height - 28 * 2.5, 72, 20, TranslationText("selectWorld.recreate"), () => {
+    this.copyButton = this.addButton(new Button(this.width / 2 + 4 * 2.55, this.height - 28 * 2.55, 72, 20, TranslationText("selectWorld.recreate"), () => {
       console.log('No action');
     }));
-    this.addButton(new Button(this.width / 2 + 82 * 2.5, this.height - 28 * 2.5, 72, 20, TranslationText("gui.cancel"), () => {
+    this.addButton(new Button(this.width / 2 + 82 * 2.55, this.height - 28 * 2.55, 72, 20, TranslationText("gui.cancel"), () => {
       this.minecraft.displayGuiScreen(this.prevScreen);
     }));
 

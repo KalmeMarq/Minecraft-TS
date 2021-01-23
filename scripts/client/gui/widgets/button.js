@@ -13,8 +13,8 @@ class Button {
 
   render() {
     this.btn.style.position = 'absolute';
-    this.btn.style.width = this.width * 2.5 + 'px';
-    this.btn.style.height = this.height * 2.5 + 'px';
+    this.btn.style.width = this.width * 2.55 + 'px';
+    this.btn.style.height = this.height * 2.55 + 'px';
     this.btn.style.top = this.y + 'px';
     this.btn.style.left = this.x + 'px';
 

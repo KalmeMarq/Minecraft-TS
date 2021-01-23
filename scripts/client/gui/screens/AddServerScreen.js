@@ -8,8 +8,8 @@ export default class AddServerScreen extends Screen {
     this.parentScreen = parentScreen;
   }
 
-  initCont() {
-    this.addButton(new Button(this.width / 2 - 100 * 2.5, this.height / 4 + (120 + 18) * 2.5, 200, 20, TranslationText('gui.cancel'), () => {
+  init() {
+    this.addButton(new Button(this.width / 2 - 100 * 2.55, this.height / 4 + (120 + 18) * 2.55, 200, 20, TranslationText('gui.cancel'), () => {
       this.minecraft.displayGuiScreen(this.parentScreen);
    }));
   }

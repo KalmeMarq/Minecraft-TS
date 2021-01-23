@@ -32,9 +32,9 @@ class Screen {
     this.buttons = [];
     this.width = width;
     this.height = height;
-    this.initCont();
+    this.init();
     this.render();
-    this.advancedRender();
+    this.render();
   }
 
   shouldCloseOnEsc() {
@@ -42,10 +42,10 @@ class Screen {
   }
 
   closeScreen() {
-    this.minecraft.displayGuiScreen('none');
+    this.minecraft.displayGuiScreen(null);
   }
 
-  advancedRender() {
+  render() {
   }
 }
 

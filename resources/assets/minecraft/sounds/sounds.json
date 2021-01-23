@@ -1,0 +1,5 @@
+{
+  "button.click": {
+    "sound": "sounds/click_stereo.ogg"
+  }
+}

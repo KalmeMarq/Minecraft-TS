@@ -41,7 +41,7 @@ const Items = {
   SNOWBALL: register('snowball', new Item((new ItemProperties()).setMaxStackSize(16).setGroup(ItemGroup.MISC))),
   MUSIC_DISC_13: register('music_disc_13', new MusicDiscItem('null', (new ItemProperties()).setMaxStackSize(1).setGroup(ItemGroup.MISC).setRarity(Rarity.RARE))),
   DIAMOND_LEGGINGS:  register('diamond_leggings', new ArmorItem(ArmorMaterials.DIAMOND, 'legs', (new ItemProperties()).setGroup(ItemGroup.COMBAT))),
-  WOODEN_SWORD: register('wooden_sword', new SwordItem(ItemTiers.WOOD, 3, -2.4, (new ItemProperties()).setGroup(ItemGroup.COMBAT))),
+  WOODEN_SWORD: register('wooden_sword', new SwordItem(ItemTiers.WOOD, 2.55, -2.55, (new ItemProperties()).setGroup(ItemGroup.COMBAT))),
   EGG: register("egg", new Item((new ItemProperties()).setMaxStackSize(16).setGroup(ItemGroup.MATERIALS))),
   COMPASS: register("compass", new Item((new ItemProperties()).setGroup(ItemGroup.TOOLS))),
   FISHING_ROD: register("fishing_rod", new Item((new ItemProperties()).setMaxDamage(64).setGroup(ItemGroup.TOOLS))),
