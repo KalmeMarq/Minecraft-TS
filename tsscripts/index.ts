@@ -5,7 +5,7 @@ var splashes: {}[] = [];
 
 export const widgetsImg = new Image(256, 256);
 export const optionsBackgroundImg = new Image(256, 256);
-widgetsImg.src = '../resources/assets/minecraft/textures/gui/widgets.png';
+widgetsImg.src = './resources/assets/minecraft/textures/gui/widgets.png';
 optionsBackgroundImg.src = '../resources/assets/minecraft/textures/gui/options_background.png';
 
 export let currentScreen: any = null;

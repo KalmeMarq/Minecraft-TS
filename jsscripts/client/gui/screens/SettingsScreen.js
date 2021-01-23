@@ -1,5 +1,5 @@
-import Screen from './ScreenP.js';
-class SettingsScreen extends Screen {
+import ScreenP from './ScreenP.js';
+class SettingsScreen extends ScreenP {
     constructor(previousScreen, gameSettingsObj) {
         super();
         this.parentScreen = previousScreen;
