@@ -24,8 +24,8 @@ class Minecraft {
 export { Minecraft, langs, splashes };
 window.addEventListener('DOMContentLoaded', function aysnc() {
     (async function () {
-        widgetsImg.src = '../resources/assets/minecraft/textures/gui/widgets.png';
-        optionsBackgroundImg.src = '../resources/assets/minecraft/textures/gui/options_background.png';
+        widgetsImg.src = './resources/assets/minecraft/textures/gui/widgets.png';
+        optionsBackgroundImg.src = './resources/assets/minecraft/textures/gui/options_background.png';
         const req = await fetch('./resources/assets/minecraft/lang/en_us.json');
         const req2 = await fetch('./resources/assets/minecraft/lang/pt_pt.json');
         const req1 = await fetch('./resources/assets/minecraft/texts/splashes.txt');
