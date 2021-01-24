@@ -6,9 +6,8 @@ export default class TextFieldWidget {
   public y
   public width
   public height
-  public isEnabled
   public textFieldBox: any
-  public textField: any
+  public isEnabled
 
   constructor(x: number, y: number, width: number, height: number, placeholder: string) {
     this.x = x;
@@ -20,25 +19,30 @@ export default class TextFieldWidget {
     this.isEnabled = true;
 
     this.textFieldBox = document.createElement('div');
-    this.textField = document.createElement('input');
-  }
-
-  render() {
     this.textFieldBox.style.position = 'absolute';
     this.textFieldBox.style.width = this.width * 2.55 + 'px';
     this.textFieldBox.style.height = this.height * 2.55 + 'px';
-    this.textFieldBox.style.top = this.y + 'px';
-    this.textFieldBox.style.left = this.x + 'px';
+    this.textFieldBox.style.top = this.y * 2.55 + 'px';
+    this.textFieldBox.style.left = this.x * 2.55 + 'px';
     this.textFieldBox.classList.add('text-field-box');
-    this.textField.classList.add('text-field');
+    this.textFieldBox.innerHTML = `
+      <input type="text" value="" class="text-field">
+    `;
 
-    this.textField.setAttribute('placeholder', this.placeholder)
-  
-    this.textFieldBox.appendChild(this.textField);
+    this.textFieldBox.firstElementChild!.addEventListener('input', () => {
+      this.text = (this.textFieldBox.firstElementChild as HTMLInputElement).value;
+    });
+  }
 
+  render() {
     if(!document.body.contains(this.textFieldBox)){
       document.getElementById('root')!.appendChild(this.textFieldBox)
     }
+
+    return this.textFieldBox.firstElementChild!;
   }
 
+  protected getText() {
+    return this.text;
+  }
 }

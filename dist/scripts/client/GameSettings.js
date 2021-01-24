@@ -1,4 +1,4 @@
-const GameSettings = {
+const GameSettings = localStorage.getItem('GameSettings') ? JSON.parse(localStorage.getItem('GameSettings')) : {
     mouseSensitivity: 0.5,
     renderDistanceChunks: -1,
     entityDistanceScaling: 1.0,
@@ -34,4 +34,10 @@ const GameSettings = {
     fovScaleEffect: 1.0,
     language: "en_us"
 };
+function saveOptions(screen) {
+    localStorage.setItem('GameSettings', JSON.stringify(GameSettings));
+    localStorage.setItem('prevScreen', JSON.stringify(screen));
+    window.location = window.location;
+}
 export default GameSettings;
+export { saveOptions };

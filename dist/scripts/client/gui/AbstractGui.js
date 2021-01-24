@@ -8,8 +8,8 @@ export default class AbstractGui {
         span.innerText = text;
         span.style.color = ColorHelper.getColor(color) || 'white';
         span.style.position = 'absolute';
-        span.style.top = posY + 'px';
-        span.style.left = posX + 'px';
+        span.style.top = posY * 2.55 + 'px';
+        span.style.left = posX * 2.55 + 'px';
         span.style.transform = 'translate(-50%)';
         span.classList.add('text');
         matrix.appendChild(span);
@@ -19,8 +19,8 @@ export default class AbstractGui {
         span.innerText = text;
         span.style.color = ColorHelper.getColor(color) || 'white';
         span.style.position = 'absolute';
-        span.style.top = posY + 'px';
-        span.style.left = posX + 'px';
+        span.style.top = posY * 2.55 + 'px';
+        span.style.left = posX * 2.55 + 'px';
         span.classList.add('text');
         matrix.appendChild(span);
     }

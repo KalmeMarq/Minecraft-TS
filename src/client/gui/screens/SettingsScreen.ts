@@ -2,12 +2,10 @@ import ScreenP from './ScreenP.js';
 
 class SettingsScreen extends ScreenP {
   public parentScreen
-  public gameSettings
 
-  constructor(previousScreen: ScreenP, gameSettingsObj: any) {
+  constructor(previousScreen: ScreenP) {
      super();
      this.parentScreen = previousScreen;
-     this.gameSettings = gameSettingsObj;
   }
 
   onClose() {

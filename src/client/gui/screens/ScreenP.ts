@@ -17,12 +17,10 @@ export default class ScreenP extends AbstractGui {
     this.width = 0;
     this.height = 0;
     this.buttons = [];
+  }
 
-    window.addEventListener('keydown', e => {
-      if(e.key === 'Escape' && this.shouldCloseOnEsc()) {
-        this.closeScreen();
-      }
-    })
+  setTitle(text: string): void {
+    this.title = text;
   }
 
   renderWidgets() {

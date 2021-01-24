@@ -1,7 +1,7 @@
-import { splashes } from '../../index.js';
-
 export default class Splashes {
   public static getSplashText(matrix: HTMLElement, width: number, height: number) {
+    const splashes = JSON.parse(localStorage.getItem('Resources')!).texts.splashes;
+
     const splashText = document.createElement('span');
 
     const getRandomSplashText = () => {
@@ -15,8 +15,8 @@ export default class Splashes {
     const initFontSize = splashLength < 2522 ? (9.8 / splashLength) * 1.5 + 9.8 : 9.8 / splashLength;
     const endFontSize = splashLength < 2522 ? (10 / splashLength) * 1.5 + 10 : 10 / splashLength + 0.2;
     splashText.className = 'splash-texts';
-    splashText.style.top = 40 * 2.55 + 'px'
-    splashText.style.left = width / 2 + 40 * 2.55 + 'px'
+    splashText.style.top = 40 + 'px'
+    splashText.style.left = width / 2 + 40 + 'px'
 
     splashText.style.setProperty('--init', initFontSize + "px");
     splashText.style.setProperty('--end', endFontSize + "px");
