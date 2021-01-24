@@ -67,7 +67,7 @@ export default class Button {
             this.btn.appendChild(this.text);
         this.btn.appendChild(btnBg);
         this.btn.addEventListener('click', () => {
-            const playSound = new Audio('./resources/assets/minecraft/sounds/click_stereo.ogg');
+            const playSound = new Audio('./dist/resources/assets/minecraft/sounds/click_stereo.ogg');
             playSound.play();
             this.btn.blur();
         });
