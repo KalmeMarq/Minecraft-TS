@@ -33,8 +33,8 @@ export default class ScreenP extends AbstractGui {
     this.buttons = [];
     this.width = width;
     this.height = height;
-    this.render();
     this.init();
+    this.render();
     this.renderWidgets();
   }
 

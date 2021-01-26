@@ -34,7 +34,8 @@ export let keyName = '';
 export let isDragging = false;
 export let keyModifiers = {
     keyShift: false,
-    keyCtrl: false
+    keyCtrl: false,
+    keyAlt: false
 };
 var Resources = {
     languages: [],
@@ -181,28 +182,35 @@ window.addEventListener('dblclick', (e) => {
     dblclickYM = e.clientY;
 });
 window.addEventListener('keydown', (e) => {
-    if (e.ctrlKey && e.shiftKey) {
-        keyModifiers.keyShift = true;
+    keyModifiers.keyShift = false;
+    keyModifiers.keyCtrl = false;
+    keyModifiers.keyAlt = false;
+    if (e.ctrlKey) {
         keyModifiers.keyCtrl = true;
     }
-    else if (e.ctrlKey && !e.shiftKey) {
-        keyModifiers.keyShift = false;
-        keyModifiers.keyCtrl = true;
-    }
-    else if (!e.ctrlKey && e.shiftKey) {
+    if (e.shiftKey) {
         keyModifiers.keyShift = true;
-        keyModifiers.keyCtrl = false;
     }
-    else if (!e.ctrlKey && !e.shiftKey) {
-        keyModifiers.keyShift = false;
-        keyModifiers.keyCtrl = false;
+    if (e.altKey) {
+        keyModifiers.keyAlt = true;
     }
-    if (!(e.key === 'Control' || e.key === 'Shift')) {
+    if (!(e.key === 'Control' || e.key === 'Shift' || e.key === 'Meta' || e.key === 'Alt' || e.key === 'CapsLock' || e.key === 'Tab')) {
         keyName = e.key;
     }
-    if (e.key === 'Tab') {
+    if (e.key === 'Tab' || e.key === 'F1' || e.key === 'F2' || e.key === 'F3' || e.key === 'F4' || e.key === 'F5') {
         e.preventDefault();
     }
+});
+export const resetKeyInfo = () => {
+    keyName = '';
+    keyModifiers.keyShift = false;
+    keyModifiers.keyCtrl = false;
+    keyModifiers.keyAlt = false;
+};
+window.addEventListener('keyup', (e) => {
+    keyName = '';
+    keyModifiers.keyShift = false;
+    keyModifiers.keyCtrl = false;
 });
 window.addEventListener('contextmenu', (e) => e.preventDefault(), false);
 window.addEventListener('mousedown', (e) => {

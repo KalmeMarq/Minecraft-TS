@@ -2,6 +2,7 @@ import { scaleFactor, ctx, minecraftImg, editionImg, mouseXM, mouseYM, clickXM, 
 import TranslationTextComponent from "../../../util/TranslationText.js";
 import FontRenderer from "../FontRenderer.js";
 import Button from "../widgets/button/Button.js";
+import TextFieldWidget from "../widgets/TextFieldWidget.js";
 import MultiplayerScreen from "./MultiplayerScreen.js";
 import OptionsScreen from "./OptionsScreen.js";
 import RealmsScreen from "./RealmsScreen.js";
@@ -18,6 +19,7 @@ export default class MainMenuScreen extends ScreenP {
     init() {
         let i = 24;
         let j = this.height / 4 + 48;
+        this.searchField = new TextFieldWidget(this.width / 2 - 100, 100, 200, 20, this.searchField, 'Placeholder here');
         this.addButton(new Button(this.width / 2 - 100, j, 200, 20, new TranslationTextComponent('menu.singleplayer').get(), () => {
             this.minecraft.displayGuiScreen(new WorldSelectionScreen(this));
         }));
@@ -63,6 +65,9 @@ export default class MainMenuScreen extends ScreenP {
         let a = this.splashText;
         let splashWidth = ctx.measureText('Not affiliated with Mojang Studios').width;
         const miliT = new Date().getMilliseconds();
+        let f2 = 2.0 - Math.abs(Math.sin((miliT % 1000) / 1000.0 * (Math.PI * 2)) * 0.1);
+        f2 = f2 * 100.0 / (splashWidth + 32);
+        ctx.scale(f2, f2);
         try {
             FontRenderer.renderText(this.splashText, j + 88 + 70, 67 + 100, 16776960);
         }
@@ -83,5 +88,6 @@ export default class MainMenuScreen extends ScreenP {
             ctx.stroke();
         }
         FontRenderer.renderText(f, this.width - FontRenderer.getTextWidth(f.split('')) - 1, this.height - 10, 16777215);
+        this.searchField.renderButton(mouseXM, mouseYM);
     }
 }

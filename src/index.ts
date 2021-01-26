@@ -1,6 +1,7 @@
 import JSONUtils from "./util/JSONUtils.js";
 import MainMenuScreen from './client/gui/screens/MainMenuScreen.js';
 import FontRenderer, { CharacterRenderer } from "./client/gui/FontRenderer.js";
+import TextFieldWidget from "./client/gui/widgets/TextFieldWidget.js";
 
 /* Ticks */
 let ticks = true;
@@ -46,7 +47,8 @@ export let keyName = '';
 export let isDragging = false;
 export let keyModifiers = {
   keyShift: false,
-  keyCtrl: false
+  keyCtrl: false,
+  keyAlt: false
 }
 
 /* Resources { lang files, texts { credits, end, splahes } } */
@@ -77,6 +79,7 @@ export let widgetsImg = new Image(256, 256);
 export let optionsBackgroundImg = new Image(256, 256);
 export let clickSound = new Audio();
 
+/* Characters Registry */
 export let characterRenderers: any = {};
 export let addCharacterRenderer = (color: number, char: string) => {
   if(!characterRenderers[color]) {
@@ -88,6 +91,7 @@ export let addCharacterRenderer = (color: number, char: string) => {
   };
 }
 
+/* Minecraft */
 export let currentScreen: any = null;
 class Minecraft {
   static displayGuiScreen(guiScreenIn: any) {
@@ -158,12 +162,6 @@ class Minecraft {
     return randSplash;
   }
 }
-
-
-// (async function() {
-// console.log(JSON.parse(await (await fetch('https://api.mcsrvstat.us/2/hypixel.net')).text()))
-  
-// })()
 
 const initialize = async () => {
   async function fetchAllData() {
@@ -243,28 +241,43 @@ window.addEventListener('dblclick', (e) => {
 });
 
 window.addEventListener('keydown', (e) => {
-  if(e.ctrlKey && e.shiftKey) {
-    keyModifiers.keyShift = true;
+  keyModifiers.keyShift = false;
+  keyModifiers.keyCtrl = false;
+  keyModifiers.keyAlt = false;
+
+  if(e.ctrlKey) {
     keyModifiers.keyCtrl = true;
-  } else if(e.ctrlKey && !e.shiftKey) {
-    keyModifiers.keyShift = false;
-    keyModifiers.keyCtrl = true;
-  } else if(!e.ctrlKey && e.shiftKey) {
-    keyModifiers.keyShift = true;
-    keyModifiers.keyCtrl = false;
-  } else if(!e.ctrlKey && !e.shiftKey) {
-    keyModifiers.keyShift = false;
-    keyModifiers.keyCtrl = false;
   }
 
-  if(!(e.key === 'Control' || e.key === 'Shift')) {
+  if(e.shiftKey){
+    keyModifiers.keyShift = true;
+  }
+
+  if(e.altKey) {
+    keyModifiers.keyAlt = true;
+  }
+
+  if(!(e.key === 'Control' || e.key === 'Shift' || e.key === 'Meta' || e.key === 'Alt' || e.key === 'CapsLock' || e.key === 'Tab')) {
     keyName = e.key;
   }
   
-  if(e.key === 'Tab') {
+  if(e.key === 'Tab' || e.key === 'F1' || e.key === 'F2'|| e.key === 'F3' || e.key === 'F4' || e.key === 'F5') {
     e.preventDefault();
   }
 });
+
+export const resetKeyInfo = () => {
+  keyName = '';
+  keyModifiers.keyShift = false;
+  keyModifiers.keyCtrl = false;
+  keyModifiers.keyAlt = false;
+}
+
+window.addEventListener('keyup', (e) => {
+  keyName = '';
+  keyModifiers.keyShift = false;
+  keyModifiers.keyCtrl = false;
+})
 
 window.addEventListener('contextmenu', (e) => e.preventDefault(), false);
 

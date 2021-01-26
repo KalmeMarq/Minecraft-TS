@@ -8,7 +8,7 @@ export default abstract class Widget {
   protected isHovered: boolean = false;
   public active = true;
   public visible = true;
-  protected focused: boolean = false;
+  protected focused: boolean;
 
   constructor(x: number, y: number, width: number, height: number, title: string) {
     this.x = x;
@@ -16,5 +16,6 @@ export default abstract class Widget {
     this.width = width;
     this.height = height;
     this.message = title;
+    this.focused = false;
   }
 }
