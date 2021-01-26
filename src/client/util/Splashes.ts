@@ -1,26 +1,26 @@
-export default class Splashes {
-  public static getSplashText(matrix: HTMLElement, width: number, height: number) {
-    const splashes = JSON.parse(localStorage.getItem('Resources')!).texts.splashes;
+// import { Resources } from "../../index.js";
 
-    const splashText = document.createElement('span');
+// export default class Splashes {
+//   public static getSplashText(matrix: HTMLElement, width: number, height: number) {
+//     const splashes = Resources.texts.splashes;
+//     const splashText = document.createElement('span');
 
-    const getRandomSplashText = () => {
-      return splashes[~~(Math.random() * (splashes.length - 1))]
-    }
+//     const date = new Date(),
+//           month = date.getMonth(),
+//           day = date.getDate();    
 
-    const randSplash = String(getRandomSplashText());
-    const splashLength: number = randSplash.split('').length;
+//     const getRandomSplashText = () => {
+//       return splashes[~~(Math.random() * (splashes.length - 1))]
+//     }
 
-    splashText.innerText = randSplash;
-    const initFontSize = splashLength < 2522 ? (9.8 / splashLength) * 1.5 + 9.8 : 9.8 / splashLength;
-    const endFontSize = splashLength < 2522 ? (10 / splashLength) * 1.5 + 10 : 10 / splashLength + 0.2;
-    splashText.className = 'splash-texts';
-    splashText.style.top = 40 + 'px'
-    splashText.style.left = width / 2 + 40 + 'px'
+//     let randSplash = String(getRandomSplashText());
+//     if(month + 1 === 12 && day === 24) {
+//       randSplash = 'Merry X-mas!';
+//     } else if (month + 1 === 1 && day === 1) {
+//       randSplash = 'Happy new year!';
+//     } else if(month + 1 === 10 && day === 31) {
+//       randSplash = 'OOoooOOOoooo! Spooky!';
+//     }
 
-    splashText.style.setProperty('--init', initFontSize + "px");
-    splashText.style.setProperty('--end', endFontSize + "px");
-
-    matrix.appendChild(splashText)
-  }
-}
+//   }
+// }

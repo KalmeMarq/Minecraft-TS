@@ -1,36 +1,31 @@
+import { clickXM, clickYM, ctx, font, scaleFactor, widgetsImg, resetClickXY, minecraftImg } from '../../index.js';
 import ColorHelper from '../../util/ColorHelper.js';
 
 export default abstract class AbstractGui {
-  // public BACKGROUND_LOCATION = "textures/gui/options_background.png";
-  // public STATS_ICON_LOCATION = "textures/gui/container/stats_icons.png";
-  // public GUI_ICONS_LOCATION = "textures/gui/icons.png";
-
-  public root = document.getElementById('root')!;
-
-  public static drawCenteredString(matrix: HTMLElement, text: string, posX: number, posY: number, color: number) {
-    const span = document.createElement('span');
-    span.innerText = text;
-    span.style.color = ColorHelper.getColor(color) || 'white';
-  
-    span.style.position = 'absolute';
-    span.style.top = posY * 2.55 + 'px';
-    span.style.left = posX * 2.55 + 'px';
-    span.style.transform = 'translate(-50%)';
-    span.classList.add('text');
-  
-    matrix.appendChild(span);
+  public static drawCenteredString(fontType: string, text: string, posX: number, posY: number, color: number) {
+    ctx.save();
+    ctx.textBaseline = 'top';
+    ctx.textAlign = 'center';
+    ctx.font = fontType;
+    ctx.fillStyle = ColorHelper.getDarkerColor(color);
+    ctx.fillText(text, posX + 1, posY + 1)
+    ctx.fillStyle = ColorHelper.getColor(color) || 'white';
+    ctx.fillText(text, posX, posY)
+    ctx.restore();
   }
 
-  public static drawString(matrix: HTMLElement, text: string, posX: number, posY: number, color: number) {
-    const span = document.createElement('span');
-    span.innerText = text;
-    span.style.color = ColorHelper.getColor(color) || 'white';
-  
-    span.style.position = 'absolute';
-    span.style.top = posY * 2.55 + 'px';
-    span.style.left = posX * 2.55 + 'px';
-    span.classList.add('text');
-  
-    matrix.appendChild(span);
+  public static drawString(fontType: string, text: string, posX: number, posY: number, color: number) {
+    ctx.save();
+    ctx.textBaseline = 'top';
+    ctx.font = fontType;
+    ctx.fillStyle = ColorHelper.getDarkerColor(color);
+    ctx.fillText(text, posX + 1, posY + 1)
+    ctx.fillStyle = ColorHelper.getColor(color) || 'white';
+    ctx.fillText(text, posX, posY)
+    ctx.restore();
+  }
+
+  public static drawImg(img: any, offsetX: number, offsetY: number, uvX: number, uvY: number, width: number, height: number) {
+    ctx.drawImage(img, uvX, uvY, width, height, offsetX, offsetY, width, height);
   }
 }

@@ -1,96 +1,61 @@
-import { Minecraft, optionsBackgroundImg } from '../../../index.js';
+import { canvas, ctx, Minecraft, minecraftImg, mouseXM, mouseYM, optionsBackgroundImg, scaleFactor, widgetsImg } from '../../../index.js';
 import AbstractGui from '../AbstractGui.js';
-import Button from '../widgets/Button.js'
+import Button from '../widgets/button/Button.js';
 
 export default class ScreenP extends AbstractGui {
-  public title
-  public minecraft
-  public width
-  public height
+  public title: string = ''
+  public minecraft;
+  public width: number = 0;
+  public height: number = 0;
   public buttons: Array<Button> = new Array();
+  public req: any
 
   constructor() {
     super();
-
-    this.title = '';
     this.minecraft = Minecraft;
-    this.width = 0;
-    this.height = 0;
     this.buttons = [];
   }
 
-  setTitle(text: string): void {
-    this.title = text;
-  }
-
-  renderWidgets() {
-    document.getElementById('root')!.innerHTML = '';
-
+  public renderWidgets(): void {
     for(var i = 0; i < this.buttons.length; i++) {
       let button: Button = this.buttons[i];
-      button.render()
+      button.renderButton(mouseXM, mouseYM)
     }
   }
 
-  addButton(button: Button) {
-    this.buttons.push(button);
-    return button;
+  addButton(button: Button): Button {
+    let butston: Button = button;
+    this.buttons.push(butston);
+    return butston;
   }
 
-  initScreen(width: number, height: number) {
+  initScreen(width: number, height: number): void {
     this.buttons = [];
     this.width = width;
     this.height = height;
+    this.render();
     this.init();
     this.renderWidgets();
-    this.render();
-  }
-
-  shouldCloseOnEsc() {
-    return true;
-  }
-
-  closeScreen() {
-    this.minecraft.displayGuiScreen(null);
   }
 
   protected init(): void {
+
   }
 
-  public render(): void {
+  protected render(): void {
+
   }
 
-  renderDirtBackground() {
-
-    const canvas = document.createElement('canvas')!;
-    canvas.style.transform = 'scale(' + 1.5 * (2.55 + 0.5) + ')';
-    canvas.width = this.width;
-    canvas.height = this.height;
-
-
-
-    canvas.className = 'canvas-bg';
-
-
-    const ctx = canvas!.getContext('2d')!;
-  
-    let img = optionsBackgroundImg;
-    
-    var ptrn = ctx.createPattern(img, 'repeat')!; 
+  public renderDirtBackground() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    var ptrn = ctx.createPattern(optionsBackgroundImg, 'repeat')!;
+    ctx.save();
+    ctx.scale(scaleFactor * 0.65, scaleFactor * 0.65)
+    ctx.imageSmoothingEnabled = false
     ctx.fillStyle = ptrn;
-    ctx.filter = 'brightness(35%)'
+    ctx.filter = 'brightness(30%)'
     ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-    canvas.style.zIndex = '-5'
-    
-    // const dirt = document.createElement('div');
-    // dirt.style.position = 'absolute';
-    // dirt.style.top = '0px';
-    // dirt.style.left = '0px';
-    // dirt.style.background = 'rgb(61, 35, 13)';
-    // dirt.style.width = this.width + 'px';
-    // dirt.style.height = this.height + 'px';
-    // dirt.style.zIndex = '-15';
-    document.getElementById('root')!.appendChild(canvas);
+    ctx.filter = 'brightness(100%)'
+    ctx.restore()
   }
 }

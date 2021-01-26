@@ -1,41 +1,41 @@
-import ScreenP from './ScreenP.js';
-import Button from '../widgets/Button.js';
-import TextFieldWidget from '../widgets/TextFieldWidget.js';
-import TranslationTextComponent from '../../../util/text/TranslationText.js';
-import CreateWorldScreen from './CreateWorldScreen.js';
+import { canvas, ctx } from "../../../index.js";
+import TranslationTextComponent from "../../../util/TranslationText.js";
+import Button from "../widgets/button/Button.js";
+import ScreenP from "./ScreenP.js";
 
 export default class WorldSelectionScreen extends ScreenP {
-  public prevScreen
+  public parentScreen;
   public deleteButton: Button | any
   public selectButton: Button | any
   public renameButton: Button | any
   public copyButton: Button | any
-  public searchField: TextFieldWidget | any;
-
-  constructor(screenIn: ScreenP) {
+  public flag;
+  
+  constructor(parentScreen: ScreenP) {
     super();
-    this.prevScreen = screenIn;
+    this.parentScreen = parentScreen;
     this.deleteButton;
     this.selectButton;
     this.renameButton;
     this.copyButton;
+    this.flag = false;
   }
 
   init() {
-    this.setTitle(new TranslationTextComponent("selectWorld.title").get());
 
     this.addButton(new Button(this.width / 2 - 75, this.height / 2 - 20, 150, 20, new TranslationTextComponent("Simulate Select").get(), () => {
-      this.V(true)
+      this.flag = true;
+      this.V()
     }));
     this.addButton(new Button(this.width / 2 - 75, this.height / 2 + 4, 150, 20, new TranslationTextComponent("Simulate Deselect").get(), () => {
-      this.V(false)
+      this.flag = false;
+      this.V()
     }));
 
     this.selectButton = this.addButton(new Button(this.width / 2 - 154, this.height - 52, 150, 20, new TranslationTextComponent("selectWorld.select").get(), () => {
       return false;
     }));
     this.addButton(new Button(this.width / 2 + 4, this.height - 52, 150, 20, new TranslationTextComponent("selectWorld.create").get(), () => {
-      this.minecraft.displayGuiScreen(new CreateWorldScreen(this))
     }));
     this.renameButton = this.addButton(new Button(this.width / 2 - 154, this.height - 28, 72, 20, new TranslationTextComponent("selectWorld.edit").get(), () => {
       return false;
@@ -48,27 +48,25 @@ export default class WorldSelectionScreen extends ScreenP {
       return false;
     }));
     this.addButton(new Button(this.width / 2 + 82, this.height - 28, 72, 20, new TranslationTextComponent("gui.cancel").get(), () => {
-      this.minecraft.displayGuiScreen(this.prevScreen);
+      this.minecraft.displayGuiScreen(this.parentScreen);
     }));
 
 
-    this.V(false)
+    this.V()
   }
 
   closeScreen() {
-    this.minecraft.displayGuiScreen(this.prevScreen);
+    this.minecraft.displayGuiScreen(this.parentScreen);
   }
 
-  V(activeBoolean: boolean) {
-    this.selectButton.active(activeBoolean);
-    this.renameButton.active(activeBoolean);
-    this.deleteButton.active(activeBoolean);
-    this.copyButton.active(activeBoolean);
+  V() {
+    this.selectButton.setActive(this.flag);
+    this.renameButton.setActive(this.flag);
+    this.deleteButton.setActive(this.flag);
+    this.copyButton.setActive(this.flag);
   }
 
   render() {
-    this.searchField = new TextFieldWidget(this.width / 2 - 100, 22, 200, 20, '').render();
-    ScreenP.drawCenteredString(this.root, this.title, this.width / 2, 8, 16777215);
-    this.renderDirtBackground();
+    this.renderDirtBackground()
   }
 }
