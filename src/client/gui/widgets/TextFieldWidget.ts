@@ -345,6 +345,15 @@ export default class TextFieldWidget extends Widget {
     this.mouseClicked(clickXM, clickYM);
     this.keyPressed();
 
+    ctx.save();
+    ctx.imageSmoothingEnabled = true;
+    ctx.fillStyle = 'black';
+    ctx.fillRect(this.x, this.y, this.width, this.height);
+    let i = this.focused ? -1 : -6250336;
+    ctx.strokeStyle = ColorHelper.getColor(i);
+    ctx.strokeRect(this.x, this.y, this.width, this.height)
+    ctx.restore();
+
     let i2 = this.isEnabled ? this.enabledColor : this.disabledColor;
     let j = this.cursorPosition - this.lineScrollOffset;
     let k = this.selectionEnd - this.lineScrollOffset;
@@ -386,14 +395,7 @@ export default class TextFieldWidget extends Widget {
   }
 
   private drawSelectionBox(): void {
-    ctx.save();
-    ctx.imageSmoothingEnabled = true;
-    ctx.fillStyle = 'black';
-    ctx.fillRect(this.x, this.y, this.width, this.height);
-    let i = this.focused ? -1 : -6250336;
-    ctx.strokeStyle = ColorHelper.getColor(i);
-    ctx.strokeRect(this.x, this.y, this.width, this.height)
-    ctx.restore();
+
   }
 
   public setMaxStringLength(length: number): void {

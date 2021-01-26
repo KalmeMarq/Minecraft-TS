@@ -20,6 +20,7 @@ export default class MainMenuScreen extends ScreenP {
         let i = 24;
         let j = this.height / 4 + 48;
         this.searchField = new TextFieldWidget(this.width / 2 - 100, 100, 200, 20, this.searchField, 'Placeholder here');
+        this.searchField.setMaxStringLength(44);
         this.addButton(new Button(this.width / 2 - 100, j, 200, 20, new TranslationTextComponent('menu.singleplayer').get(), () => {
             this.minecraft.displayGuiScreen(new WorldSelectionScreen(this));
         }));

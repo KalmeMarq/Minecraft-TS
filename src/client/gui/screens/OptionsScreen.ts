@@ -1,10 +1,11 @@
 import TranslationTextComponent from "../../../util/TranslationText.js";
 import Button from "../widgets/button/Button.js";
+import Widget from "../widgets/Widget.js";
 import ScreenP from "./ScreenP.js";
 
 export default class OptionsScreen extends ScreenP {
   public parentScreen;
-  private resourcePackBtn: Button | undefined
+  private resourcePackBtn: Button | any
 
   constructor(parentScreen: ScreenP) {
     super();

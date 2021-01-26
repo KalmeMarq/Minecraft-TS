@@ -1,13 +1,14 @@
 import { canvas, ctx, Minecraft, minecraftImg, mouseXM, mouseYM, optionsBackgroundImg, scaleFactor, widgetsImg } from '../../../index.js';
 import AbstractGui from '../AbstractGui.js';
 import Button from '../widgets/button/Button.js';
+import Widget from '../widgets/Widget.js';
 
 export default class ScreenP extends AbstractGui {
   public title: string = ''
   public minecraft;
   public width: number = 0;
   public height: number = 0;
-  public buttons: Array<Button> = new Array();
+  public buttons: Array<Widget> = new Array();
   public req: any
 
   constructor() {
@@ -18,13 +19,13 @@ export default class ScreenP extends AbstractGui {
 
   public renderWidgets(): void {
     for(var i = 0; i < this.buttons.length; i++) {
-      let button: Button = this.buttons[i];
+      let button: Widget = this.buttons[i];
       button.renderButton(mouseXM, mouseYM)
     }
   }
 
-  addButton(button: Button): Button {
-    let butston: Button = button;
+  addButton(button: Widget) {
+    let butston: Widget = button;
     this.buttons.push(butston);
     return butston;
   }
