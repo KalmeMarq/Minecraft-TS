@@ -10,6 +10,7 @@ interface Resources {
     end: string[],
     splashes: string[]
   }
+  font: {}
 }
 
 export var Resources: Resources = {
@@ -18,7 +19,8 @@ export var Resources: Resources = {
     credits: [],
     end: [],
     splashes: []
-  }
+  },
+  font: {}
 };
 
 export const ResourcesSplashes = Resources.texts.splashes;
@@ -29,6 +31,7 @@ export let mojangstudiosImg = new Image(256, 256);
 export let minecraftImg = new Image(256, 256);
 export let editionImg = new Image(256, 256);
 export let widgetsImg = new Image(256, 256);
+export let accessibilityImg = new Image(256, 256);
 export let optionsBackgroundImg = new Image(256, 256);
 export let clickSound = new Audio();
 
@@ -58,6 +61,8 @@ class Main {
   }
 }
 
+export let getFontChars: any = {};
+
 const initialize = async () => {
   (<HTMLCanvasElement>document.getElementById('root')).getContext('2d')!.clearRect(0, 0, window.innerWidth, window.innerHeight);
   async function fetchAllData() {
@@ -68,11 +73,14 @@ const initialize = async () => {
     minecraftImg.src = `./${rootloc}/textures/gui/title/minecraft.png`;
     mojangstudiosImg.src = `./${rootloc}/textures/gui/title/mojangstudios.png`;
     widgetsImg.src = `./${rootloc}/textures/gui/widgets.png`;
+    accessibilityImg.src = `./${rootloc}/textures/gui/accessibility.png`;
     optionsBackgroundImg.src = `./${rootloc}/textures/gui/options_background.png`;
     clickSound.src = `./${rootloc}/sounds/click_stereo.ogg`;
 
     langNames.forEach(async (name) => await JSONUtils.getJSONFile(`./${rootloc}/lang/${name}.json`, (data: any) => Resources.languages.push({code: name, data: data})));
     
+    await JSONUtils.getJSONFile(`./${rootloc}/font/font.json`, (data: any) => Resources.font = data);
+
     await JSONUtils.getTextFile(`./${rootloc}/texts/credits.txt`, (data: any) => data.split(/\r?\n/).forEach((line: any) => Resources.texts.credits.push(line)));
     await JSONUtils.getTextFile(`./${rootloc}/texts/end.txt`, (data: any) => data.split(/\r?\n/).forEach((line: any) => Resources.texts.end.push(line)));
     await JSONUtils.getTextFile(`./${rootloc}/texts/splashes.txt`, (data: any) => data.split(/\r?\n/).forEach((line: any) => Resources.texts.splashes.push(line)));
@@ -85,7 +93,7 @@ const initialize = async () => {
   await fetchAllData();
 
   console.log(Resources)
-  
+  getFontChars = Resources.font
   document.title = 'Minecraft JS'
 
   Main.main();

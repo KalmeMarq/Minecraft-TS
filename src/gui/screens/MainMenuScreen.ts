@@ -1,7 +1,9 @@
-import { editionImg, minecraftImg, ResourcesSplashes } from "../../index.js";
+import { editionImg, minecraftImg, ResourcesSplashes, widgetsImg, accessibilityImg } from "../../index.js";
 import TranslationTextComponent from "../../utils/TranslationText.js";
 import FontRenderer from "../FontRenderer.js";
 import Button from "../widgets/button/Button.js";
+import ImageButton from "../widgets/button/ImageButton.js";
+import AccessibilityScreen from "./Accessibility.js";
 import OptionsScreen from "./OptionsScreen.js";
 import ScreenP from "./ScreenP.js";
 
@@ -10,6 +12,8 @@ export default class MainMenuScreen extends ScreenP {
   private widthCopyrightRest: number = 0;
   protected MINECRAFT_TITLE_IMG = minecraftImg;
   protected MINECRAFT_EDITION_IMG = editionImg;
+  protected WIDGETS_LOCATION = widgetsImg;
+  protected ACCESSIBILITY_TEXTURES = accessibilityImg;
   private showTitleWronglySpelled: boolean = (Math.random() < 1.0E-4);
   private splashText: any = this.getSplashText();
 
@@ -51,6 +55,14 @@ export default class MainMenuScreen extends ScreenP {
     this.widthCopyright = FontRenderer.getTextWidth("Not affiliated with Mojang Studios!");
     this.widthCopyrightRest = this.width - this.widthCopyright - 2;
 
+    this.addButton(new ImageButton(this.width / 2 - 124, j + 72 + 12, 20, 20, 0, 106, 20, this.WIDGETS_LOCATION, 256, 256, () => {
+      this.minecraft.displayGuiScreen(new OptionsScreen(this, this.minecraft.gameSettings));
+    }, ''));
+
+    this.addButton(new ImageButton(this.width / 2 + 104, j + 72 + 12, 20, 20, 0, 0, 20, this.ACCESSIBILITY_TEXTURES, 32, 64, () => {
+      this.minecraft.displayGuiScreen(new AccessibilityScreen(this));
+   }, ''));
+
     this.addButton(new Button(this.width  / 2 - 100, j, 200, 20, new TranslationTextComponent('menu.singleplayer').get(), () => {}));
 
     this.addButton(new Button(this.width  / 2 - 100, j + i * 1, 200, 20, new TranslationTextComponent('menu.multiplayer').get(), () => {}));
@@ -58,7 +70,7 @@ export default class MainMenuScreen extends ScreenP {
     this.addButton(new Button(this.width  / 2 - 100, j + i * 2, 200, 20, new TranslationTextComponent('menu.online').get(), () => {}));
 
     this.addButton(new Button(this.width  / 2 - 100, j + 72 + 12, 98, 20, new TranslationTextComponent('menu.options').get(), () => {
-      this.minecraft.displayGuiScreen(new OptionsScreen(this))
+      this.minecraft.displayGuiScreen(new OptionsScreen(this, this.minecraft.gameSettings))
     }));
 
     this.addButton(new Button(this.width  / 2 + 2, j + 72 + 12, 98, 20, new TranslationTextComponent('menu.quit').get(), () => {
@@ -110,14 +122,14 @@ export default class MainMenuScreen extends ScreenP {
     }
     context.restore();
 
-    let s = 'Minecraft JS 1.19.2';
+    let s = 'Minecraft JS 1.20.2';
     this.drawString(context, s, 2, this.height - 10, 16777215);
 
-    let f = 'Not affiliated with Mojang Studios';
+    let f = 'Not affiliated with Mojang Studios!';
     if (mouseX > (this.widthCopyrightRest) && mouseX < (this.widthCopyrightRest + this.widthCopyright) && mouseY > (this.height - 10) && mouseY < this.height) {
       this.fill(context, (this.widthCopyrightRest - 1), this.height - 2, this.widthCopyright + 1, 1, 16777215)
     }
 
-    this.drawString(context, 'Not affiliated with Mojang Studios', this.widthCopyrightRest, this.height - 10, 16777215);
+    this.drawString(context, 'Not affiliated with Mojang Studios!', this.widthCopyrightRest, this.height - 10, 16777215);
   }
 }

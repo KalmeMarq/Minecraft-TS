@@ -1,4 +1,5 @@
 import GameConfiguration from "./GameConfiguration.js";
+import GameSettings from "./GameSettings.js";
 import MainMenuScreen from "./gui/screens/MainMenuScreen.js";
 import ScreenP from "./gui/screens/ScreenP.js";
 import { Resources } from "./index.js";
@@ -11,6 +12,7 @@ export default class Minecraft {
   public mouseHelper: MouseHelper;
   public keyboardListener: KeyboardListener;
   public canvasX = 0;
+  public gameSettings: GameSettings;
   public ResourcesData: any = Resources;
   public canvasY = 0;
   public canvasWidth = window.innerWidth;
@@ -19,11 +21,11 @@ export default class Minecraft {
   private fps: number = 0;
   private times: Array<number> = [];
   public running: boolean = true;
-  public showFps: boolean = false;
   public currentScreen: ScreenP | null = null;
 
   constructor(gameConfig: GameConfiguration) {
     this.gameconfiguration = gameConfig;
+    this.gameSettings = new GameSettings(this);
     this.mouseHelper = new MouseHelper(this, this.context);
     this.keyboardListener = new KeyboardListener(this);
     this.mouseHelper.registerCallbacks();
@@ -38,11 +40,11 @@ export default class Minecraft {
   }
 
   public setFpsVisibility(state: boolean) {
-    this.showFps = state;
+    this.gameSettings.showFPS = state;
   }
 
   public isFpsVisible() {
-    return this.showFps;
+    return this.gameSettings.showFPS;
   }
 
   public run() {
@@ -50,15 +52,13 @@ export default class Minecraft {
     this.context.canvas.height = this.canvasHeight;
     this.context.scale(this.scaleFactor, this.scaleFactor);
     this.context.imageSmoothingEnabled = false;
-
+    
     const runLoop = () => {
-      // this.context.clearRect(this.canvasX, this.canvasY, this.canvasWidth, this.canvasHeight)
       requestAnimationFrame(runLoop);
 
       if(this.running) {
         this.displayGuiScreen(this.currentScreen);
-
-        if(this.showFps) {
+        if(this.gameSettings.showFPS) {
           this.context.save();
           this.context.fillStyle = 'red';
           this.context.font = '8px Arial';
@@ -76,7 +76,7 @@ export default class Minecraft {
     while (this.times.length > 0 && this.times[0] <= now - 1000) this.times.shift();
     this.times.push(now);
     this.fps = this.times.length;
-    return this.fps;
+    return this.fps > this.gameSettings.framerateLimit ? this.gameSettings.framerateLimit : this.fps;
   }
 
   public displayGuiScreen(guiScreenIn: ScreenP | null): void {

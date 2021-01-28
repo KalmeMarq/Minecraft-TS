@@ -84,10 +84,7 @@ class ScreenP extends FocusableGui implements IRenderable, IGuiEventListener {
   }
 
   keyDown(key: string, modifiers: any) {
-    if(key === 'F3') {
-      const i = this.minecraft.isFpsVisible();
-      this.minecraft.setFpsVisibility(i ? false : true)
-    }
+    if(key === 'F3') this.minecraft.gameSettings.showFPS = !this.minecraft.gameSettings.showFPS;
     
     if(key == 'Escape' && this.shouldCloseOnEsc()) {
       this.closeScreen();
@@ -114,7 +111,7 @@ class ScreenP extends FocusableGui implements IRenderable, IGuiEventListener {
 
   public renderDirtBackground(context: CanvasRenderingContext2D) {
     context.save();
-    context.scale(3 * 0.65, 3 * 0.65)
+    context.scale(this.minecraft.getScaleFactor() * 0.65, this.minecraft.getScaleFactor() * 0.65)
     context.fillStyle = context.createPattern(optionsBackgroundImg, 'repeat')!;
     context.fillRect(0, 0, context.canvas.width, context.canvas.height);
 
@@ -131,41 +128,7 @@ class ScreenP extends FocusableGui implements IRenderable, IGuiEventListener {
   }
 
   public changeFocus(focus: boolean) {
-    let iguieventlistener: IGuiEventListener | null = this.getListener();
-    // let flag = iguieventlistener != null;
-
-    let list = this.getEventListeners();
-    list[0].changeFocus(true);
-
     return false;
-   /*  if (flag && iguieventlistener!.changeFocus(focus)) {
-       return true;
-    } else {
-      const listener: any = iguieventlistener;
-
-      let list = this.getEventListeners();
-      let j = list.indexOf(listener);
-      let i;
-      if (flag && j >= 0) {
-        i = j + (focus ? 1 : 0);
-      } else if (focus) {
-        i = 0;
-      } else {
-        i = list.length;
-      }
-
-      let k = 0;
-       while(k < list.length) {
-          let iguieventlistener1: IGuiEventListener = list[k];
-          if (iguieventlistener1.changeFocus(true)) {
-             this.setListener(iguieventlistener1);
-             return true;
-          }
-       }
-
-       this.setListener(null);
-       return false;
-    } */
   }
 }
 
