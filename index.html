@@ -2,17 +2,15 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no, shrink-to-fit=no">
-  <link rel="shortcut icon" href="dist/resources/assets/icons/icon_16x16.png" sizes="16x16" type="image/x-icon">
-  <link rel="shortcut icon" href="dist/resources/assets/icons/icon_32x32.png" sizes="32x32" type="image/x-icon">
-  <title>Minecraft JS</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="dist/styles/index.min.css">
+  <link rel="shortcut icon" href="#" type="image/x-icon">
+  <title>Minecraft JS</title>
+  <script src="https://requirejs.org/docs/release/2.3.6/comments/require.js"></script>
+  <script type="module" src="dist/scripts/index.js"></script>
 </head>
 <body>
-  <div class="loadingScreen" id="loadingScreen"></div>
-  <canvas id="root">
-  </canvas>
-
-  <script type="module" src="dist/scripts/index.js"></script>
+  <canvas id="root"></canvas>
+  <script src="dist/scripts/requires.js"></script>
 </body>
 </html>
