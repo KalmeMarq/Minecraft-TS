@@ -3,9 +3,9 @@ import { CharacterRenderer } from "./gui/FontRenderer.js";
 import Minecraft from "./Minecraft.js";
 import JSONUtils from "./utils/JSONUtils.js";
 
-interface Resources {
+export interface Resources {
   languages: {}[];
-  texts: {
+  texts: any | {
     credits: string[],
     end: string[],
     splashes: string[]
@@ -75,26 +75,24 @@ const initialize = async () => {
     widgetsImg.src = `./${rootloc}/textures/gui/widgets.png`;
     accessibilityImg.src = `./${rootloc}/textures/gui/accessibility.png`;
     optionsBackgroundImg.src = `./${rootloc}/textures/gui/options_background.png`;
-    clickSound.src = `./${rootloc}/sounds/click_stereo.ogg`;
+    clickSound.src = `https://raw.githubusercontent.com/KalmeMarq/Minecraft-JS-Assets/main/assets/sounds/click_stereo.ogg`;
 
-    langNames.forEach(async (name) => await JSONUtils.getJSONFile(`./${rootloc}/lang/${name}.json`, (data: any) => Resources.languages.push({code: name, data: data})));
+    ['credits', 'end', 'splashes'].forEach(async (name) => {
+      const s: string = name;
+      await JSONUtils.getTextFile(`https://raw.githubusercontent.com/KalmeMarq/Minecraft-JS-Assets/main/assets/texts/${name}.txt`, (data: any) => data.split(/\r?\n/).forEach((line: any) => Resources.texts[s].push(line)));
+    });
+
+    langNames.forEach(async (name) => name === 'en_us'
+      ? await JSONUtils.getJSONFile(`./${rootloc}/lang/${name}.json`, (data: any) => Resources.languages.push({code: name, data: data}))
+      : await JSONUtils.getJSONFile(`https://raw.githubusercontent.com/KalmeMarq/Minecraft-JS-Assets/main/assets/lang/${name}.json`, (data: any) => Resources.languages.push({code: name, data: data})));
     
     await JSONUtils.getJSONFile(`./${rootloc}/font/font.json`, (data: any) => Resources.font = data);
-
-    await JSONUtils.getTextFile(`./${rootloc}/texts/credits.txt`, (data: any) => data.split(/\r?\n/).forEach((line: any) => Resources.texts.credits.push(line)));
-    await JSONUtils.getTextFile(`./${rootloc}/texts/end.txt`, (data: any) => data.split(/\r?\n/).forEach((line: any) => Resources.texts.end.push(line)));
-    await JSONUtils.getTextFile(`./${rootloc}/texts/splashes.txt`, (data: any) => data.split(/\r?\n/).forEach((line: any) => Resources.texts.splashes.push(line)));
-  
-    // localStorage.setItem('GameSettings', JSON.stringify(GameSettings));
-    if(!localStorage.getItem('WorldsList')) localStorage.setItem('WorldsList', JSON.stringify([]))
-    if(!localStorage.getItem('ServersList')) localStorage.setItem('ServersList', JSON.stringify([]))
   };
 
   await fetchAllData();
 
   console.log(Resources)
   getFontChars = Resources.font
-  document.title = 'Minecraft JS'
 
   Main.main();
 }

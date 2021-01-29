@@ -19,7 +19,8 @@ export default class TranslationTextComponent {
 
   get() {
     try {
-      const displayLang: any = Resources.languages.find((id: any) => id.code === 'en_us');
+      const s = JSON.parse(localStorage.getItem('GameSettings')!).language ? JSON.parse(localStorage.getItem('GameSettings')!).language : 'en_us';
+      const displayLang: any = Resources.languages.find((id: any) => id.code === s);
       
       if(!displayLang.data[this.translateKey]) return this.translateKey;
       return displayLang.data[this.translateKey];

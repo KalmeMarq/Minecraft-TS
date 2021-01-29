@@ -1,7 +1,7 @@
 import IGuiEventListener from "../interfaces/IGuiEventListener.js";
 import Minecraft from "../Minecraft.js";
 
-class MouseHelper {
+export default class MouseHelper {
   private minecraft: any;
   private context: any;
   private leftDown: boolean = false;
@@ -102,8 +102,8 @@ class MouseHelper {
 
   public registerCallbacks(): void {
     this.context.canvas.addEventListener('mousemove', (e: MouseEvent) => {
-      this.mouseX = e.clientX;
-      this.mouseY = e.clientY;
+      this.mouseX = e.clientX - this.minecraft.canvasX;
+      this.mouseY = e.clientY - this.minecraft.canvasY;
     });
 
     this.context.canvas.addEventListener('mousedown', (e: MouseEvent) => {
@@ -133,4 +133,4 @@ class MouseHelper {
   }
 }
 
-export default MouseHelper;
+ MouseHelper;

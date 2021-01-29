@@ -5,6 +5,9 @@ import AbstractGui from "../AbstractGui.js";
 import FontRenderer from "../FontRenderer.js";
 
 class Widgets extends AbstractGui implements IRenderable, IGuiEventListener {
+  keyDown(key: string, modifiers: any) {
+    throw new Error("Method not implemented.");
+  }
   protected width: number;
   protected height: number;
   public x: number;
@@ -33,7 +36,7 @@ class Widgets extends AbstractGui implements IRenderable, IGuiEventListener {
     return i;
   }
 
-  renderScreen(context: CanvasRenderingContext2D, mouseX: number, mouseY: number) {
+  renderObject(context: CanvasRenderingContext2D, mouseX: number, mouseY: number) {
     if(this.visible) {
       this.isHovered = mouseX >= this.x && mouseY >= this.y && mouseX < this.x + this.width && mouseY < this.y + this.height;
 
@@ -55,24 +58,24 @@ class Widgets extends AbstractGui implements IRenderable, IGuiEventListener {
   }
 
   public renderButton(context: CanvasRenderingContext2D, mouseX: number, mouseY: number) {
+    
+    context.save();
     let yUV = this.getYImage(this.getHovered());
-/*     setInterval(() => {
-      this.focused = true
-      
-    }, 1000) */
+
+    context.globalAlpha = this.alpha;
 
     this.renderBgG(context, widgetsImg, [0, 46 + 20 * yUV], [this.x, this.y], [this.width / 2, 20]);
     this.renderBgG(context, widgetsImg, [200 - this.width / 2, 46 + 20 * yUV], [this.x + this.width / 2, this.y], [this.width / 2, 20]);
 
     let textColor = this.active ? 16777215 : 10526880;
     FontRenderer.renderCenteredText(this.message, this.x + this.width / 2, this.y + (this.height - 8) / 2, textColor);
+
+    context.restore();
   }
 
   public renderBgG(context: CanvasRenderingContext2D, img: any, uv: number[], offset: number[], uvSize: number[]) {
-    context.clearRect(offset[0], offset[1], uvSize[0], uvSize[1]);
     context.save();
     context.imageSmoothingEnabled = false;
-    context.globalAlpha = this.alpha;
     context.drawImage(img, uv[0], uv[1], uvSize[0], uvSize[1], offset[0], offset[1], uvSize[0], uvSize[1]);
     context.restore();
   }
@@ -82,20 +85,20 @@ class Widgets extends AbstractGui implements IRenderable, IGuiEventListener {
  }
 
   mouseClicked(mouseX: number, mouseY: number, button: number) {
-    if(mouseX > this.x && mouseY > this.y && mouseX < this.x + this.width && mouseY < this.y + this.height) {
+    if(this.clicked(mouseX, mouseY)) {
       console.log('button clicked');
     }
   }
 
   mouseReleased(mouseX: number, mouseY: number, button: number) {
-    if(mouseX > this.x && mouseY > this.y && mouseX < this.x + this.width && mouseY < this.y + this.height) {
+    if(this.clicked(mouseX, mouseY)) {
       console.log('button released');
     }
   }
 
-  protected clicked(clickX: number, clickY: number): boolean {
-    return this.clicked && this.active && this.visible && clickX >= this.x && clickY >= this.y && clickX < (this.x + this.width) && clickY < (this.y + this.height);
- }
+  protected clicked(mouseX: number, mouseY: number): boolean {
+    return this.clicked && this.active && this.visible && mouseX >= this.x && mouseY >= this.y && mouseX < (this.x + this.width) && mouseY < (this.y + this.height);
+  }
 
   public isMouseOver(mouseX: number, mouseY: number): boolean {
     return this.active && this.visible && mouseX >= this.x && mouseY >= this.y && mouseX <= (this.x + this.width) && mouseY <= (this.y + this.height);
@@ -116,6 +119,8 @@ class Widgets extends AbstractGui implements IRenderable, IGuiEventListener {
   keyReleased(key: string, modifiers: {}): void {
 
   }
+
+ 
 
 }
 

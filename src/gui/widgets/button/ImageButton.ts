@@ -29,7 +29,6 @@ export default class ImageButton extends Button {
       i += this.yDiffText;
     }
 
-    context.clearRect(this.x, this.y, this.width, this.height);
     context.save();
     context.imageSmoothingEnabled = false;
     context.globalAlpha = this.alpha;

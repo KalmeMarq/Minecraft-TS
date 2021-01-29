@@ -1,4 +1,4 @@
-interface IGuiEventListener {
+export default interface IGuiEventListener {
   mouseMoved(xPos: number, mouseY: number): void;
   mouseClicked(mouseX: number, mouseY: number, button: number): void;
   mouseReleased(mouseX: number, mouseY: number, button: number): void;
@@ -10,5 +10,3 @@ interface IGuiEventListener {
   changeFocus(focus: any): boolean
   isMouseOver(mouseX: number, mouseY: number): void
 }
-
-export default IGuiEventListener;

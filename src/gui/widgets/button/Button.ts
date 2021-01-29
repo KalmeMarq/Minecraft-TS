@@ -9,7 +9,7 @@ class Button extends Widgets {
   }
 
   mouseClicked(mouseX: number, mouseY: number, button: number) {
-    if(mouseX > this.x && mouseY > this.y && mouseX < this.x + this.width && mouseY < this.y + this.height) {
+    if(this.clicked(mouseX, mouseY)) {
       this.onPress();
       const a = new Audio('resources/assets/minecraft/sounds/click_stereo.ogg');
       a.volume = 0.2;
@@ -19,6 +19,16 @@ class Button extends Widgets {
 
   mouseReleased() {
 
+  }
+
+  keyDown(key: string, modifiers: {}) {
+    if(this.focused && key === 'Enter') {
+      this.focused = false;
+      this.onPress();
+      const a = new Audio('resources/assets/minecraft/sounds/click_stereo.ogg');
+      a.volume = 0.2;
+      a.play();
+    }
   }
 }
 

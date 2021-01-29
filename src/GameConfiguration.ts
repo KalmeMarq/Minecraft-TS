@@ -1,6 +1,4 @@
-class GameConfiguration {
+export default class GameConfiguration {
   constructor() {
   }
 }
-
-export default GameConfiguration;

@@ -3,71 +3,48 @@ import TranslationTextComponent from "../../utils/TranslationText.js";
 import FontRenderer from "../FontRenderer.js";
 import Button from "../widgets/button/Button.js";
 import ImageButton from "../widgets/button/ImageButton.js";
-import AccessibilityScreen from "./Accessibility.js";
+import Widgets from "../widgets/Widget.js";
+import AccessibilityScreen from "./AccessibilityScreen.js";
 import OptionsScreen from "./OptionsScreen.js";
 import ScreenP from "./ScreenP.js";
 
 export default class MainMenuScreen extends ScreenP {
   private widthCopyright: number = 0;
   private widthCopyrightRest: number = 0;
-  protected MINECRAFT_TITLE_IMG = minecraftImg;
-  protected MINECRAFT_EDITION_IMG = editionImg;
-  protected WIDGETS_LOCATION = widgetsImg;
-  protected ACCESSIBILITY_TEXTURES = accessibilityImg;
+  protected MINECRAFT_TITLE_IMG: HTMLImageElement = minecraftImg;
+  protected MINECRAFT_EDITION_IMG: HTMLImageElement = editionImg;
+  protected WIDGETS_LOCATION: HTMLImageElement = widgetsImg;
+  protected ACCESSIBILITY_TEXTURES: HTMLImageElement = accessibilityImg;
   private showTitleWronglySpelled: boolean = (Math.random() < 1.0E-4);
-  private splashText: any = this.getSplashText();
+  private splashText: string = '';
+  private buttonResetDemo: Widgets | null = null;
 
-  public getSplashText(): string {
-    const splashes = ResourcesSplashes;
-
-    const date = new Date(),
-          month = date.getMonth(),
-          day = date.getDate();    
-
-    const getRandomSplashText = () => {
-      return splashes[~~(Math.random() * (splashes.length - 1))]
-    }
-
-    let randSplash = String(getRandomSplashText());
-
-    if(month + 1 === 12 && day === 24) {
-      randSplash = 'Merry X-mas!';
-    } else if (month + 1 === 1 && day === 1) {
-      randSplash = 'Happy new year!';
-    } else if(month + 1 === 10 && day === 31) {
-      randSplash = 'OOoooOOOoooo! Spooky!';
-    }
-
-    return randSplash;
-  }
-
-  public closeScreen(): void {
-  }
+  public closeScreen(): void {}
 
   public shouldCloseOnEsc(): boolean {
     return false;
   }
   
   protected init(): void {
-    let i = 24;
-    let j = this.height / 4 + 48;
+    this.splashText = this.splashText !== '' ? this.splashText : this.minecraft.getSplashText();
 
     this.widthCopyright = FontRenderer.getTextWidth("Not affiliated with Mojang Studios!");
     this.widthCopyrightRest = this.width - this.widthCopyright - 2;
 
+    let i = 24;
+    let j = this.height / 4 + 48;
+
+    let isDemo = false;
+
+    if(isDemo) {
+      this.addDemoButtons(j, 24);
+    } else {
+      this.addSingleplayerMultiplayerButtons(j, 24);
+    }
+
     this.addButton(new ImageButton(this.width / 2 - 124, j + 72 + 12, 20, 20, 0, 106, 20, this.WIDGETS_LOCATION, 256, 256, () => {
       this.minecraft.displayGuiScreen(new OptionsScreen(this, this.minecraft.gameSettings));
     }, ''));
-
-    this.addButton(new ImageButton(this.width / 2 + 104, j + 72 + 12, 20, 20, 0, 0, 20, this.ACCESSIBILITY_TEXTURES, 32, 64, () => {
-      this.minecraft.displayGuiScreen(new AccessibilityScreen(this));
-   }, ''));
-
-    this.addButton(new Button(this.width  / 2 - 100, j, 200, 20, new TranslationTextComponent('menu.singleplayer').get(), () => {}));
-
-    this.addButton(new Button(this.width  / 2 - 100, j + i * 1, 200, 20, new TranslationTextComponent('menu.multiplayer').get(), () => {}));
-
-    this.addButton(new Button(this.width  / 2 - 100, j + i * 2, 200, 20, new TranslationTextComponent('menu.online').get(), () => {}));
 
     this.addButton(new Button(this.width  / 2 - 100, j + 72 + 12, 98, 20, new TranslationTextComponent('menu.options').get(), () => {
       this.minecraft.displayGuiScreen(new OptionsScreen(this, this.minecraft.gameSettings))
@@ -77,7 +54,34 @@ export default class MainMenuScreen extends ScreenP {
       this.minecraft.shutdown();
     }));
 
-    // this.buttons[0].changeFocus(true)
+    this.addButton(new ImageButton(this.width / 2 + 104, j + 72 + 12, 20, 20, 0, 0, 20, this.ACCESSIBILITY_TEXTURES, 32, 64, () => {
+      this.minecraft.displayGuiScreen(new AccessibilityScreen(this, this.minecraft.gameSettings));
+    }, ''));
+  }
+
+  private addSingleplayerMultiplayerButtons(yIn: number, rowHeightIn: number): void {
+    this.addButton(new Button(this.width / 2 - 100, yIn, 200, 20, new TranslationTextComponent("menu.singleplayer").get(), () => {
+      //  this.minecraft.displayGuiScreen(new WorldSelectionScreen(this));
+    }));
+
+    (this.addButton(new Button(this.width / 2 - 100, yIn + rowHeightIn * 1, 200, 20, new TranslationTextComponent("menu.multiplayer").get(), () => {
+       let screen: ScreenP | null = (this.minecraft.gameSettings.skipMultiplayerWarning ? /* new MultiplayerScreen(this) */null : /* new MultiplayerWarningScreen(this) */ null);
+      //  this.minecraft.displayGuiScreen(screen);
+    })));
+
+    (this.addButton(new Button(this.width / 2 - 100, yIn + rowHeightIn * 2, 200, 20, new TranslationTextComponent("menu.online").get(), () => {
+      //  this.switchToRealms();
+    })));
+  }
+
+  private addDemoButtons(yIn: number, rowHeightIn: number): void  {
+    this.addButton(new Button(this.width / 2 - 100, yIn, 200, 20, new TranslationTextComponent("menu.playdemo").get(), () => {
+    }));
+
+    this.buttonResetDemo = this.addButton(new Button(this.width / 2 - 100, yIn + rowHeightIn * 1, 200, 20, new TranslationTextComponent("menu.resetdemo").get(), () => {
+    }));
+
+    this.buttonResetDemo.active = false;
   }
 
   protected render(context: CanvasRenderingContext2D, mouseX: number, mouseY: number): void {
@@ -100,10 +104,7 @@ export default class MainMenuScreen extends ScreenP {
     }
     this.drawImg(context, this.MINECRAFT_EDITION_IMG, j + 88, 67, 0, 0, 98, 14);
     context.restore();
-
     context.save();
-    
-   
     const miliT = new Date().getMilliseconds();
     let f2 = 2.0 - Math.abs(Math.sin((miliT % 1000) / 1000.0 * (Math.PI * 2)) * 0.03);
     try {

@@ -4,49 +4,41 @@ import OptionButton from "../gui/widgets/button/OptionButton.js";
 import Widget from "../gui/widgets/Widget.js";
 import TranslationTextComponent from "../utils/TranslationText.js";
 
-export class BooleanOption extends AbstractOption {
-  private field_244785_aa: string;
-  public getter: string;
-  private setter: boolean;
+export default class BooleanOption extends AbstractOption {
+  private text: string;
+  public getter: any;
+  private setter: any;
 
-  constructor(translationKeyIn: string, getter: string, setter: boolean) {
-    super()
-    this.field_244785_aa = translationKeyIn;
+  constructor(translationKeyIn: string, getter: any, setter: any) {
+    super();
+    this.text = translationKeyIn;
     this.getter = getter;
     this.setter = setter;
   }
 
-  public set(options: GameSettings, valueIn: string): void {
-    this.setPriv(options, (valueIn == 'true' ? true : false));
+  public set(options: GameSettings, valueIn: boolean): void {
+    this.setPriv(options, valueIn);
   }
  
   private setPriv(options: GameSettings, valueIn: boolean) {
-    const i: string = this.getter;
-    options.accept(i, valueIn);
+    this.setter(options, valueIn)
   }
 
   public get(options: GameSettings): boolean {
-    const i: string = this.getter;
-    return options.test(i);
- }
+    return (this.getter(options));
+   }
   
   public nextValue(options: GameSettings) {
-    this.set(options, String(!this.get(options)));
+    this.set(options, !this.get(options));
   }
 
   public createWidget(options: GameSettings, xIn: number, yIn: number, widthIn: number): Widget {
-   /*  if (this.field_244785_aa != null) {
-       this.setOptionValues(Minecraft.getInstance().fontRenderer.trimStringToWidth(this.field_244785_aa, 200));
-    } */
-
     return new OptionButton(xIn, yIn, widthIn, 20, this, this.func_238152_c_(options), () => {
        this.nextValue(options);
-       console.log("sss");
-       
     });
   }
 
   public func_238152_c_(p_238152_1_: GameSettings) {
-    return `${this.field_244785_aa}: ${this.get(p_238152_1_) == false ? new TranslationTextComponent('options.off').get() : new TranslationTextComponent('options.on').get()}`;
+    return `${new TranslationTextComponent(this.text).get()}: ${this.get(p_238152_1_) == false ? new TranslationTextComponent('options.off').get() : new TranslationTextComponent('options.on').get()}`;
    }
 }

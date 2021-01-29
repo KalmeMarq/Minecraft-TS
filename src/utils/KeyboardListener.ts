@@ -3,7 +3,6 @@ import Minecraft from "../Minecraft.js";
 
 export default class KeyboardListener {
   private mc: any;
-  private repeatEventsEnabled: boolean = false;
   
   constructor(minecraftIn: Minecraft) {
     this.mc = minecraftIn;
@@ -12,14 +11,9 @@ export default class KeyboardListener {
   private onKeyEvent(key: string, action: number, modifiers: {}) {
     const iguieventlistener: IGuiEventListener = this.mc.currentScreen;
     if (action != 1) {
-      if(action == 0) {
-        iguieventlistener.keyReleased(key, modifiers);
-      } else {
-        this.mc.currentScreen.keyDown(key, modifiers);
-      }
-    } else {
-      iguieventlistener.keyPressed(key, modifiers);
-    }
+      if(action == 0) iguieventlistener.keyReleased(key, modifiers);
+      else this.mc.currentScreen.keyDown(key, modifiers);
+    } else iguieventlistener.keyPressed(key, modifiers);
   }
 
   public setupCallbacks() {
