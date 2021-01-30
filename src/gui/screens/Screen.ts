@@ -1,4 +1,4 @@
-import { optionsBackgroundImg } from "../../index.js";
+import { optionsBackgroundImg } from "../../utils/GetResources.js";
 import IGuiEventListener from "../../interfaces/IGuiEventListener.js";
 import IRenderable from "../../interfaces/IRenderable.js";
 import Minecraft from "../../Minecraft.js";

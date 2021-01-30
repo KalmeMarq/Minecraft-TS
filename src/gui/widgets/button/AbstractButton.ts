@@ -1,3 +1,4 @@
+import { playSound } from "../../../utils/PlaySound";
 import Widget from "../Widget";
 
 export default abstract class AbstractButton extends Widget {
@@ -16,9 +17,7 @@ export default abstract class AbstractButton extends Widget {
       if(keyName != 'Enter' && keyName != ' ') {
         return false;
       } else {
-        const a = new Audio('resources/assets/minecraft/sounds/click_stereo.ogg');
-        a.volume = 0.2;
-        a.play();
+        playSound('resources/assets/minecraft/sounds/click_stereo.ogg', 0.2);
         this.PressFunc();
         return true;
       }

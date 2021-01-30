@@ -83,9 +83,7 @@ export default class GameSettings {
   constructor(mcIn: Minecraft) {
     this.mc = mcIn;
     this.loadOptions();
-    this.cloudOptions.setValue(CloudOptions.OFF)
-    console.log(this.cloudOptions.getId());
-    
+    // this.mc.outputLog += '\n Game Options Loaded'
   }
 
   public loadOptions(): void {
@@ -96,7 +94,16 @@ export default class GameSettings {
       this.framerateLimit = Options.framerateLimit;
       this.showFPS = Options.showFPS;
       this.skipMultiplayerWarning = Options.skipMultiplayerWarning;
-      this.language = Options.language
+      this.language = Options.language;
+      this.advancedItemTooltips = Options.advancedItemTooltips;
+      this.heldItemTooltips = Options.heldItemTooltips;
+      this.rawMouseInput = Options.rawMouseInput;
+      this.skipMultiplayerWarning = Options.skipMultiplayerWarning;
+      this.autoJump = Options.autoJump;
+      this.vsync = Options.vsync;
+      this.forceUnicodeFont = Options.forceUnicodeFont;
+      this.showSubtitles = Options.showSubtitles;
+      this.hideGUI = Options.hideGUI;
     }
   }
 
@@ -106,8 +113,18 @@ export default class GameSettings {
       framerateLimit: this.framerateLimit,
       showFPS: this.showFPS,
       skipMultiplayerWarning: this.skipMultiplayerWarning,
-      language: this.language
+      language: this.language,
+      advancedItemTooltips: this.advancedItemTooltips,
+      heldItemTooltips: this.heldItemTooltips,
+      rawMouseInput: this.rawMouseInput,
+      autoJump: this.autoJump,
+      vsync: this.vsync,
+      forceUnicodeFont: this.forceUnicodeFont,
+      showSubtitles: this.showSubtitles,
+      hideGUI: this.hideGUI
     }));
+
+    // this.mc.outputLog += '\n Game Options Saved'
   }
 
   public test(i: string): boolean {

@@ -1,4 +1,4 @@
-import { addCharacterRenderer, characterRenderers, fontImg, getFontChars } from "../index.js";
+import { addCharacterRenderer, characterRenderers, fontImg, getFontChars } from "../utils/GetResources.js";
 import ColorHelper from "../utils/ColorHelper.js";
 
 // let getFontChars: any = getFontgetFontChars;

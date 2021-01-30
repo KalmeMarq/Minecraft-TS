@@ -1,6 +1,7 @@
-import { widgetsImg } from "../../index.js";
+import { widgetsImg } from "../../utils/GetResources.js";
 import IGuiEventListener from "../../interfaces/IGuiEventListener.js";
 import IRenderable from "../../interfaces/IRenderable.js";
+import { playSound } from "../../utils/PlaySound.js";
 import AbstractGui from "../AbstractGui.js";
 
 export default class Widgets extends AbstractGui implements IRenderable, IGuiEventListener {
@@ -78,9 +79,7 @@ export default class Widgets extends AbstractGui implements IRenderable, IGuiEve
       if(this.isValidClickButton(button)) {
         let flag = this.clicked(mouseX, mouseY);
         if (flag) {
-          const a = new Audio('resources/assets/minecraft/sounds/click_stereo.ogg');
-          a.volume = 0.2;
-          a.play();
+          playSound('resources/assets/minecraft/sounds/click_stereo.ogg', 0.2);
           this.onClick(mouseX, mouseY);
           return true;
         }

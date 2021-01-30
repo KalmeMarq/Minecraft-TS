@@ -3,7 +3,8 @@ import GameSettings from "./GameSettings.js";
 import FontRenderer from "./gui/FontRenderer.js";
 import MainMenuScreen from "./gui/screens/MainMenuScreen.js";
 import Screen from "./gui/screens/Screen.js";
-import { Resources, ResourcesSplashes } from "./index.js";
+import { Resources } from "./index.js";
+import { IResources } from "./utils/GetResources.js";
 import KeyboardListener from "./utils/KeyboardListener.js";
 import MouseHelper from "./utils/MouseHelper.js";
 
@@ -15,7 +16,7 @@ export default class Minecraft {
   public canvasX = 0;
   public canvasY = 0;
   public gameSettings: GameSettings;
-  public ResourcesData: Resources = Resources;
+  public ResourcesData: IResources = Resources;
   public canvasWidth = window.innerWidth;
   public canvasHeight = window.innerHeight;
   public scaleFactor = 3;
@@ -23,6 +24,7 @@ export default class Minecraft {
   private times: Array<number> = [];
   public running: boolean = true;
   public currentScreen: Screen | null = null;
+  public outputLog = ''
 
   constructor(gameConfig: GameConfiguration) {
     this.gameconfiguration = gameConfig;
@@ -33,10 +35,12 @@ export default class Minecraft {
     this.keyboardListener.setupCallbacks();
     this.updateCanvasSize();
     this.run();
+    this.outputLog = ''
   }
 
   public shutdown() {
     this.running = false;
+    console.log(this.outputLog);
     window.close()
   }
 
@@ -50,7 +54,7 @@ export default class Minecraft {
 
   public getSplashText(): string {
     function getRandSplash() {
-      const splashes = ResourcesSplashes,
+      const splashes = Resources.texts.splashes,
             date = new Date(),
             month = date.getMonth(),
             day = date.getDate();
@@ -84,7 +88,8 @@ export default class Minecraft {
         if(this.gameSettings.showFPS) {
           this.context.save();
           this.context.scale(0.666, 0.666);
-          FontRenderer.drawStringWithShadow(this.context, `${String(this.getFPS())}/${this.gameSettings.framerateLimit}`, 2, 2, 16777215, []);
+          let fps = this.gameSettings.vsync ? (this.getFPS() > this.gameSettings.framerateLimit ? this.gameSettings.framerateLimit : this.getFPS()) : this.getFPS()
+          FontRenderer.drawStringWithShadow(this.context, `${String(fps)}/${this.gameSettings.framerateLimit}`, 2, 2, 16777215, []);
           this.context.restore();
         }
        
@@ -99,7 +104,7 @@ export default class Minecraft {
     while (this.times.length > 0 && this.times[0] <= now - 1000) this.times.shift();
     this.times.push(now);
     this.fps = this.times.length;
-    return this.fps > this.gameSettings.framerateLimit ? this.gameSettings.framerateLimit : this.fps;
+    return this.fps;
   }
 
   public displayGuiScreen(guiScreenIn: Screen | null): void {
@@ -134,5 +139,25 @@ export default class Minecraft {
 
   public getScaleFactor(): number {
     return this.scaleFactor;
+  }
+
+  public isDemo(): boolean {
+    return this.gameconfiguration.gameInfo.isDemo;
+  }
+
+  public isModdedClient(): boolean {
+    return this.gameconfiguration.gameInfo.clientName !== 'vanilla';
+  }
+
+  public getVersionType(): string {
+    return this.gameconfiguration.gameInfo.versionType;
+  }
+
+  public getVersion(): string {
+    return this.gameconfiguration.gameInfo.version;
+  }
+
+  public getUsername(): string {
+    return this.gameconfiguration.userInfo.userName;
   }
 }

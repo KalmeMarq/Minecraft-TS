@@ -44,7 +44,6 @@ export default class MultiplayerScreen extends Screen {
     }));
 
     this.V();
-    
   }
 
   refreshServerList() {
