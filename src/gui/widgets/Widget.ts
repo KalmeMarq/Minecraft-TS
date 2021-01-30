@@ -2,12 +2,8 @@ import { widgetsImg } from "../../index.js";
 import IGuiEventListener from "../../interfaces/IGuiEventListener.js";
 import IRenderable from "../../interfaces/IRenderable.js";
 import AbstractGui from "../AbstractGui.js";
-import FontRenderer from "../FontRenderer.js";
 
-class Widgets extends AbstractGui implements IRenderable, IGuiEventListener {
-  keyDown(key: string, modifiers: any) {
-    throw new Error("Method not implemented.");
-  }
+export default class Widgets extends AbstractGui implements IRenderable, IGuiEventListener {
   protected width: number;
   protected height: number;
   public x: number;
@@ -30,20 +26,16 @@ class Widgets extends AbstractGui implements IRenderable, IGuiEventListener {
   }
 
   protected getYImage(isHovered: boolean) {
-    let i = 1;
-    if (!this.active) i = 0;
-    else if (isHovered) i = 2;
-    return i;
+    let y = 1;
+    if (!this.active) y = 0;
+    else if (isHovered) y = 2;
+    return y;
   }
 
   renderObject(context: CanvasRenderingContext2D, mouseX: number, mouseY: number) {
     if(this.visible) {
       this.isHovered = mouseX >= this.x && mouseY >= this.y && mouseX < this.x + this.width && mouseY < this.y + this.height;
-
-      if(this.visible) {
-        this.renderButton(context, mouseX, mouseY);
-      }
-
+      if(this.visible) this.renderButton(context, mouseX, mouseY);
       this.wasHovered = this.isHovered;
     }
   }
@@ -58,42 +50,50 @@ class Widgets extends AbstractGui implements IRenderable, IGuiEventListener {
   }
 
   public renderButton(context: CanvasRenderingContext2D, mouseX: number, mouseY: number) {
-    
-    context.save();
     let yUV = this.getYImage(this.getHovered());
-
-    context.globalAlpha = this.alpha;
-
-    this.renderBgG(context, widgetsImg, [0, 46 + 20 * yUV], [this.x, this.y], [this.width / 2, 20]);
-    this.renderBgG(context, widgetsImg, [200 - this.width / 2, 46 + 20 * yUV], [this.x + this.width / 2, this.y], [this.width / 2, 20]);
-
-    let textColor = this.active ? 16777215 : 10526880;
-    FontRenderer.renderCenteredText(this.message, this.x + this.width / 2, this.y + (this.height - 8) / 2, textColor);
-
-    context.restore();
-  }
-
-  public renderBgG(context: CanvasRenderingContext2D, img: any, uv: number[], offset: number[], uvSize: number[]) {
     context.save();
-    context.imageSmoothingEnabled = false;
-    context.drawImage(img, uv[0], uv[1], uvSize[0], uvSize[1], offset[0], offset[1], uvSize[0], uvSize[1]);
+    context.globalAlpha = this.alpha;
+    this.blit(context, widgetsImg, this.x, this.y, 0, 46 + yUV * 20, this.width / 2, this.height);
+    this.blit(context, widgetsImg, this.x + this.width / 2, this.y, 200 - this.width / 2, 46 + yUV * 20, this.width / 2, this.height);
+    let color = this.active ? 16777215 : 10526880;
+    this.drawCenteredString(context, this.message, this.x + this.width / 2, this.y + (this.height - 8) / 2, color);
     context.restore();
   }
 
   public getHovered() {
     return this.isHovered || this.focused;
- }
-
-  mouseClicked(mouseX: number, mouseY: number, button: number) {
-    if(this.clicked(mouseX, mouseY)) {
-      console.log('button clicked');
-    }
   }
 
-  mouseReleased(mouseX: number, mouseY: number, button: number) {
-    if(this.clicked(mouseX, mouseY)) {
-      console.log('button released');
-    }
+  public onClick(mouseX: number, mouseY: number): void {
+  }
+
+  public onRelease(mouseX: number, mouseY: number): void {
+  }
+
+  public onDrag(mouseX: number, mouseY: number, dragX: number, dragY: number): void {
+  }
+
+  public mouseClicked(mouseX: number, mouseY: number, button: number) {
+    if(this.active && this.visible) {
+      if(this.isValidClickButton(button)) {
+        let flag = this.clicked(mouseX, mouseY);
+        if (flag) {
+          const a = new Audio('resources/assets/minecraft/sounds/click_stereo.ogg');
+          a.volume = 0.2;
+          a.play();
+          this.onClick(mouseX, mouseY);
+          return true;
+        }
+      }
+      return false;
+    } else return false;
+  }
+
+  public mouseReleased(mouseX: number, mouseY: number, button: number): boolean {
+    if(this.isValidClickButton(button)) {
+      this.onRelease(mouseX, mouseY);
+      return true;
+    } else return false;
   }
 
   protected clicked(mouseX: number, mouseY: number): boolean {
@@ -104,24 +104,61 @@ class Widgets extends AbstractGui implements IRenderable, IGuiEventListener {
     return this.active && this.visible && mouseX >= this.x && mouseY >= this.y && mouseX <= (this.x + this.width) && mouseY <= (this.y + this.height);
   }
 
-  mouseMoved(xPos: number, mouseY: number): void {
+  public mouseMoved(xPos: number, mouseY: number): void {
   }
 
-  mouseDragged(mouseX: number, mouseY: number, button: number, dragX: number, dragY: number): void {
-
-  }
-  mouseScrolled(mouseX: number, mouseY: number, delta: number): void {
-
-  }
-  keyPressed(key: string, modifiers: {}): void {
-
-  }
-  keyReleased(key: string, modifiers: {}): void {
-
+  public mouseDragged(mouseX: number, mouseY: number, button: number, dragX: number, dragY: number): boolean {
+    if(this.isValidClickButton(button)) {
+      this.onDrag(mouseX, mouseY, dragX, dragY);
+      return true;
+   } else {
+      return false;
+   }
   }
 
- 
+  public mouseScrolled(mouseX: number, mouseY: number, delta: number): void {
+  }
 
+  public keyPressed(key: string, modifiers: {}): void {
+  }
+
+  public keyReleased(key: string, modifiers: {}): void {
+  }
+
+  public keyDown(key: string, modifiers: any) {
+  }
+
+  public charTyped() {}
+
+  protected isValidClickButton(button: number): boolean {
+    return button == 0;
+  }
+
+  public getWidth(): number {
+    return this.width;
+ }
+
+  public setWidth(width: number): void {
+    this.width = width;
+  }
+
+  public setAlpha(alpha: number): void {
+    this.alpha = alpha;
+  }
+
+  public setMessage(message: string): void {
+    this.message = message;
+  }
+
+  public getMessage(): string {
+    return this.message;
+  }
+
+  public isFocused(): boolean {
+    return this.focused;
+  }
+
+  protected setFocused(focused: boolean): void {
+    this.focused = focused;
+  }
 }
-
-export default Widgets;

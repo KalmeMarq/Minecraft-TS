@@ -1,17 +1,15 @@
 import AbstractOption from "../../GameOption.js";
 import GameSettings from "../../GameSettings";
 import TranslationTextComponent from "../../utils/TranslationText.js";
-import AbstractButton from "../widgets/button/AbstractButton.js";
 import Button from "../widgets/button/Button.js";
 import OptionButton from "../widgets/button/OptionButton.js";
 import Screen from "./Screen.js";
 import SettingsScreen from "./SettingsScreen.js";
 
-export default class AccessibilityScreen extends SettingsScreen {
-  private SCREEN_OPTIONS: AbstractOption[] = [AbstractOption.ShowSubtitlesOption, AbstractOption.AutoJumpOption];
-
+export default class VideoSettingsScreen extends SettingsScreen {
+  private SCREEN_OPTIONS: AbstractOption[] = [AbstractOption.AdvancedItemTooltipsOption, AbstractOption.AutoJumpOption, AbstractOption.ForceUnicodeFont, AbstractOption.HeldItemTooltipsOption, AbstractOption.HideGUIOption, AbstractOption.RawMouseInputOption, AbstractOption.ShowFPSOption, AbstractOption.SkipMultiplayerWarningOption, AbstractOption.VsyncOption];
   constructor(parentScreen: Screen, gameSettingsObj: GameSettings) {
-    super(parentScreen, gameSettingsObj,  new TranslationTextComponent("options.accessibility.title").get())
+    super(parentScreen, gameSettingsObj,  new TranslationTextComponent("options.videoTitle").get())
   }
 
   protected init(): void {
@@ -22,7 +20,7 @@ export default class AccessibilityScreen extends SettingsScreen {
       this.addButton((iterator as any).createWidget(this.minecraft.gameSettings, j, k, 150));
       i++;
     }
-    
+
     this.addButton(new Button(this.width / 2 - 100, this.height - 27, 200, 20, new TranslationTextComponent("gui.done").get(), () => {
       this.minecraft.displayGuiScreen(this.parentScreen);
     }));

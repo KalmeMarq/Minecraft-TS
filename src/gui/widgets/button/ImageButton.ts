@@ -24,15 +24,11 @@ export default class ImageButton extends Button {
   }
 
   public renderButton(context: CanvasRenderingContext2D, mouseX: number, mouseY: number) {
-    let i = this.yTexStart;
-    if (this.getHovered()) {
-      i += this.yDiffText;
-    }
-
+    let y = this.yTexStart;
+    if (this.getHovered()) y += this.yDiffText;
     context.save();
-    context.imageSmoothingEnabled = false;
     context.globalAlpha = this.alpha;
-    context.drawImage(this.resourceLocation, this.xTexStart, i, this.width, this.height, this.x, this.y, this.width, this.height);
+    this.blit(context, this.resourceLocation, this.x, this.y, this.xTexStart, y, this.width, this.height);
     context.restore();
   }
 }

@@ -1,12 +1,12 @@
 import GameSettings from "../../GameSettings.js";
-import ScreenP from "./ScreenP.js";
+import Screen from "./Screen.js";
 
-export default class SettingsScreen extends ScreenP {
-  protected parentScreen: ScreenP;
+export default class SettingsScreen extends Screen {
+  protected parentScreen: Screen;
   protected gameSettings: GameSettings;
 
-  constructor(previousScreen: ScreenP, gameSettingsObj: GameSettings) {
-    super();
+  constructor(previousScreen: Screen, gameSettingsObj: GameSettings, title: string) {
+    super(title);
     this.parentScreen = previousScreen;
     this.gameSettings = gameSettingsObj;
   }
@@ -19,7 +19,7 @@ export default class SettingsScreen extends ScreenP {
     this.minecraft.displayGuiScreen(this.parentScreen);
   }
 
-  render(context: CanvasRenderingContext2D, mouseX: number, mouseY: number) {
+  protected render(context: CanvasRenderingContext2D, mouseX: number, mouseY: number): void {
     this.renderDirtBackground(context);
   }
 }

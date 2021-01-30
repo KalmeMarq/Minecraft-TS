@@ -26,15 +26,16 @@ export default class BooleanOption extends AbstractOption {
 
   public get(options: GameSettings): boolean {
     return (this.getter(options));
-   }
+  }
   
   public nextValue(options: GameSettings) {
     this.set(options, !this.get(options));
   }
 
   public createWidget(options: GameSettings, xIn: number, yIn: number, widthIn: number): Widget {
-    return new OptionButton(xIn, yIn, widthIn, 20, this, this.func_238152_c_(options), () => {
+    return new OptionButton(xIn, yIn, widthIn, 20, 0, this.func_238152_c_(options), () => {
        this.nextValue(options);
+       options.saveOptions();
     });
   }
 

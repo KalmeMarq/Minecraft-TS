@@ -2,8 +2,7 @@ import GameConfiguration from "./GameConfiguration.js";
 import GameSettings from "./GameSettings.js";
 import FontRenderer from "./gui/FontRenderer.js";
 import MainMenuScreen from "./gui/screens/MainMenuScreen.js";
-import OptionsScreen from "./gui/screens/OptionsScreen.js";
-import ScreenP from "./gui/screens/ScreenP.js";
+import Screen from "./gui/screens/Screen.js";
 import { Resources, ResourcesSplashes } from "./index.js";
 import KeyboardListener from "./utils/KeyboardListener.js";
 import MouseHelper from "./utils/MouseHelper.js";
@@ -23,7 +22,7 @@ export default class Minecraft {
   private fps: number = 0;
   private times: Array<number> = [];
   public running: boolean = true;
-  public currentScreen: ScreenP | null = null;
+  public currentScreen: Screen | null = null;
 
   constructor(gameConfig: GameConfiguration) {
     this.gameconfiguration = gameConfig;
@@ -50,10 +49,9 @@ export default class Minecraft {
   }
 
   public getSplashText(): string {
-    function aaa() {
-      const splashes = ResourcesSplashes;
-
-      const date = new Date(),
+    function getRandSplash() {
+      const splashes = ResourcesSplashes,
+            date = new Date(),
             month = date.getMonth(),
             day = date.getDate();
   
@@ -63,18 +61,14 @@ export default class Minecraft {
   
       let randSplash = String(getRandomSplashText());
   
-      if(month + 1 === 12 && day === 24) {
-        randSplash = 'Merry X-mas!';
-      } else if (month + 1 === 1 && day === 1) {
-        randSplash = 'Happy new year!';
-      } else if(month + 1 === 10 && day === 31) {
-        randSplash = 'OOoooOOOoooo! Spooky!';
-      }
+      if(month + 1 === 12 && day === 24) randSplash = 'Merry X-mas!';
+      else if (month + 1 === 1 && day === 1) randSplash = 'Happy new year!';
+      else if(month + 1 === 10 && day === 31) randSplash = 'OOoooOOOoooo! Spooky!';
   
       return randSplash;
     }
 
-    return aaa();
+    return getRandSplash();
   }
 
   public run() {
@@ -82,20 +76,18 @@ export default class Minecraft {
     this.context.canvas.height = this.canvasHeight;
     this.context.scale(this.scaleFactor, this.scaleFactor);
     this.context.imageSmoothingEnabled = false;
-    
     const runLoop = () => {
       requestAnimationFrame(runLoop);
-
-      // this.context.clearRect(0, 0, window.innerHeight, window.innerWidth);
 
       if(this.running) {
         this.displayGuiScreen(this.currentScreen);
         if(this.gameSettings.showFPS) {
           this.context.save();
           this.context.scale(0.666, 0.666);
-          FontRenderer.drawStringWithShadow(this.context, `${String(this.getFPS())}/${this.gameSettings.framerateLimit}`, 2, 2, 16777215);
+          FontRenderer.drawStringWithShadow(this.context, `${String(this.getFPS())}/${this.gameSettings.framerateLimit}`, 2, 2, 16777215, []);
           this.context.restore();
         }
+       
       }
     }
 
@@ -110,9 +102,7 @@ export default class Minecraft {
     return this.fps > this.gameSettings.framerateLimit ? this.gameSettings.framerateLimit : this.fps;
   }
 
- 
-
-  public displayGuiScreen(guiScreenIn: ScreenP | null): void {
+  public displayGuiScreen(guiScreenIn: Screen | null): void {
     if (this.currentScreen != null) this.currentScreen.onClose();
 
     if(guiScreenIn === null) guiScreenIn = new MainMenuScreen();
@@ -120,8 +110,8 @@ export default class Minecraft {
     this.currentScreen = guiScreenIn;
     if(guiScreenIn !== null) {
       try {
-        const i = this.mouseHelper.getMouseX();
-        const j = this.mouseHelper.getMouseY();
+        const i = this.mouseHelper.getMouseX(),
+              j = this.mouseHelper.getMouseY();
     
         guiScreenIn.initScreen(this, this.canvasWidth / this.scaleFactor, this.canvasHeight / this.scaleFactor);
         guiScreenIn.renderObject(this.context, i / this.scaleFactor, j / this.scaleFactor);
@@ -131,7 +121,7 @@ export default class Minecraft {
     }
   }
 
-  public updateCanvasSize() {
+  public updateCanvasSize(): void {
     window.addEventListener('resize', () => {
       this.canvasWidth = window.innerWidth;
       this.canvasHeight = window.innerHeight;
@@ -142,7 +132,7 @@ export default class Minecraft {
     });
   }
 
-  public getScaleFactor() {
+  public getScaleFactor(): number {
     return this.scaleFactor;
   }
 }

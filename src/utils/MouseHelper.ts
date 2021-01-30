@@ -4,16 +4,16 @@ import Minecraft from "../Minecraft.js";
 export default class MouseHelper {
   private minecraft: any;
   private context: any;
-  private leftDown: boolean = false;
-  private middleDown: boolean = false;
-  private rightDown: boolean = false;
+  // private leftDown: boolean = false;
+  // private middleDown: boolean = false;
+  // private rightDown: boolean = false;
   private mouseX: number = 0;
   private mouseY: number = 0;
   private ignoreFirstMove: boolean = true;
   private xVelocity: number = 0;
   private yVelocity: number = 0;
   private eventTime: number = 0;
-  private accumulatedScrollDelta: number = 0;
+  // private accumulatedScrollDelta: number = 0;
   private activeButton: number = -1;
   private mouseGrabbed = false;
   
@@ -70,34 +70,12 @@ export default class MouseHelper {
   }
 
   private scrollCallback(xoffset: number, yoffset: number) {
-    let d0 = (/* this.minecraft.gameSettings.discreteMouseScroll */true ? Math.sign(yoffset) : yoffset) * /* this.minecraft.gameSettings.mouseWheelSensitivity */ 1;
+    let d0 = (this.minecraft.gameSettings.discreteMouseScroll ? Math.sign(yoffset) : yoffset) * this.minecraft.gameSettings.mouseWheelSensitivity;
     if(this.minecraft.currentScreen != null) {
       let d1 = this.mouseX * this.minecraft.getScaleFactor();
       let d2 = this.mouseY * this.minecraft.getScaleFactor();
       this.minecraft.currentScreen.mouseScrolled(d1, d2, d0);
-    }/*  else if (this.minecraft.player != null) {
-        if (this.accumulatedScrollDelta != 0.0D && Math.signum(d0) != Math.signum(this.accumulatedScrollDelta)) {
-          this.accumulatedScrollDelta = 0.0D;
-        }
-
-        this.accumulatedScrollDelta += d0;
-        float f1 = (float)((int)this.accumulatedScrollDelta);
-        if (f1 == 0.0F) {
-          return;
-        }
-
-        this.accumulatedScrollDelta -= (double)f1;
-        if (this.minecraft.player.isSpectator()) {
-          if (this.minecraft.ingameGUI.getSpectatorGui().isMenuActive()) {
-              this.minecraft.ingameGUI.getSpectatorGui().onMouseScroll((double)(-f1));
-          } else {
-              float f = MathHelper.clamp(this.minecraft.player.abilities.getFlySpeed() + f1 * 0.005F, 0.0F, 0.2F);
-              this.minecraft.player.abilities.setFlySpeed(f);
-          }
-        } else {
-          this.minecraft.player.inventory.changeCurrentItem((double)f1);
-        }
-    } */
+    }
   }
 
   public registerCallbacks(): void {
@@ -132,5 +110,3 @@ export default class MouseHelper {
     return this.mouseY;
   }
 }
-
- MouseHelper;

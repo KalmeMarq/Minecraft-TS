@@ -6,12 +6,12 @@ abstract class AbstractGui {
     console.log(text)
   }
 
-  public drawString(context: CanvasRenderingContext2D, text: string, posX: number, posY: number, color: number) {
-    FontRenderer.drawStringWithShadow(context, text, posX, posY, color);
+  public drawString(context: CanvasRenderingContext2D, text: string, posX: number, posY: number, color: number, ..._formatting: []) {
+    FontRenderer.drawStringWithShadow(context, text, posX, posY, color, _formatting);
   }
 
-  public drawCenteredString(context: CanvasRenderingContext2D, text: string, posX: number, posY: number, color: number) {
-    FontRenderer.drawStringWithShadow(context, text, posX - (FontRenderer.getTextWidth(text) / 2), posY, color);
+  public drawCenteredString(context: CanvasRenderingContext2D, text: string, posX: number, posY: number, color: number, ..._formatting: []) {
+    FontRenderer.drawStringWithShadow(context, text, posX - (FontRenderer.getTextWidth(text) / 2), posY, color, _formatting);
   }
 
   public drawImg(context: CanvasRenderingContext2D, img: any, offsetX: number, offsetY: number, uvX: number, uvY: number, width: number, height: number) {
@@ -24,6 +24,10 @@ abstract class AbstractGui {
     context.fillStyle = ColorHelper.getColor(color);
     context.fillRect(minX, minY, maxX, maxY);
     context.stroke();
+  }
+  
+  public blit(context: CanvasRenderingContext2D, img: HTMLImageElement, x: number, y: number, uvX: number, uvY: number, width: number, height: number) {
+    context.drawImage(img, uvX, uvY, width, height, x, y, width, height);
   }
 }
 

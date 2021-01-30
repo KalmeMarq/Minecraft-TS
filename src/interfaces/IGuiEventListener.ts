@@ -6,7 +6,7 @@ export default interface IGuiEventListener {
   mouseScrolled(mouseX: number, mouseY: number, delta: number): void;
   keyPressed(key: string, modifiers: any): void;
   keyReleased(key: string, modifiers: any): void
-  // charTyped(codePoint: any, modifiers: number): void;
+  charTyped(key: string, modifiers: any): void;
   changeFocus(focus: any): boolean
   isMouseOver(mouseX: number, mouseY: number): void
 }

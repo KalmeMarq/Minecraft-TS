@@ -16,9 +16,13 @@ export default class KeyboardListener {
     } else iguieventlistener.keyPressed(key, modifiers);
   }
 
+  /* private onCharEvent(key: string, modifiers: {}): void {
+    let iguieventlistener: IGuiEventListener = this.mc.currentScreen;
+  } */
+
   public setupCallbacks() {
-    window.addEventListener('keypress', (e: KeyboardEvent) => {
-      this.onKeyEvent(e.key, 1, {
+    const call_imit = (e: KeyboardEvent, idx: number) => {
+      this.onKeyEvent(e.key, idx, {
         altKeyDown: e.getModifierState('Alt'),
         altGrKeyDown: e.getModifierState('AltGraph'),
         capsLockKeyDown: e.getModifierState('CapsLock'),
@@ -26,29 +30,13 @@ export default class KeyboardListener {
         numLockKeyDown: e.getModifierState('NumLock'),
         shiftKeyDown: e.getModifierState('Shift')
       });
-    });
+    }
 
-    window.addEventListener('keyup', (e: KeyboardEvent) => {
-      this.onKeyEvent(e.key, 0, {
-        altKeyDown: e.getModifierState('Alt'),
-        altGrKeyDown: e.getModifierState('AltGraph'),
-        capsLockKeyDown: e.getModifierState('CapsLock'),
-        controlKeyDown: e.getModifierState('Control'),
-        numLockKeyDown: e.getModifierState('NumLock'),
-        shiftKeyDown: e.getModifierState('Shift')
-      });
-    });
-
+    window.addEventListener('keypress', (e: KeyboardEvent) => call_imit(e, 1));
+    window.addEventListener('keyup', (e: KeyboardEvent) => call_imit(e, 0));
     window.addEventListener('keydown', (e: KeyboardEvent) => {
       if(!(e.key == 'F11' || e.key == 'F12')) e.preventDefault();
-      this.onKeyEvent(e.key, 2,  {
-        altKeyDown: e.getModifierState('Alt'),
-        altGrKeyDown: e.getModifierState('AltGraph'),
-        capsLockKeyDown: e.getModifierState('CapsLock'),
-        controlKeyDown: e.getModifierState('CapsLoControlck'),
-        numLockKeyDown: e.getModifierState('NumLock'),
-        shiftKeyDown: e.getModifierState('Shift')
-      });
-    })
+      call_imit(e, 2)
+    });
   }
 }

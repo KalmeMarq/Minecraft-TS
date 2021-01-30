@@ -31,6 +31,7 @@ export let mojangstudiosImg = new Image(256, 256);
 export let minecraftImg = new Image(256, 256);
 export let editionImg = new Image(256, 256);
 export let widgetsImg = new Image(256, 256);
+export let checkboxImg = new Image(256, 256);
 export let accessibilityImg = new Image(256, 256);
 export let optionsBackgroundImg = new Image(256, 256);
 export let clickSound = new Audio();
@@ -73,18 +74,19 @@ const initialize = async () => {
     minecraftImg.src = `./${rootloc}/textures/gui/title/minecraft.png`;
     mojangstudiosImg.src = `./${rootloc}/textures/gui/title/mojangstudios.png`;
     widgetsImg.src = `./${rootloc}/textures/gui/widgets.png`;
+    checkboxImg.src = `./${rootloc}/textures/gui/checkbox.png`;
     accessibilityImg.src = `./${rootloc}/textures/gui/accessibility.png`;
     optionsBackgroundImg.src = `./${rootloc}/textures/gui/options_background.png`;
     clickSound.src = `https://raw.githubusercontent.com/KalmeMarq/Minecraft-JS-Assets/main/assets/sounds/click_stereo.ogg`;
+
+    await JSONUtils.getJSONFile(`./${rootloc}/lang/en_us.json`, (data: any) => Resources.languages.push({code: 'en_us', data: data}));
+      // : null)}} // : await JSONUtils.getJSONFile(`https://raw.githubusercontent.com/KalmeMarq/Minecraft-JS-Assets/main/assets/lang/${name}.json`, (data: any) => Resources.languages.push({code: name, data: data})));
 
     ['credits', 'end', 'splashes'].forEach(async (name) => {
       const s: string = name;
       await JSONUtils.getTextFile(`https://raw.githubusercontent.com/KalmeMarq/Minecraft-JS-Assets/main/assets/texts/${name}.txt`, (data: any) => data.split(/\r?\n/).forEach((line: any) => Resources.texts[s].push(line)));
     });
 
-    langNames.forEach(async (name) => name === 'en_us'
-      ? await JSONUtils.getJSONFile(`./${rootloc}/lang/${name}.json`, (data: any) => Resources.languages.push({code: name, data: data}))
-      : await JSONUtils.getJSONFile(`https://raw.githubusercontent.com/KalmeMarq/Minecraft-JS-Assets/main/assets/lang/${name}.json`, (data: any) => Resources.languages.push({code: name, data: data})));
     
     await JSONUtils.getJSONFile(`./${rootloc}/font/font.json`, (data: any) => Resources.font = data);
   };
@@ -94,7 +96,9 @@ const initialize = async () => {
   console.log(Resources)
   getFontChars = Resources.font
 
-  Main.main();
+  setTimeout(() => {
+    Main.main();
+  }, 1000)
 }
 
 initialize();

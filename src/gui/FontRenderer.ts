@@ -20,121 +20,62 @@ export class CharacterRenderer {
     this.b = ColorHelper.getBlue(color);
   }
 
-  create() {
-    const fontcanvas = document.createElement('canvas')!;
-    const ctxfont = fontcanvas.getContext('2d')!;
-
-    fontcanvas.width = this.charWidth;
-    fontcanvas.height = this.charHeight;
-    
-    ctxfont.save();
-    ctxfont.imageSmoothingEnabled = false;
+  public create(): HTMLCanvasElement {
+    const ctxfont = document.createElement('canvas')!.getContext('2d')!;
+    ctxfont.canvas.width = this.charWidth;
+    ctxfont.canvas.height = this.charHeight;
     ctxfont.drawImage(fontImg, getFontChars[this.char].x, getFontChars[this.char].y, this.charWidth, this.charHeight, 0, 0, this.charWidth, this.charHeight);
+        
+    ctxfont.save();
+    let myImg = ctxfont.getImageData(0, 0, this.charWidth * 3, this.charHeight * 3);
+    ctxfont.clearRect(0, 0, this.charWidth, this.charHeight);
+    for(var p = 0; p < myImg.data.length; p+=4) myImg.data[p] = this.r, myImg.data[p + 1] = this.g, myImg.data[p + 2] = this.b;
     ctxfont.restore();
 
-    ctxfont.scale(3, 3);
-    var myImg = ctxfont.getImageData(0, 0, this.charWidth * 3, this.charHeight * 3);
-    ctxfont.clearRect(0, 0, this.charWidth, this.charHeight);
-     for (var t=0;t< myImg.data.length;t+=4) {        
-        myImg.data[t] = this.r;
-        myImg.data[t+1]= this.g;
-        myImg.data[t+2]= this.b;
-     }
-     ctxfont.putImageData(myImg, 0, 0);
-   
-    ctxfont.restore();
-    return fontcanvas;
+    ctxfont.putImageData(myImg, 0, 0);
+    return ctxfont.canvas;
   }
 
-  createShadow() {
-    const fontcanvas = document.createElement('canvas')!;
-    const ctxfont = fontcanvas.getContext('2d')!;
-
-    fontcanvas.width = this.charWidth;
-    fontcanvas.height = this.charHeight;
-    
-    ctxfont.save();
-    ctxfont.imageSmoothingEnabled = false;
+  public createShadow(): HTMLCanvasElement {
+    const ctxfont = document.createElement('canvas')!.getContext('2d')!;
+    ctxfont.canvas.width = this.charWidth;
+    ctxfont.canvas.height = this.charHeight;
     ctxfont.drawImage(fontImg, getFontChars[this.char].x, getFontChars[this.char].y, this.charWidth, this.charHeight, 0, 0, this.charWidth, this.charHeight);
-    
-    ctxfont.scale(3, 3);
-     var myImg = ctxfont.getImageData(0, 0, this.charWidth * 3, this.charHeight * 3);
-     ctxfont.clearRect(0, 0, this.charWidth, this.charHeight);
-      for (var t=0;t< myImg.data.length;t+=4) {        
-         myImg.data[t] = this.r - (42.5 * 5.4);
-         myImg.data[t+1]= this.g - (42.5 * 5.4);
-         myImg.data[t+2]= this.b - (42.5 * 5.4);
-      }
-      ctxfont.putImageData(myImg, 0, 0); // Image data is adjusted according to context 
-    
+
+    ctxfont.save();
+    let myImg = ctxfont.getImageData(0, 0, this.charWidth * 3, this.charHeight * 3);
+    ctxfont.clearRect(0, 0, this.charWidth, this.charHeight);
+    for(var p = 0; p < myImg.data.length; p += 4) myImg.data[p] = this.r - (42.5 * 5.4), myImg.data[p + 1] = this.g - (42.5 * 5.4), myImg.data[p + 2] = this.b - (42.5 * 5.4);
     ctxfont.restore();
-    return fontcanvas;
+
+    ctxfont.putImageData(myImg, 0, 0);
+    return ctxfont.canvas;
   }
 } 
-
-
 
 export default class FontRenderer {
   public static getTextWidth(text: string) {
     let width = 0;
-    for (let j = 0; j < text.length; j++) {
-      width += getFontChars[text[j]].w - 1;
-    }
-
+    text.split('').forEach((char, idx) => width += getFontChars[text[idx]].w - 1)
     return width;
   }
 
-  public static renderCenteredText(text: string, posX: number, posY: number, color: number) {
-    let textgetFontChars = text.split('');
-    let textwidth = FontRenderer.getTextWidth(text);
-
-    for(var j = 0, k = posX; j < textgetFontChars.length; j++) {
-     
+  public static drawStringWithShadow(context: CanvasRenderingContext2D, text: string, posX: number, posY: number, color: number, _formatting: []) {
+    for(var j = 0, k = posX; j < text.length; j++) {
+      const char: any = text[j];
+      if(!(characterRenderers[color] && characterRenderers[color][char])) addCharacterRenderer(color, char);
       
-      const char: any = textgetFontChars[j];
-      if(!(characterRenderers[color] && characterRenderers[color][textgetFontChars[j]])) {
-        addCharacterRenderer(color, textgetFontChars[j]);
-      }
+      context.drawImage(characterRenderers[color][char]['textShadow'], k - 1 + 1, posY + 1);
+      context.drawImage(characterRenderers[color][char]['text'], k - 1, posY);
 
-      (<HTMLCanvasElement>document.getElementById('root')).getContext('2d')!.drawImage(characterRenderers[color][char]['textShadow'], k - 1 - textwidth / 2 + 1, posY + 1);
-      (<HTMLCanvasElement>document.getElementById('root')).getContext('2d')!.drawImage(characterRenderers[color][char]['text'], k - 1 - textwidth / 2, posY);
-    
       k += getFontChars[char].w - 1;
     }
   }
 
-  public static renderText(context: CanvasRenderingContext2D, text: string, posX: number, posY: number, color: number) {
-
-    let textgetFontChars = text.split('');
-    let textwidth = FontRenderer.getTextWidth(text);
-
-    for(var j = 0, k = posX; j < textgetFontChars.length; j++) {
-      const char: any = textgetFontChars[j];
-      if(!(characterRenderers[color] && characterRenderers[color][textgetFontChars[j]])) {
-        addCharacterRenderer(color, textgetFontChars[j]);
-      }
-      
-      context.drawImage(characterRenderers[color][char]['textShadow'], k - 1 + 1, posY + 1);
-      context.drawImage(characterRenderers[color][char]['text'], k - 1, posY);
-    
-      k += getFontChars[char].w - 1;
-    }
-  }
-
-  public static drawStringWithShadow(context: CanvasRenderingContext2D, text: string, posX: number, posY: number, color: number) {
-    let textgetFontChars = text.split('');
-    let textwidth = FontRenderer.getTextWidth(text);
-
-    for(var j = 0, k = posX; j < textgetFontChars.length; j++) {
-      const char: any = textgetFontChars[j];
-      if(!(characterRenderers[color] && characterRenderers[color][textgetFontChars[j]])) {
-        addCharacterRenderer(color, textgetFontChars[j]);
-      }
-      
-      context.drawImage(characterRenderers[color][char]['textShadow'], k - 1 + 1, posY + 1);
-      context.drawImage(characterRenderers[color][char]['text'], k - 1, posY);
-    
-      k += getFontChars[char].w - 1;
-    }
+  public static filll(context: CanvasRenderingContext2D, minX: number, minY: number, maxX: number, maxY: number, color: number) {
+    context.save();
+    context.fillStyle = ColorHelper.getColor(color);
+    context.fillRect(minX, minY, maxX, maxY);
+    context.stroke();
   }
 }

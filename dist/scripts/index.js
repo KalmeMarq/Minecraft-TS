@@ -1,6 +1,25 @@
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 define("AbstractOption", ["require", "exports"], function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
@@ -22,13 +41,11 @@ define("utils/JSONUtils", ["require", "exports"], function (require, exports) {
     Object.defineProperty(exports, "__esModule", { value: true });
     class JSONUtils {
         static async getJSONFile(url, callback) {
-            const req = await fetch(url);
-            const data = await req.json();
+            const data = await (await fetch(url)).json();
             callback(data);
         }
         static async getTextFile(url, callback) {
-            const req = await fetch(url);
-            const data = await req.text();
+            const data = await (await fetch(url)).text();
             callback(data);
         }
     }
@@ -37,7 +54,7 @@ define("utils/JSONUtils", ["require", "exports"], function (require, exports) {
 define("index", ["require", "exports", "GameConfiguration", "gui/FontRenderer", "Minecraft", "utils/JSONUtils"], function (require, exports, GameConfiguration_js_1, FontRenderer_js_1, Minecraft_js_1, JSONUtils_js_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.getFontChars = exports.addCharacterRenderer = exports.characterRenderers = exports.clickSound = exports.optionsBackgroundImg = exports.accessibilityImg = exports.widgetsImg = exports.editionImg = exports.minecraftImg = exports.mojangstudiosImg = exports.fontImg = exports.langNames = exports.ResourcesSplashes = exports.Resources = void 0;
+    exports.getFontChars = exports.addCharacterRenderer = exports.characterRenderers = exports.clickSound = exports.optionsBackgroundImg = exports.accessibilityImg = exports.checkboxImg = exports.widgetsImg = exports.editionImg = exports.minecraftImg = exports.mojangstudiosImg = exports.fontImg = exports.langNames = exports.ResourcesSplashes = exports.Resources = void 0;
     GameConfiguration_js_1 = __importDefault(GameConfiguration_js_1);
     Minecraft_js_1 = __importDefault(Minecraft_js_1);
     JSONUtils_js_1 = __importDefault(JSONUtils_js_1);
@@ -57,6 +74,7 @@ define("index", ["require", "exports", "GameConfiguration", "gui/FontRenderer", 
     exports.minecraftImg = new Image(256, 256);
     exports.editionImg = new Image(256, 256);
     exports.widgetsImg = new Image(256, 256);
+    exports.checkboxImg = new Image(256, 256);
     exports.accessibilityImg = new Image(256, 256);
     exports.optionsBackgroundImg = new Image(256, 256);
     exports.clickSound = new Audio();
@@ -95,23 +113,24 @@ define("index", ["require", "exports", "GameConfiguration", "gui/FontRenderer", 
             exports.minecraftImg.src = `./${rootloc}/textures/gui/title/minecraft.png`;
             exports.mojangstudiosImg.src = `./${rootloc}/textures/gui/title/mojangstudios.png`;
             exports.widgetsImg.src = `./${rootloc}/textures/gui/widgets.png`;
+            exports.checkboxImg.src = `./${rootloc}/textures/gui/checkbox.png`;
             exports.accessibilityImg.src = `./${rootloc}/textures/gui/accessibility.png`;
             exports.optionsBackgroundImg.src = `./${rootloc}/textures/gui/options_background.png`;
             exports.clickSound.src = `https://raw.githubusercontent.com/KalmeMarq/Minecraft-JS-Assets/main/assets/sounds/click_stereo.ogg`;
+            await JSONUtils_js_1.default.getJSONFile(`./${rootloc}/lang/en_us.json`, (data) => exports.Resources.languages.push({ code: 'en_us', data: data }));
             ['credits', 'end', 'splashes'].forEach(async (name) => {
                 const s = name;
                 await JSONUtils_js_1.default.getTextFile(`https://raw.githubusercontent.com/KalmeMarq/Minecraft-JS-Assets/main/assets/texts/${name}.txt`, (data) => data.split(/\r?\n/).forEach((line) => exports.Resources.texts[s].push(line)));
             });
-            exports.langNames.forEach(async (name) => name === 'en_us'
-                ? await JSONUtils_js_1.default.getJSONFile(`./${rootloc}/lang/${name}.json`, (data) => exports.Resources.languages.push({ code: name, data: data }))
-                : await JSONUtils_js_1.default.getJSONFile(`https://raw.githubusercontent.com/KalmeMarq/Minecraft-JS-Assets/main/assets/lang/${name}.json`, (data) => exports.Resources.languages.push({ code: name, data: data })));
             await JSONUtils_js_1.default.getJSONFile(`./${rootloc}/font/font.json`, (data) => exports.Resources.font = data);
         }
         ;
         await fetchAllData();
         console.log(exports.Resources);
         exports.getFontChars = exports.Resources.font;
-        Main.main();
+        setTimeout(() => {
+            Main.main();
+        }, 1000);
     };
     initialize();
 });
@@ -161,94 +180,56 @@ define("gui/FontRenderer", ["require", "exports", "index", "utils/ColorHelper"],
             this.b = ColorHelper_js_1.default.getBlue(color);
         }
         create() {
-            const fontcanvas = document.createElement('canvas');
-            const ctxfont = fontcanvas.getContext('2d');
-            fontcanvas.width = this.charWidth;
-            fontcanvas.height = this.charHeight;
-            ctxfont.save();
-            ctxfont.imageSmoothingEnabled = false;
+            const ctxfont = document.createElement('canvas').getContext('2d');
+            ctxfont.canvas.width = this.charWidth;
+            ctxfont.canvas.height = this.charHeight;
             ctxfont.drawImage(index_js_1.fontImg, index_js_1.getFontChars[this.char].x, index_js_1.getFontChars[this.char].y, this.charWidth, this.charHeight, 0, 0, this.charWidth, this.charHeight);
-            ctxfont.restore();
-            ctxfont.scale(3, 3);
-            var myImg = ctxfont.getImageData(0, 0, this.charWidth * 3, this.charHeight * 3);
+            ctxfont.save();
+            let myImg = ctxfont.getImageData(0, 0, this.charWidth * 3, this.charHeight * 3);
             ctxfont.clearRect(0, 0, this.charWidth, this.charHeight);
-            for (var t = 0; t < myImg.data.length; t += 4) {
-                myImg.data[t] = this.r;
-                myImg.data[t + 1] = this.g;
-                myImg.data[t + 2] = this.b;
-            }
-            ctxfont.putImageData(myImg, 0, 0);
+            for (var p = 0; p < myImg.data.length; p += 4)
+                myImg.data[p] = this.r, myImg.data[p + 1] = this.g, myImg.data[p + 2] = this.b;
             ctxfont.restore();
-            return fontcanvas;
+            ctxfont.putImageData(myImg, 0, 0);
+            return ctxfont.canvas;
         }
         createShadow() {
-            const fontcanvas = document.createElement('canvas');
-            const ctxfont = fontcanvas.getContext('2d');
-            fontcanvas.width = this.charWidth;
-            fontcanvas.height = this.charHeight;
-            ctxfont.save();
-            ctxfont.imageSmoothingEnabled = false;
+            const ctxfont = document.createElement('canvas').getContext('2d');
+            ctxfont.canvas.width = this.charWidth;
+            ctxfont.canvas.height = this.charHeight;
             ctxfont.drawImage(index_js_1.fontImg, index_js_1.getFontChars[this.char].x, index_js_1.getFontChars[this.char].y, this.charWidth, this.charHeight, 0, 0, this.charWidth, this.charHeight);
-            ctxfont.scale(3, 3);
-            var myImg = ctxfont.getImageData(0, 0, this.charWidth * 3, this.charHeight * 3);
+            ctxfont.save();
+            let myImg = ctxfont.getImageData(0, 0, this.charWidth * 3, this.charHeight * 3);
             ctxfont.clearRect(0, 0, this.charWidth, this.charHeight);
-            for (var t = 0; t < myImg.data.length; t += 4) {
-                myImg.data[t] = this.r - (42.5 * 5.4);
-                myImg.data[t + 1] = this.g - (42.5 * 5.4);
-                myImg.data[t + 2] = this.b - (42.5 * 5.4);
-            }
-            ctxfont.putImageData(myImg, 0, 0);
+            for (var p = 0; p < myImg.data.length; p += 4)
+                myImg.data[p] = this.r - (42.5 * 5.4), myImg.data[p + 1] = this.g - (42.5 * 5.4), myImg.data[p + 2] = this.b - (42.5 * 5.4);
             ctxfont.restore();
-            return fontcanvas;
+            ctxfont.putImageData(myImg, 0, 0);
+            return ctxfont.canvas;
         }
     }
     exports.CharacterRenderer = CharacterRenderer;
     class FontRenderer {
         static getTextWidth(text) {
             let width = 0;
-            for (let j = 0; j < text.length; j++) {
-                width += index_js_1.getFontChars[text[j]].w - 1;
-            }
+            text.split('').forEach((char, idx) => width += index_js_1.getFontChars[text[idx]].w - 1);
             return width;
         }
-        static renderCenteredText(text, posX, posY, color) {
-            let textgetFontChars = text.split('');
-            let textwidth = FontRenderer.getTextWidth(text);
-            for (var j = 0, k = posX; j < textgetFontChars.length; j++) {
-                const char = textgetFontChars[j];
-                if (!(index_js_1.characterRenderers[color] && index_js_1.characterRenderers[color][textgetFontChars[j]])) {
-                    index_js_1.addCharacterRenderer(color, textgetFontChars[j]);
-                }
-                document.getElementById('root').getContext('2d').drawImage(index_js_1.characterRenderers[color][char]['textShadow'], k - 1 - textwidth / 2 + 1, posY + 1);
-                document.getElementById('root').getContext('2d').drawImage(index_js_1.characterRenderers[color][char]['text'], k - 1 - textwidth / 2, posY);
-                k += index_js_1.getFontChars[char].w - 1;
-            }
-        }
-        static renderText(context, text, posX, posY, color) {
-            let textgetFontChars = text.split('');
-            let textwidth = FontRenderer.getTextWidth(text);
-            for (var j = 0, k = posX; j < textgetFontChars.length; j++) {
-                const char = textgetFontChars[j];
-                if (!(index_js_1.characterRenderers[color] && index_js_1.characterRenderers[color][textgetFontChars[j]])) {
-                    index_js_1.addCharacterRenderer(color, textgetFontChars[j]);
-                }
+        static drawStringWithShadow(context, text, posX, posY, color, _formatting) {
+            for (var j = 0, k = posX; j < text.length; j++) {
+                const char = text[j];
+                if (!(index_js_1.characterRenderers[color] && index_js_1.characterRenderers[color][char]))
+                    index_js_1.addCharacterRenderer(color, char);
                 context.drawImage(index_js_1.characterRenderers[color][char]['textShadow'], k - 1 + 1, posY + 1);
                 context.drawImage(index_js_1.characterRenderers[color][char]['text'], k - 1, posY);
                 k += index_js_1.getFontChars[char].w - 1;
             }
         }
-        static drawStringWithShadow(context, text, posX, posY, color) {
-            let textgetFontChars = text.split('');
-            let textwidth = FontRenderer.getTextWidth(text);
-            for (var j = 0, k = posX; j < textgetFontChars.length; j++) {
-                const char = textgetFontChars[j];
-                if (!(index_js_1.characterRenderers[color] && index_js_1.characterRenderers[color][textgetFontChars[j]])) {
-                    index_js_1.addCharacterRenderer(color, textgetFontChars[j]);
-                }
-                context.drawImage(index_js_1.characterRenderers[color][char]['textShadow'], k - 1 + 1, posY + 1);
-                context.drawImage(index_js_1.characterRenderers[color][char]['text'], k - 1, posY);
-                k += index_js_1.getFontChars[char].w - 1;
-            }
+        static filll(context, minX, minY, maxX, maxY, color) {
+            context.save();
+            context.fillStyle = ColorHelper_js_1.default.getColor(color);
+            context.fillRect(minX, minY, maxX, maxY);
+            context.stroke();
         }
     }
     exports.default = FontRenderer;
@@ -262,10 +243,10 @@ define("utils/TranslationText", ["require", "exports", "index"], function (requi
         }
         get() {
             try {
-                const s = JSON.parse(localStorage.getItem('GameSettings')).language ? JSON.parse(localStorage.getItem('GameSettings')).language : 'en_us';
+                const s = 'en_us';
                 const displayLang = index_js_2.Resources.languages.find((id) => id.code === s);
-                if (!displayLang.data[this.translateKey])
-                    return this.translateKey;
+                if (!displayLang.data[this.translateKey] || displayLang.data[this.translateKey] === '')
+                    return String(this.translateKey);
                 return displayLang.data[this.translateKey];
             }
             catch (err) {
@@ -292,11 +273,11 @@ define("gui/AbstractGui", ["require", "exports", "utils/ColorHelper", "gui/FontR
         testConsole(text) {
             console.log(text);
         }
-        drawString(context, text, posX, posY, color) {
-            FontRenderer_1.default.drawStringWithShadow(context, text, posX, posY, color);
+        drawString(context, text, posX, posY, color, ..._formatting) {
+            FontRenderer_1.default.drawStringWithShadow(context, text, posX, posY, color, _formatting);
         }
-        drawCenteredString(context, text, posX, posY, color) {
-            FontRenderer_1.default.drawStringWithShadow(context, text, posX - (FontRenderer_1.default.getTextWidth(text) / 2), posY, color);
+        drawCenteredString(context, text, posX, posY, color, ..._formatting) {
+            FontRenderer_1.default.drawStringWithShadow(context, text, posX - (FontRenderer_1.default.getTextWidth(text) / 2), posY, color, _formatting);
         }
         drawImg(context, img, offsetX, offsetY, uvX, uvY, width, height) {
             context.drawImage(img, uvX, uvY, width, height, offsetX, offsetY, width, height);
@@ -308,14 +289,16 @@ define("gui/AbstractGui", ["require", "exports", "utils/ColorHelper", "gui/FontR
             context.fillRect(minX, minY, maxX, maxY);
             context.stroke();
         }
+        blit(context, img, x, y, uvX, uvY, width, height) {
+            context.drawImage(img, uvX, uvY, width, height, x, y, width, height);
+        }
     }
     exports.default = AbstractGui;
 });
-define("gui/widgets/Widget", ["require", "exports", "index", "gui/AbstractGui", "gui/FontRenderer"], function (require, exports, index_js_3, AbstractGui_js_1, FontRenderer_js_2) {
+define("gui/widgets/Widget", ["require", "exports", "index", "gui/AbstractGui"], function (require, exports, index_js_3, AbstractGui_js_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     AbstractGui_js_1 = __importDefault(AbstractGui_js_1);
-    FontRenderer_js_2 = __importDefault(FontRenderer_js_2);
     class Widgets extends AbstractGui_js_1.default {
         constructor(x, y, width, height, title) {
             super();
@@ -331,23 +314,19 @@ define("gui/widgets/Widget", ["require", "exports", "index", "gui/AbstractGui", 
             this.height = height;
             this.message = title;
         }
-        keyDown(key, modifiers) {
-            throw new Error("Method not implemented.");
-        }
         getYImage(isHovered) {
-            let i = 1;
+            let y = 1;
             if (!this.active)
-                i = 0;
+                y = 0;
             else if (isHovered)
-                i = 2;
-            return i;
+                y = 2;
+            return y;
         }
         renderObject(context, mouseX, mouseY) {
             if (this.visible) {
                 this.isHovered = mouseX >= this.x && mouseY >= this.y && mouseX < this.x + this.width && mouseY < this.y + this.height;
-                if (this.visible) {
+                if (this.visible)
                     this.renderButton(context, mouseX, mouseY);
-                }
                 this.wasHovered = this.isHovered;
             }
         }
@@ -361,33 +340,48 @@ define("gui/widgets/Widget", ["require", "exports", "index", "gui/AbstractGui", 
             }
         }
         renderButton(context, mouseX, mouseY) {
-            context.save();
             let yUV = this.getYImage(this.getHovered());
-            context.globalAlpha = this.alpha;
-            this.renderBgG(context, index_js_3.widgetsImg, [0, 46 + 20 * yUV], [this.x, this.y], [this.width / 2, 20]);
-            this.renderBgG(context, index_js_3.widgetsImg, [200 - this.width / 2, 46 + 20 * yUV], [this.x + this.width / 2, this.y], [this.width / 2, 20]);
-            let textColor = this.active ? 16777215 : 10526880;
-            FontRenderer_js_2.default.renderCenteredText(this.message, this.x + this.width / 2, this.y + (this.height - 8) / 2, textColor);
-            context.restore();
-        }
-        renderBgG(context, img, uv, offset, uvSize) {
             context.save();
-            context.imageSmoothingEnabled = false;
-            context.drawImage(img, uv[0], uv[1], uvSize[0], uvSize[1], offset[0], offset[1], uvSize[0], uvSize[1]);
+            context.globalAlpha = this.alpha;
+            this.blit(context, index_js_3.widgetsImg, this.x, this.y, 0, 46 + yUV * 20, this.width / 2, this.height);
+            this.blit(context, index_js_3.widgetsImg, this.x + this.width / 2, this.y, 200 - this.width / 2, 46 + yUV * 20, this.width / 2, this.height);
+            let color = this.active ? 16777215 : 10526880;
+            this.drawCenteredString(context, this.message, this.x + this.width / 2, this.y + (this.height - 8) / 2, color);
             context.restore();
         }
         getHovered() {
             return this.isHovered || this.focused;
         }
+        onClick(mouseX, mouseY) {
+        }
+        onRelease(mouseX, mouseY) {
+        }
+        onDrag(mouseX, mouseY, dragX, dragY) {
+        }
         mouseClicked(mouseX, mouseY, button) {
-            if (this.clicked(mouseX, mouseY)) {
-                console.log('button clicked');
+            if (this.active && this.visible) {
+                if (this.isValidClickButton(button)) {
+                    let flag = this.clicked(mouseX, mouseY);
+                    if (flag) {
+                        const a = new Audio('resources/assets/minecraft/sounds/click_stereo.ogg');
+                        a.volume = 0.2;
+                        a.play();
+                        this.onClick(mouseX, mouseY);
+                        return true;
+                    }
+                }
+                return false;
             }
+            else
+                return false;
         }
         mouseReleased(mouseX, mouseY, button) {
-            if (this.clicked(mouseX, mouseY)) {
-                console.log('button released');
+            if (this.isValidClickButton(button)) {
+                this.onRelease(mouseX, mouseY);
+                return true;
             }
+            else
+                return false;
         }
         clicked(mouseX, mouseY) {
             return this.clicked && this.active && this.visible && mouseX >= this.x && mouseY >= this.y && mouseX < (this.x + this.width) && mouseY < (this.y + this.height);
@@ -398,6 +392,13 @@ define("gui/widgets/Widget", ["require", "exports", "index", "gui/AbstractGui", 
         mouseMoved(xPos, mouseY) {
         }
         mouseDragged(mouseX, mouseY, button, dragX, dragY) {
+            if (this.isValidClickButton(button)) {
+                this.onDrag(mouseX, mouseY, dragX, dragY);
+                return true;
+            }
+            else {
+                return false;
+            }
         }
         mouseScrolled(mouseX, mouseY, delta) {
         }
@@ -405,36 +406,74 @@ define("gui/widgets/Widget", ["require", "exports", "index", "gui/AbstractGui", 
         }
         keyReleased(key, modifiers) {
         }
+        keyDown(key, modifiers) {
+        }
+        charTyped() { }
+        isValidClickButton(button) {
+            return button == 0;
+        }
+        getWidth() {
+            return this.width;
+        }
+        setWidth(width) {
+            this.width = width;
+        }
+        setAlpha(alpha) {
+            this.alpha = alpha;
+        }
+        setMessage(message) {
+            this.message = message;
+        }
+        getMessage() {
+            return this.message;
+        }
+        isFocused() {
+            return this.focused;
+        }
+        setFocused(focused) {
+            this.focused = focused;
+        }
     }
     exports.default = Widgets;
 });
-define("gui/widgets/button/Button", ["require", "exports", "gui/widgets/Widget"], function (require, exports, Widget_js_1) {
+define("gui/widgets/button/AbstractButton", ["require", "exports", "gui/widgets/Widget"], function (require, exports, Widget_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    Widget_js_1 = __importDefault(Widget_js_1);
-    class Button extends Widget_js_1.default {
-        constructor(x, y, width, height, title, onPress) {
+    Widget_1 = __importDefault(Widget_1);
+    class AbstractButton extends Widget_1.default {
+        constructor(x, y, width, height, title) {
             super(x, y, width, height, title);
-            this.onPress = onPress;
         }
-        mouseClicked(mouseX, mouseY, button) {
-            if (this.clicked(mouseX, mouseY)) {
-                this.onPress();
-                const a = new Audio('resources/assets/minecraft/sounds/click_stereo.ogg');
-                a.volume = 0.2;
-                a.play();
+        onClick(mouseX, mouseY) {
+            this.PressFunc();
+        }
+        keyDown(keyName, modifiers) {
+            if (this.active && this.visible && (this.isHovered || this.focused)) {
+                if (keyName != 'Enter' && keyName != ' ') {
+                    return false;
+                }
+                else {
+                    const a = new Audio('resources/assets/minecraft/sounds/click_stereo.ogg');
+                    a.volume = 0.2;
+                    a.play();
+                    this.PressFunc();
+                    return true;
+                }
             }
+            else
+                return false;
         }
-        mouseReleased() {
-        }
-        keyDown(key, modifiers) {
-            if (this.focused && key === 'Enter') {
-                this.focused = false;
-                this.onPress();
-                const a = new Audio('resources/assets/minecraft/sounds/click_stereo.ogg');
-                a.volume = 0.2;
-                a.play();
-            }
+    }
+    exports.default = AbstractButton;
+});
+define("gui/widgets/button/Button", ["require", "exports", "gui/widgets/button/AbstractButton"], function (require, exports, AbstractButton_js_1) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    AbstractButton_js_1 = __importDefault(AbstractButton_js_1);
+    class Button extends AbstractButton_js_1.default {
+        constructor(x, y, width, height, title, PressFunc) {
+            super(x, y, width, height, title);
+            this.PressFunc = PressFunc;
         }
     }
     exports.default = Button;
@@ -458,14 +497,12 @@ define("gui/widgets/button/ImageButton", ["require", "exports", "gui/widgets/but
             this.y = yIn;
         }
         renderButton(context, mouseX, mouseY) {
-            let i = this.yTexStart;
-            if (this.getHovered()) {
-                i += this.yDiffText;
-            }
+            let y = this.yTexStart;
+            if (this.getHovered())
+                y += this.yDiffText;
             context.save();
-            context.imageSmoothingEnabled = false;
             context.globalAlpha = this.alpha;
-            context.drawImage(this.resourceLocation, this.xTexStart, i, this.width, this.height, this.x, this.y, this.width, this.height);
+            this.blit(context, this.resourceLocation, this.x, this.y, this.xTexStart, y, this.width, this.height);
             context.restore();
         }
     }
@@ -476,8 +513,8 @@ define("gui/widgets/button/OptionButton", ["require", "exports", "gui/widgets/bu
     Object.defineProperty(exports, "__esModule", { value: true });
     Button_1 = __importDefault(Button_1);
     class OptionButton extends Button_1.default {
-        constructor(x, y, width, height, enumOptions, title, onPress) {
-            super(x, y, width, height, title, onPress);
+        constructor(x, y, width, height, enumOptions, title, PressFunc) {
+            super(x, y, width, height, title, PressFunc);
             this.enumOptions = enumOptions;
         }
     }
@@ -501,27 +538,23 @@ define("gui/FocusableGui", ["require", "exports", "gui/AbstractGui"], function (
     }
     exports.default = FocusableGui;
 });
-define("gui/screens/ScreenP", ["require", "exports", "index", "gui/AbstractGui", "gui/widgets/button/OptionButton"], function (require, exports, index_js_4, AbstractGui_js_3, OptionButton_js_1) {
+define("gui/screens/Screen", ["require", "exports", "index", "gui/AbstractGui", "gui/widgets/button/OptionButton"], function (require, exports, index_js_4, AbstractGui_js_3, OptionButton_js_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     AbstractGui_js_3 = __importDefault(AbstractGui_js_3);
     OptionButton_js_1 = __importDefault(OptionButton_js_1);
-    class ScreenP extends AbstractGui_js_3.default {
-        constructor() {
-            super(...arguments);
+    class Screen extends AbstractGui_js_3.default {
+        constructor(...args) {
+            super();
             this.minecraft = null;
             this.width = 0;
             this.height = 0;
             this.children = new Array();
             this.buttons = new Array();
             this.focusedWidget = -1;
-            this.listener = null;
-        }
-        getListener() {
-            return this.listener;
-        }
-        setListener(listener) {
-            this.listener = listener;
+            if (args.length == 1) {
+                this.title = args[0];
+            }
         }
         initScreen(minecraft, width, height) {
             this.minecraft = minecraft;
@@ -554,57 +587,61 @@ define("gui/screens/ScreenP", ["require", "exports", "index", "gui/AbstractGui",
         render(context, mouseX, mouseY) {
         }
         mouseClicked(mouseX, mouseY, button) {
-            for (let i = 0; i < this.getEventListeners().length; i++) {
-                const j = this.getEventListeners()[i];
-                j.mouseClicked(mouseX, mouseY, button);
+            for (const iguieventlistener of this.getEventListeners()) {
+                iguieventlistener.mouseClicked(mouseX, mouseY, button);
+            }
+        }
+        mouseReleased(mouseX, mouseY, button) {
+            for (const iguieventlistener of this.getEventListeners()) {
+                iguieventlistener.mouseReleased(mouseX, mouseY, button);
             }
             this.focusedWidget = -1;
         }
-        mouseReleased(mouseX, mouseY, button) {
-            for (let i = 0; i < this.getEventListeners().length; i++) {
-                const j = this.getEventListeners()[i];
-                j.mouseReleased(mouseX, mouseY, button);
-            }
+        mouseDragged(mouseX, mouseY, button, dragX, dragY) {
+            return false;
         }
         isMouseOver(mouseX, mouseY) {
+            return false;
+        }
+        mouseScrolled(mouseX, mouseY, delta) {
+            for (const iguieventlistener of this.getEventListeners()) {
+                iguieventlistener.mouseScrolled(mouseX, mouseY, delta);
+            }
+        }
+        mouseMoved() {
+            return false;
         }
         keyPressed(key, modifiers) {
-            for (let i = 0; i < this.getEventListeners().length; i++) {
-                const j = this.getEventListeners()[i];
-                j.keyPressed(key, modifiers);
+            for (const iguieventlistener of this.getEventListeners()) {
+                iguieventlistener.keyPressed(key, modifiers);
             }
         }
         keyReleased(key, modifiers) {
-            for (let i = 0; i < this.getEventListeners().length; i++) {
-                const j = this.getEventListeners()[i];
-                j.keyReleased(key, modifiers);
+            for (const iguieventlistener of this.getEventListeners()) {
+                iguieventlistener.keyReleased(key, modifiers);
             }
         }
-        onClose() {
-        }
         keyDown(key, modifiers) {
-            let a = true;
+            let flag = true;
             for (let i = 0; i < this.getEventListeners().length; i++) {
-                const j = this.getEventListeners()[i];
-                j.keyDown(key, modifiers);
-                if (j instanceof OptionButton_js_1.default) {
-                    a = false;
-                }
+                const iguieventlistener = this.getEventListeners()[i];
+                iguieventlistener.keyDown(key, modifiers);
+                if (iguieventlistener instanceof OptionButton_js_1.default)
+                    flag = false;
             }
             if (key === 'F3')
                 this.minecraft.gameSettings.showFPS = !this.minecraft.gameSettings.showFPS;
-            if (key == 'Escape' && this.shouldCloseOnEsc()) {
+            else if (key == 'Escape' && this.shouldCloseOnEsc())
                 this.closeScreen();
-                return true;
-            }
-            else if (key == 'Tab') {
+            else if (key == 'Tab')
                 this.changeFocus(true);
-                return false;
-            }
-            else if (key == 'Enter' && this.focusedWidget !== -1) {
-                if (a)
-                    this.focusedWidget = -1;
-            }
+            else if (key == 'Enter' && this.focusedWidget !== -1 && flag)
+                this.focusedWidget = -1;
+        }
+        charTyped() {
+            return false;
+        }
+        onClose() {
         }
         shouldCloseOnEsc() {
             return true;
@@ -623,28 +660,27 @@ define("gui/screens/ScreenP", ["require", "exports", "index", "gui/AbstractGui",
                 context.restore();
             }
         }
-        mouseDragged() { }
-        mouseMoved() { }
-        mouseScrolled() {
-            console.log("scrolling");
-        }
         changeFocus(focus) {
-            if (this.focusedWidget + 2 > this.children.length) {
+            if (this.focusedWidget + 2 > this.children.length)
                 this.focusedWidget = -1;
+            while (true) {
+                this.focusedWidget++;
+                if (this.children[this.focusedWidget].active) {
+                    break;
+                }
             }
-            this.focusedWidget++;
             return false;
         }
     }
-    exports.default = ScreenP;
+    exports.default = Screen;
 });
-define("gui/screens/SettingsScreen", ["require", "exports", "gui/screens/ScreenP"], function (require, exports, ScreenP_js_1) {
+define("gui/screens/SettingsScreen", ["require", "exports", "gui/screens/Screen"], function (require, exports, Screen_js_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    ScreenP_js_1 = __importDefault(ScreenP_js_1);
-    class SettingsScreen extends ScreenP_js_1.default {
-        constructor(previousScreen, gameSettingsObj) {
-            super();
+    Screen_js_1 = __importDefault(Screen_js_1);
+    class SettingsScreen extends Screen_js_1.default {
+        constructor(previousScreen, gameSettingsObj, title) {
+            super(title);
             this.parentScreen = previousScreen;
             this.gameSettings = gameSettingsObj;
         }
@@ -660,89 +696,330 @@ define("gui/screens/SettingsScreen", ["require", "exports", "gui/screens/ScreenP
     }
     exports.default = SettingsScreen;
 });
-define("gui/screens/AccessibilityScreen", ["require", "exports", "GameOption", "utils/TranslationText", "gui/widgets/button/Button", "gui/widgets/button/OptionButton", "gui/screens/SettingsScreen"], function (require, exports, GameOption_js_1, TranslationText_js_1, Button_js_2, OptionButton_js_2, SettingsScreen_js_1) {
+define("gui/screens/AccessibilityScreen", ["require", "exports", "GameOption", "utils/TranslationText", "gui/widgets/button/Button", "gui/screens/SettingsScreen"], function (require, exports, GameOption_js_1, TranslationText_js_1, Button_js_2, SettingsScreen_js_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     GameOption_js_1 = __importDefault(GameOption_js_1);
     TranslationText_js_1 = __importDefault(TranslationText_js_1);
     Button_js_2 = __importDefault(Button_js_2);
-    OptionButton_js_2 = __importDefault(OptionButton_js_2);
     SettingsScreen_js_1 = __importDefault(SettingsScreen_js_1);
     class AccessibilityScreen extends SettingsScreen_js_1.default {
-        constructor(parentScreenIn, gameSettingsIn) {
-            super(parentScreenIn, gameSettingsIn);
-        }
-        closeScreen() {
-            this.minecraft.displayGuiScreen(this.parentScreen);
+        constructor(parentScreen, gameSettingsObj) {
+            super(parentScreen, gameSettingsObj, new TranslationText_js_1.default("options.accessibility.title").get());
+            this.SCREEN_OPTIONS = [GameOption_js_1.default.ShowSubtitlesOption, GameOption_js_1.default.AutoJumpOption];
         }
         init() {
-            this.addButton(new OptionButton_js_2.default(this.width / 2 + 5, this.height / 6 - 12 - 6, 150, 20, 0, GameOption_js_1.default.ShowFPSOption.func_238152_c_(this.gameSettings), () => {
-                GameOption_js_1.default.ShowFPSOption.nextValue(this.gameSettings);
-            }));
-            this.addButton(new Button_js_2.default(this.width / 2 - 100, this.height / 6 + 168, 200, 20, new TranslationText_js_1.default("gui.done").get(), () => {
+            let i = 0;
+            for (const iterator of this.SCREEN_OPTIONS) {
+                let j = this.width / 2 - 155 + (i % 2) * 160;
+                let k = this.height / 6 - 12 + 24 * (i >> 1);
+                this.addButton(iterator.createWidget(this.minecraft.gameSettings, j, k, 150));
+                i++;
+            }
+            this.addButton(new Button_js_2.default(this.width / 2 - 100, this.height - 27, 200, 20, new TranslationText_js_1.default("gui.done").get(), () => {
                 this.minecraft.displayGuiScreen(this.parentScreen);
             }));
+        }
+        render(context, mouseX, mouseY) {
+            super.render(context, mouseX, mouseY);
+            this.drawCenteredString(context, this.title, this.width / 2, 20, 16777215);
         }
     }
     exports.default = AccessibilityScreen;
 });
-define("gui/screens/ChatOptionsScreen", ["require", "exports", "utils/TranslationText", "gui/widgets/button/Button", "gui/screens/SettingsScreen"], function (require, exports, TranslationText_js_2, Button_js_3, SettingsScreen_js_2) {
+define("gui/screens/MultiplayerScreen", ["require", "exports", "utils/TranslationText", "gui/widgets/button/Button", "gui/screens/Screen"], function (require, exports, TranslationText_js_2, Button_js_3, Screen_js_2) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     TranslationText_js_2 = __importDefault(TranslationText_js_2);
     Button_js_3 = __importDefault(Button_js_3);
-    SettingsScreen_js_2 = __importDefault(SettingsScreen_js_2);
-    class ChatOptionsScreen extends SettingsScreen_js_2.default {
-        constructor(parentScreenIn, gameSettingsIn) {
-            super(parentScreenIn, gameSettingsIn);
-        }
-        closeScreen() {
-            this.minecraft.displayGuiScreen(this.parentScreen);
+    Screen_js_2 = __importDefault(Screen_js_2);
+    class MultiplayerScreen extends Screen_js_2.default {
+        constructor(parentScreen) {
+            super();
+            this.parentScreen = parentScreen;
+            this.flag = false;
         }
         init() {
-            this.addButton(new Button_js_3.default(this.width / 2 - 100, this.height / 6 + 168, 200, 20, new TranslationText_js_2.default("gui.done").get(), () => {
+            this.btnSelectServer = this.addButton(new Button_js_3.default(this.width / 2 - 154, this.height - 52, 100, 20, new TranslationText_js_2.default("selectServer.select").get(), () => {
+            }));
+            this.addButton(new Button_js_3.default(this.width / 2 - 50, this.height - 52, 100, 20, new TranslationText_js_2.default("selectServer.direct").get(), () => {
+            }));
+            this.addButton(new Button_js_3.default(this.width / 2 + (4 + 50), this.height - 52, 100, 20, new TranslationText_js_2.default("selectServer.add").get(), () => {
+                this.flag = this.flag === true ? false : true;
+                this.V();
+            }));
+            this.btnEditServer = this.addButton(new Button_js_3.default(this.width / 2 - 154, this.height - 28, 70, 20, new TranslationText_js_2.default("selectServer.edit").get(), () => {
+            }));
+            this.btnDeleteServer = this.addButton(new Button_js_3.default(this.width / 2 - 74, this.height - 28, 70, 20, new TranslationText_js_2.default("selectServer.delete").get(), () => {
+            }));
+            this.addButton(new Button_js_3.default(this.width / 2 + 4, this.height - 28, 70, 20, new TranslationText_js_2.default("selectServer.refresh").get(), () => {
+                this.flag = false;
+                this.refreshServerList();
+            }));
+            this.addButton(new Button_js_3.default(this.width / 2 + (4 + 76), this.height - 28, 75, 20, new TranslationText_js_2.default("gui.cancel").get(), () => {
                 this.minecraft.displayGuiScreen(this.parentScreen);
             }));
+            this.V();
+        }
+        refreshServerList() {
+            this.minecraft.displayGuiScreen(this);
+        }
+        V() {
+            this.btnEditServer.active = this.flag;
+            this.btnSelectServer.active = this.flag;
+            this.btnDeleteServer.active = this.flag;
+        }
+        render(context, mouseX, mouseY) {
+            this.renderDirtBackground(context);
+            this.drawCenteredString(context, new TranslationText_js_2.default("multiplayer.title").get(), this.width / 2, 20, 16777215);
+        }
+    }
+    exports.default = MultiplayerScreen;
+});
+define("gui/widgets/button/CheckboxButton", ["require", "exports", "index", "gui/widgets/button/AbstractButton"], function (require, exports, index_js_5, AbstractButton_1) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.CheckboxButton = void 0;
+    AbstractButton_1 = __importDefault(AbstractButton_1);
+    class CheckboxButton extends AbstractButton_1.default {
+        constructor(x, y, width, height, title, stored) {
+            super(x, y, width, height, title);
+            this.TEXTURE = index_js_5.checkboxImg;
+            this.checked = false;
+            if (stored != null) {
+                this.setChecked(stored.isChecked());
+            }
+        }
+        onPress() {
+            this.checked = !this.checked;
+        }
+        onClick(mouseX, mouseY) {
+            this.onPress();
+        }
+        isChecked() {
+            return this.checked;
+        }
+        setChecked(state) {
+            this.checked = state;
+        }
+        renderButton(context, mouseX, mouseY) {
+            this.blit(context, this.TEXTURE, this.x, this.y, this.getHovered() ? 20 : 0, this.checked ? 20 : 0, 20, this.height);
+            this.drawString(context, this.getMessage(), this.x + 24, this.y + (this.height - 8) / 2, 14737632);
+        }
+    }
+    exports.CheckboxButton = CheckboxButton;
+});
+define("gui/screens/MultiplayerWarningScreen", ["require", "exports", "utils/TranslationText", "gui/screens/Screen", "gui/widgets/button/Button", "gui/widgets/button/CheckboxButton", "gui/screens/MultiplayerScreen"], function (require, exports, TranslationText_js_3, Screen_js_3, Button_js_4, CheckboxButton_js_1, MultiplayerScreen_js_1) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    TranslationText_js_3 = __importDefault(TranslationText_js_3);
+    Screen_js_3 = __importDefault(Screen_js_3);
+    Button_js_4 = __importDefault(Button_js_4);
+    MultiplayerScreen_js_1 = __importDefault(MultiplayerScreen_js_1);
+    class MultiplayerWarningScreen extends Screen_js_3.default {
+        constructor(prevScreen) {
+            super();
+            this.field_230157_b_ = (new TranslationText_js_3.default("multiplayerWarning.header")).get();
+            this.field_230158_c_ = new TranslationText_js_3.default("multiplayerWarning.message").get();
+            this.field_230159_d_ = new TranslationText_js_3.default("multiplayerWarning.check").get();
+            this.prevScreen = prevScreen;
+        }
+        init() {
+            let i = 10 * 9 * 2;
+            this.addButton(new Button_js_4.default(this.width / 2 - 155, 100 + i, 150, 20, new TranslationText_js_3.default('gui.proceed').get(), () => {
+                if (this.field_230162_g_.isChecked()) {
+                    this.minecraft.gameSettings.skipMultiplayerWarning = true;
+                    this.minecraft.gameSettings.saveOptions();
+                    console.log(this.minecraft.gameSettings.skipMultiplayerWarning);
+                }
+                console.log(this.minecraft.gameSettings.skipMultiplayerWarning);
+                this.minecraft.displayGuiScreen(new MultiplayerScreen_js_1.default(this.prevScreen));
+            }));
+            this.addButton(new Button_js_4.default(this.width / 2 - 155 + 160, 100 + i, 150, 20, new TranslationText_js_3.default('gui.back').get(), () => {
+                this.minecraft.displayGuiScreen(this.prevScreen);
+            }));
+            this.field_230162_g_ = new CheckboxButton_js_1.CheckboxButton(this.width / 2 - 155 + 80, 76 + i, 150, 20, this.field_230159_d_, this.field_230162_g_);
+            this.addButton(this.field_230162_g_);
+        }
+        render(context, mouseX, mouseY) {
+            this.renderDirtBackground(context);
+            this.drawString(context, this.field_230157_b_, 25, 30, 16777215);
+            this.drawString(context, this.field_230158_c_, 25, 70, 16777215);
+            super.render(context, mouseX, mouseY);
+        }
+    }
+    exports.default = MultiplayerWarningScreen;
+});
+define("gui/screens/ChatOptionsScreen", ["require", "exports", "utils/TranslationText", "gui/widgets/button/Button", "gui/screens/SettingsScreen"], function (require, exports, TranslationText_js_4, Button_js_5, SettingsScreen_js_2) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    TranslationText_js_4 = __importDefault(TranslationText_js_4);
+    Button_js_5 = __importDefault(Button_js_5);
+    SettingsScreen_js_2 = __importDefault(SettingsScreen_js_2);
+    class ChatOptionsScreen extends SettingsScreen_js_2.default {
+        constructor(parentScreen, gameSettingsObj) {
+            super(parentScreen, gameSettingsObj, new TranslationText_js_4.default("options.chat.title").get());
+        }
+        init() {
+            this.addButton(new Button_js_5.default(this.width / 2 - 100, this.height - 27, 200, 20, new TranslationText_js_4.default("gui.done").get(), () => {
+                this.minecraft.displayGuiScreen(this.parentScreen);
+            }));
+        }
+        render(context, mouseX, mouseY) {
+            super.render(context, mouseX, mouseY);
+            this.drawCenteredString(context, this.title, this.width / 2, 20, 16777215);
         }
     }
     exports.default = ChatOptionsScreen;
 });
-define("gui/screens/OptionsSoundsScreen", ["require", "exports", "utils/TranslationText", "gui/widgets/button/Button", "gui/screens/SettingsScreen"], function (require, exports, TranslationText_js_3, Button_js_4, SettingsScreen_js_3) {
+define("gui/screens/ControlsScreen", ["require", "exports", "utils/TranslationText", "gui/widgets/button/Button", "gui/screens/SettingsScreen"], function (require, exports, TranslationText_js_5, Button_js_6, SettingsScreen_js_3) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    TranslationText_js_3 = __importDefault(TranslationText_js_3);
-    Button_js_4 = __importDefault(Button_js_4);
+    TranslationText_js_5 = __importDefault(TranslationText_js_5);
+    Button_js_6 = __importDefault(Button_js_6);
     SettingsScreen_js_3 = __importDefault(SettingsScreen_js_3);
-    class OptionsSoundsScreen extends SettingsScreen_js_3.default {
-        constructor(parentScreenIn, gameSettingsIn) {
-            super(parentScreenIn, gameSettingsIn);
-        }
-        closeScreen() {
-            this.minecraft.displayGuiScreen(this.parentScreen);
+    class ControlsScreen extends SettingsScreen_js_3.default {
+        constructor(parentScreen, gameSettingsObj) {
+            super(parentScreen, gameSettingsObj, new TranslationText_js_5.default("controls.title").get());
         }
         init() {
-            this.addButton(new Button_js_4.default(this.width / 2 - 100, this.height / 6 + 168, 200, 20, new TranslationText_js_3.default("gui.done").get(), () => {
+            this.addButton(new Button_js_6.default(this.width / 2 + 5, this.height - 27, 150, 20, new TranslationText_js_5.default("gui.done").get(), () => {
                 this.minecraft.displayGuiScreen(this.parentScreen);
             }));
+        }
+        render(context, mouseX, mouseY) {
+            super.render(context, mouseX, mouseY);
+            this.drawCenteredString(context, this.title, this.width / 2, 20, 16777215);
+        }
+    }
+    exports.default = ControlsScreen;
+});
+define("gui/screens/CustomizeSkinScreen", ["require", "exports", "utils/TranslationText", "gui/widgets/button/Button", "gui/screens/SettingsScreen"], function (require, exports, TranslationText_js_6, Button_js_7, SettingsScreen_js_4) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    TranslationText_js_6 = __importDefault(TranslationText_js_6);
+    Button_js_7 = __importDefault(Button_js_7);
+    SettingsScreen_js_4 = __importDefault(SettingsScreen_js_4);
+    class CustomizeSkinScreen extends SettingsScreen_js_4.default {
+        constructor(parentScreen, gameSettingsObj) {
+            super(parentScreen, gameSettingsObj, new TranslationText_js_6.default("options.skinCustomisation.title").get());
+        }
+        init() {
+            this.addButton(new Button_js_7.default(this.width / 2 - 100, this.height - 27, 200, 20, new TranslationText_js_6.default("gui.done").get(), () => {
+                this.minecraft.displayGuiScreen(this.parentScreen);
+            }));
+        }
+        render(context, mouseX, mouseY) {
+            super.render(context, mouseX, mouseY);
+            this.drawCenteredString(context, this.title, this.width / 2, 20, 16777215);
+        }
+    }
+    exports.default = CustomizeSkinScreen;
+});
+define("gui/screens/LanguageScreen", ["require", "exports", "utils/TranslationText", "gui/widgets/button/Button", "gui/screens/SettingsScreen"], function (require, exports, TranslationText_js_7, Button_js_8, SettingsScreen_js_5) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    TranslationText_js_7 = __importDefault(TranslationText_js_7);
+    Button_js_8 = __importDefault(Button_js_8);
+    SettingsScreen_js_5 = __importDefault(SettingsScreen_js_5);
+    class LanguageScreen extends SettingsScreen_js_5.default {
+        constructor(parentScreen, gameSettingsObj) {
+            super(parentScreen, gameSettingsObj, new TranslationText_js_7.default("options.language").get());
+        }
+        init() {
+            this.addButton(new Button_js_8.default(this.width / 2 - 100, this.height - 27, 200, 20, new TranslationText_js_7.default("gui.done").get(), () => {
+                this.minecraft.displayGuiScreen(this.parentScreen);
+            }));
+        }
+        render(context, mouseX, mouseY) {
+            super.render(context, mouseX, mouseY);
+            this.drawCenteredString(context, this.title, this.width / 2, 20, 16777215);
+        }
+    }
+    exports.default = LanguageScreen;
+});
+define("gui/screens/OptionsSoundsScreen", ["require", "exports", "GameOption", "utils/TranslationText", "gui/widgets/button/Button", "gui/widgets/button/OptionButton", "gui/screens/SettingsScreen"], function (require, exports, GameOption_js_2, TranslationText_js_8, Button_js_9, OptionButton_js_2, SettingsScreen_js_6) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    GameOption_js_2 = __importDefault(GameOption_js_2);
+    TranslationText_js_8 = __importDefault(TranslationText_js_8);
+    Button_js_9 = __importDefault(Button_js_9);
+    OptionButton_js_2 = __importDefault(OptionButton_js_2);
+    SettingsScreen_js_6 = __importDefault(SettingsScreen_js_6);
+    class OptionsSoundsScreen extends SettingsScreen_js_6.default {
+        constructor(parentScreen, gameSettingsObj) {
+            super(parentScreen, gameSettingsObj, new TranslationText_js_8.default("options.sounds.title").get());
+        }
+        init() {
+            let i = 0;
+            let j = this.width / 2 - 75;
+            let k = this.height / 6 - 12;
+            ++i;
+            this.addButton(new OptionButton_js_2.default(j, k + 24 * (i >> 1), 150, 20, GameOption_js_2.default.ShowSubtitlesOption, GameOption_js_2.default.ShowSubtitlesOption.func_238152_c_(this.gameSettings), () => {
+                GameOption_js_2.default.ShowSubtitlesOption.nextValue(this.minecraft.gameSettings);
+                this.minecraft.gameSettings.saveOptions();
+            }));
+            this.addButton(new Button_js_9.default(this.width / 2 - 100, this.height / 6 + 168, 200, 20, new TranslationText_js_8.default("gui.done").get(), () => {
+                this.minecraft.displayGuiScreen(this.parentScreen);
+            }));
+        }
+        render(context, mouseX, mouseY) {
+            super.render(context, mouseX, mouseY);
+            this.renderDirtBackground(context);
+            this.drawCenteredString(context, this.title, this.width / 2, 15, 16777215);
         }
     }
     exports.default = OptionsSoundsScreen;
 });
-define("gui/screens/OptionsScreen", ["require", "exports", "GameOption", "utils/TranslationText", "gui/widgets/button/Button", "gui/widgets/button/OptionButton", "gui/screens/AccessibilityScreen", "gui/screens/ChatOptionsScreen", "gui/screens/OptionsSoundsScreen", "gui/screens/ScreenP"], function (require, exports, GameOption_js_2, TranslationText_js_4, Button_js_5, OptionButton_js_3, AccessibilityScreen_js_1, ChatOptionsScreen_js_1, OptionsSoundsScreen_js_1, ScreenP_js_2) {
+define("gui/screens/VideoSettingsScreen", ["require", "exports", "GameOption", "utils/TranslationText", "gui/widgets/button/Button", "gui/screens/SettingsScreen"], function (require, exports, GameOption_js_3, TranslationText_js_9, Button_js_10, SettingsScreen_js_7) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    GameOption_js_2 = __importDefault(GameOption_js_2);
-    TranslationText_js_4 = __importDefault(TranslationText_js_4);
-    Button_js_5 = __importDefault(Button_js_5);
-    OptionButton_js_3 = __importDefault(OptionButton_js_3);
+    GameOption_js_3 = __importDefault(GameOption_js_3);
+    TranslationText_js_9 = __importDefault(TranslationText_js_9);
+    Button_js_10 = __importDefault(Button_js_10);
+    SettingsScreen_js_7 = __importDefault(SettingsScreen_js_7);
+    class VideoSettingsScreen extends SettingsScreen_js_7.default {
+        constructor(parentScreen, gameSettingsObj) {
+            super(parentScreen, gameSettingsObj, new TranslationText_js_9.default("options.videoTitle").get());
+            this.SCREEN_OPTIONS = [GameOption_js_3.default.AdvancedItemTooltipsOption, GameOption_js_3.default.AutoJumpOption, GameOption_js_3.default.ForceUnicodeFont, GameOption_js_3.default.HeldItemTooltipsOption, GameOption_js_3.default.HideGUIOption, GameOption_js_3.default.RawMouseInputOption, GameOption_js_3.default.ShowFPSOption, GameOption_js_3.default.SkipMultiplayerWarningOption, GameOption_js_3.default.VsyncOption];
+        }
+        init() {
+            let i = 0;
+            for (const iterator of this.SCREEN_OPTIONS) {
+                let j = this.width / 2 - 155 + (i % 2) * 160;
+                let k = this.height / 6 - 12 + 24 * (i >> 1);
+                this.addButton(iterator.createWidget(this.minecraft.gameSettings, j, k, 150));
+                i++;
+            }
+            this.addButton(new Button_js_10.default(this.width / 2 - 100, this.height - 27, 200, 20, new TranslationText_js_9.default("gui.done").get(), () => {
+                this.minecraft.displayGuiScreen(this.parentScreen);
+            }));
+        }
+        render(context, mouseX, mouseY) {
+            super.render(context, mouseX, mouseY);
+            this.drawCenteredString(context, this.title, this.width / 2, 20, 16777215);
+        }
+    }
+    exports.default = VideoSettingsScreen;
+});
+define("gui/screens/OptionsScreen", ["require", "exports", "GameOption", "utils/TranslationText", "gui/widgets/button/Button", "gui/screens/AccessibilityScreen", "gui/screens/ChatOptionsScreen", "gui/screens/ControlsScreen", "gui/screens/CustomizeSkinScreen", "gui/screens/LanguageScreen", "gui/screens/OptionsSoundsScreen", "gui/screens/Screen", "gui/screens/VideoSettingsScreen"], function (require, exports, GameOption_js_4, TranslationText_js_10, Button_js_11, AccessibilityScreen_js_1, ChatOptionsScreen_js_1, ControlsScreen_js_1, CustomizeSkinScreen_js_1, LanguageScreen_js_1, OptionsSoundsScreen_js_1, Screen_js_4, VideoSettingsScreen_js_1) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    GameOption_js_4 = __importDefault(GameOption_js_4);
+    TranslationText_js_10 = __importDefault(TranslationText_js_10);
+    Button_js_11 = __importDefault(Button_js_11);
     AccessibilityScreen_js_1 = __importDefault(AccessibilityScreen_js_1);
     ChatOptionsScreen_js_1 = __importDefault(ChatOptionsScreen_js_1);
+    ControlsScreen_js_1 = __importDefault(ControlsScreen_js_1);
+    CustomizeSkinScreen_js_1 = __importDefault(CustomizeSkinScreen_js_1);
+    LanguageScreen_js_1 = __importDefault(LanguageScreen_js_1);
     OptionsSoundsScreen_js_1 = __importDefault(OptionsSoundsScreen_js_1);
-    ScreenP_js_2 = __importDefault(ScreenP_js_2);
-    class OptionsScreen extends ScreenP_js_2.default {
+    Screen_js_4 = __importDefault(Screen_js_4);
+    VideoSettingsScreen_js_1 = __importDefault(VideoSettingsScreen_js_1);
+    class OptionsScreen extends Screen_js_4.default {
         constructor(parentScreen, gameSettingsObj) {
-            super();
-            this.SCREEN_OPTIONS = new Array();
+            super(new TranslationText_js_10.default("options.title").get());
+            this.SCREEN_OPTIONS = [GameOption_js_4.default.TestOption, GameOption_js_4.default.ShowFPSOption];
             this.parentScreen = parentScreen;
             this.settings = gameSettingsObj;
         }
@@ -751,90 +1028,156 @@ define("gui/screens/OptionsScreen", ["require", "exports", "GameOption", "utils/
         }
         init() {
             let i = 0;
-            this.addButton(new OptionButton_js_3.default(this.width / 2 - 155, this.height / 6 - 12 - 6, 150, 20, 0, GameOption_js_2.default.TestOption.func_238152_c_(this.settings), () => {
-                GameOption_js_2.default.TestOption.nextValue(this.settings);
-                this.settings.saveOptions();
+            for (const iterator of this.SCREEN_OPTIONS) {
+                let j = this.width / 2 - 155 + (i % 2) * 160;
+                let k = this.height / 6 - 12 + 24 * (i >> 1);
+                this.addButton(iterator.createWidget(this.minecraft.gameSettings, j, k, 150));
+                i++;
+            }
+            this.addButton(new Button_js_11.default(this.width / 2 - 155, this.height / 6 + 48 - 6, 150, 20, new TranslationText_js_10.default("options.skinCustomisation").get(), () => {
+                this.minecraft.displayGuiScreen(new CustomizeSkinScreen_js_1.default(this, this.settings));
             }));
-            this.addButton(new OptionButton_js_3.default(this.width / 2 + 5, this.height / 6 - 12 - 6, 150, 20, 0, GameOption_js_2.default.ShowFPSOption.func_238152_c_(this.settings), () => {
-                GameOption_js_2.default.ShowFPSOption.nextValue(this.settings);
-                this.settings.saveOptions();
-            }));
-            this.addButton(new Button_js_5.default(this.width / 2 - 155, this.height / 6 + 48 - 6, 150, 20, new TranslationText_js_4.default("options.skinCustomisation").get(), () => {
-            }));
-            this.addButton(new Button_js_5.default(this.width / 2 + 5, this.height / 6 + 48 - 6, 150, 20, new TranslationText_js_4.default("options.sounds").get(), () => {
+            this.addButton(new Button_js_11.default(this.width / 2 + 5, this.height / 6 + 48 - 6, 150, 20, new TranslationText_js_10.default("options.sounds").get(), () => {
                 this.minecraft.displayGuiScreen(new OptionsSoundsScreen_js_1.default(this, this.settings));
             }));
-            this.addButton(new Button_js_5.default(this.width / 2 - 155, this.height / 6 + 72 - 6, 150, 20, new TranslationText_js_4.default("options.video").get(), () => {
+            this.addButton(new Button_js_11.default(this.width / 2 - 155, this.height / 6 + 72 - 6, 150, 20, new TranslationText_js_10.default("options.video").get(), () => {
+                this.minecraft.displayGuiScreen(new VideoSettingsScreen_js_1.default(this, this.settings));
             }));
-            this.addButton(new Button_js_5.default(this.width / 2 + 5, this.height / 6 + 72 - 6, 150, 20, new TranslationText_js_4.default("options.controls").get(), () => {
+            this.addButton(new Button_js_11.default(this.width / 2 + 5, this.height / 6 + 72 - 6, 150, 20, new TranslationText_js_10.default("options.controls").get(), () => {
+                this.minecraft.displayGuiScreen(new ControlsScreen_js_1.default(this, this.settings));
             }));
-            this.addButton(new Button_js_5.default(this.width / 2 - 155, this.height / 6 + 96 - 6, 150, 20, new TranslationText_js_4.default("options.language").get(), () => {
+            this.addButton(new Button_js_11.default(this.width / 2 - 155, this.height / 6 + 96 - 6, 150, 20, new TranslationText_js_10.default("options.language").get(), () => {
+                this.minecraft.displayGuiScreen(new LanguageScreen_js_1.default(this, this.settings));
             }));
-            this.addButton(new Button_js_5.default(this.width / 2 + 5, this.height / 6 + 96 - 6, 150, 20, new TranslationText_js_4.default("options.chat.title").get(), () => {
+            this.addButton(new Button_js_11.default(this.width / 2 + 5, this.height / 6 + 96 - 6, 150, 20, new TranslationText_js_10.default("options.chat.title").get(), () => {
                 this.minecraft.displayGuiScreen(new ChatOptionsScreen_js_1.default(this, this.settings));
             }));
-            this.addButton(new Button_js_5.default(this.width / 2 - 155, this.height / 6 + 120 - 6, 150, 20, new TranslationText_js_4.default("options.resourcepack").get(), () => {
+            this.addButton(new Button_js_11.default(this.width / 2 - 155, this.height / 6 + 120 - 6, 150, 20, new TranslationText_js_10.default("options.resourcepack").get(), () => {
             }));
-            this.addButton(new Button_js_5.default(this.width / 2 + 5, this.height / 6 + 120 - 6, 150, 20, new TranslationText_js_4.default("options.accessibility.title").get(), () => {
+            this.addButton(new Button_js_11.default(this.width / 2 + 5, this.height / 6 + 120 - 6, 150, 20, new TranslationText_js_10.default("options.accessibility.title").get(), () => {
                 this.minecraft.displayGuiScreen(new AccessibilityScreen_js_1.default(this, this.settings));
             }));
-            this.addButton(new Button_js_5.default(this.width / 2 - 100, this.height / 6 + 168, 200, 20, new TranslationText_js_4.default("gui.done").get(), () => {
+            this.addButton(new Button_js_11.default(this.width / 2 - 100, this.height / 6 + 168, 200, 20, new TranslationText_js_10.default("gui.done").get(), () => {
                 this.minecraft.displayGuiScreen(this.parentScreen);
             }));
         }
         render(context, mouseX, mouseY) {
             this.renderDirtBackground(context);
+            this.drawCenteredString(context, this.title, this.width / 2, 15, 16777215);
         }
     }
     exports.default = OptionsScreen;
 });
-define("gui/screens/MainMenuScreen", ["require", "exports", "index", "utils/TranslationText", "gui/FontRenderer", "gui/widgets/button/Button", "gui/widgets/button/ImageButton", "gui/screens/AccessibilityScreen", "gui/screens/OptionsScreen", "gui/screens/ScreenP"], function (require, exports, index_js_5, TranslationText_js_5, FontRenderer_js_3, Button_js_6, ImageButton_js_1, AccessibilityScreen_js_2, OptionsScreen_js_1, ScreenP_js_3) {
+define("gui/screens/WorldSelectionScreen", ["require", "exports", "utils/TranslationText", "gui/widgets/button/Button", "gui/screens/Screen"], function (require, exports, TranslationText_js_11, Button_js_12, Screen_js_5) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    TranslationText_js_5 = __importDefault(TranslationText_js_5);
-    FontRenderer_js_3 = __importDefault(FontRenderer_js_3);
-    Button_js_6 = __importDefault(Button_js_6);
+    TranslationText_js_11 = __importDefault(TranslationText_js_11);
+    Button_js_12 = __importDefault(Button_js_12);
+    Screen_js_5 = __importDefault(Screen_js_5);
+    class WorldSelectionScreen extends Screen_js_5.default {
+        constructor(parentScreen) {
+            super();
+            this.parentScreen = parentScreen;
+            this.deleteButton;
+            this.selectButton;
+            this.renameButton;
+            this.copyButton;
+            this.flag = false;
+        }
+        init() {
+            this.addButton(new Button_js_12.default(this.width / 2 - 75, this.height / 2 - 20, 150, 20, new TranslationText_js_11.default("Simulate Select").get(), () => {
+                this.flag = true;
+                this.V();
+            }));
+            this.addButton(new Button_js_12.default(this.width / 2 - 75, this.height / 2 + 4, 150, 20, new TranslationText_js_11.default("Simulate Deselect").get(), () => {
+                this.flag = false;
+                this.V();
+            }));
+            this.selectButton = this.addButton(new Button_js_12.default(this.width / 2 - 154, this.height - 52, 150, 20, new TranslationText_js_11.default("selectWorld.select").get(), () => {
+                return false;
+            }));
+            this.addButton(new Button_js_12.default(this.width / 2 + 4, this.height - 52, 150, 20, new TranslationText_js_11.default("selectWorld.create").get(), () => {
+            }));
+            this.renameButton = this.addButton(new Button_js_12.default(this.width / 2 - 154, this.height - 28, 72, 20, new TranslationText_js_11.default("selectWorld.edit").get(), () => {
+                return false;
+            }));
+            this.deleteButton = this.addButton(new Button_js_12.default(this.width / 2 - 76, this.height - 28, 72, 20, new TranslationText_js_11.default("selectWorld.delete").get(), () => {
+                return false;
+            }));
+            this.copyButton = this.addButton(new Button_js_12.default(this.width / 2 + 4, this.height - 28, 72, 20, new TranslationText_js_11.default("selectWorld.recreate").get(), () => {
+                return false;
+            }));
+            this.addButton(new Button_js_12.default(this.width / 2 + 82, this.height - 28, 72, 20, new TranslationText_js_11.default("gui.cancel").get(), () => {
+                this.minecraft.displayGuiScreen(this.parentScreen);
+            }));
+            this.V();
+        }
+        closeScreen() {
+            this.minecraft.displayGuiScreen(this.parentScreen);
+        }
+        V() {
+            this.selectButton.active = this.flag;
+            this.renameButton.active = this.flag;
+            this.deleteButton.active = this.flag;
+            this.copyButton.active = this.flag;
+        }
+        render(context, mouseX, mouseY) {
+            this.renderDirtBackground(context);
+            this.drawCenteredString(context, new TranslationText_js_11.default("selectWorld.title").get(), this.width / 2, 8, 16777215);
+        }
+    }
+    exports.default = WorldSelectionScreen;
+});
+define("gui/screens/MainMenuScreen", ["require", "exports", "index", "utils/TranslationText", "gui/FontRenderer", "gui/widgets/button/Button", "gui/widgets/button/ImageButton", "gui/screens/AccessibilityScreen", "gui/screens/MultiplayerScreen", "gui/screens/MultiplayerWarningScreen", "gui/screens/OptionsScreen", "gui/screens/Screen", "gui/screens/WorldSelectionScreen"], function (require, exports, index_js_6, TranslationText_js_12, FontRenderer_js_2, Button_js_13, ImageButton_js_1, AccessibilityScreen_js_2, MultiplayerScreen_js_2, MultiplayerWarningScreen_js_1, OptionsScreen_js_1, Screen_js_6, WorldSelectionScreen_js_1) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    TranslationText_js_12 = __importDefault(TranslationText_js_12);
+    FontRenderer_js_2 = __importDefault(FontRenderer_js_2);
+    Button_js_13 = __importDefault(Button_js_13);
     ImageButton_js_1 = __importDefault(ImageButton_js_1);
     AccessibilityScreen_js_2 = __importDefault(AccessibilityScreen_js_2);
+    MultiplayerScreen_js_2 = __importDefault(MultiplayerScreen_js_2);
+    MultiplayerWarningScreen_js_1 = __importDefault(MultiplayerWarningScreen_js_1);
     OptionsScreen_js_1 = __importDefault(OptionsScreen_js_1);
-    ScreenP_js_3 = __importDefault(ScreenP_js_3);
-    class MainMenuScreen extends ScreenP_js_3.default {
+    Screen_js_6 = __importDefault(Screen_js_6);
+    WorldSelectionScreen_js_1 = __importDefault(WorldSelectionScreen_js_1);
+    class MainMenuScreen extends Screen_js_6.default {
         constructor() {
             super(...arguments);
             this.widthCopyright = 0;
             this.widthCopyrightRest = 0;
-            this.MINECRAFT_TITLE_IMG = index_js_5.minecraftImg;
-            this.MINECRAFT_EDITION_IMG = index_js_5.editionImg;
-            this.WIDGETS_LOCATION = index_js_5.widgetsImg;
-            this.ACCESSIBILITY_TEXTURES = index_js_5.accessibilityImg;
-            this.showTitleWronglySpelled = (Math.random() < 1.0E-4);
+            this.MINECRAFT_TITLE_IMG = index_js_6.minecraftImg;
+            this.MINECRAFT_EDITION_IMG = index_js_6.editionImg;
+            this.WIDGETS_LOCATION = index_js_6.widgetsImg;
+            this.ACCESSIBILITY_TEXTURES = index_js_6.accessibilityImg;
+            this.showTitleWronglySpelled = (Math.random() < 1.0E-1);
             this.splashText = '';
             this.buttonResetDemo = null;
         }
-        closeScreen() { }
+        closeScreen() {
+            return false;
+        }
         shouldCloseOnEsc() {
             return false;
         }
         init() {
             this.splashText = this.splashText !== '' ? this.splashText : this.minecraft.getSplashText();
-            this.widthCopyright = FontRenderer_js_3.default.getTextWidth("Not affiliated with Mojang Studios!");
+            this.widthCopyright = FontRenderer_js_2.default.getTextWidth("Not affiliated with Mojang Studios!");
             this.widthCopyrightRest = this.width - this.widthCopyright - 2;
             let i = 24;
             let j = this.height / 4 + 48;
             let isDemo = false;
-            if (isDemo) {
-                this.addDemoButtons(j, 24);
-            }
-            else {
-                this.addSingleplayerMultiplayerButtons(j, 24);
-            }
+            if (isDemo)
+                this.addDemoButtons(j, i);
+            else
+                this.addSingleplayerMultiplayerButtons(j, i);
             this.addButton(new ImageButton_js_1.default(this.width / 2 - 124, j + 72 + 12, 20, 20, 0, 106, 20, this.WIDGETS_LOCATION, 256, 256, () => {
                 this.minecraft.displayGuiScreen(new OptionsScreen_js_1.default(this, this.minecraft.gameSettings));
             }, ''));
-            this.addButton(new Button_js_6.default(this.width / 2 - 100, j + 72 + 12, 98, 20, new TranslationText_js_5.default('menu.options').get(), () => {
+            this.addButton(new Button_js_13.default(this.width / 2 - 100, j + 72 + 12, 98, 20, new TranslationText_js_12.default('menu.options').get(), () => {
                 this.minecraft.displayGuiScreen(new OptionsScreen_js_1.default(this, this.minecraft.gameSettings));
             }));
-            this.addButton(new Button_js_6.default(this.width / 2 + 2, j + 72 + 12, 98, 20, new TranslationText_js_5.default('menu.quit').get(), () => {
+            this.addButton(new Button_js_13.default(this.width / 2 + 2, j + 72 + 12, 98, 20, new TranslationText_js_12.default('menu.quit').get(), () => {
                 this.minecraft.shutdown();
             }));
             this.addButton(new ImageButton_js_1.default(this.width / 2 + 104, j + 72 + 12, 20, 20, 0, 0, 20, this.ACCESSIBILITY_TEXTURES, 32, 64, () => {
@@ -842,29 +1185,29 @@ define("gui/screens/MainMenuScreen", ["require", "exports", "index", "utils/Tran
             }, ''));
         }
         addSingleplayerMultiplayerButtons(yIn, rowHeightIn) {
-            this.addButton(new Button_js_6.default(this.width / 2 - 100, yIn, 200, 20, new TranslationText_js_5.default("menu.singleplayer").get(), () => {
+            this.addButton(new Button_js_13.default(this.width / 2 - 100, yIn, 200, 20, new TranslationText_js_12.default("menu.singleplayer").get(), () => {
+                this.minecraft.displayGuiScreen(new WorldSelectionScreen_js_1.default(this));
             }));
-            (this.addButton(new Button_js_6.default(this.width / 2 - 100, yIn + rowHeightIn * 1, 200, 20, new TranslationText_js_5.default("menu.multiplayer").get(), () => {
-                let screen = (this.minecraft.gameSettings.skipMultiplayerWarning ? null : null);
+            (this.addButton(new Button_js_13.default(this.width / 2 - 100, yIn + rowHeightIn * 1, 200, 20, new TranslationText_js_12.default("menu.multiplayer").get(), () => {
+                let screen = (this.minecraft.gameSettings.skipMultiplayerWarning ? new MultiplayerScreen_js_2.default(this) : new MultiplayerWarningScreen_js_1.default(this));
+                this.minecraft.displayGuiScreen(screen);
             })));
-            (this.addButton(new Button_js_6.default(this.width / 2 - 100, yIn + rowHeightIn * 2, 200, 20, new TranslationText_js_5.default("menu.online").get(), () => {
+            (this.addButton(new Button_js_13.default(this.width / 2 - 100, yIn + rowHeightIn * 2, 200, 20, new TranslationText_js_12.default("menu.online").get(), () => {
             })));
         }
         addDemoButtons(yIn, rowHeightIn) {
-            this.addButton(new Button_js_6.default(this.width / 2 - 100, yIn, 200, 20, new TranslationText_js_5.default("menu.playdemo").get(), () => {
+            this.addButton(new Button_js_13.default(this.width / 2 - 100, yIn, 200, 20, new TranslationText_js_12.default("menu.playdemo").get(), () => {
             }));
-            this.buttonResetDemo = this.addButton(new Button_js_6.default(this.width / 2 - 100, yIn + rowHeightIn * 1, 200, 20, new TranslationText_js_5.default("menu.resetdemo").get(), () => {
+            this.buttonResetDemo = this.addButton(new Button_js_13.default(this.width / 2 - 100, yIn + rowHeightIn * 1, 200, 20, new TranslationText_js_12.default("menu.resetdemo").get(), () => {
             }));
             this.buttonResetDemo.active = false;
         }
         render(context, mouseX, mouseY) {
-            context.save();
-            context.fillStyle = '#333';
-            context.fillRect(0, 0, this.width, this.height);
-            context.restore();
+            this.fill(context, 0, 0, this.width, this.height, 3355443);
             context.save();
             let j = this.width / 2 - 137;
             if (this.showTitleWronglySpelled) {
+                this.drawImg(context, this.MINECRAFT_TITLE_IMG, j + 0, 30, 0, 0, 99, 44);
                 this.drawImg(context, this.MINECRAFT_TITLE_IMG, j + 0, 30, 0, 0, 99, 44);
                 this.drawImg(context, this.MINECRAFT_TITLE_IMG, j + 99, 30, 129, 0, 27, 44);
                 this.drawImg(context, this.MINECRAFT_TITLE_IMG, j + 99 + 26, 30, 126, 0, 3, 44);
@@ -872,24 +1215,27 @@ define("gui/screens/MainMenuScreen", ["require", "exports", "index", "utils/Tran
                 this.drawImg(context, this.MINECRAFT_TITLE_IMG, j + 155, 30, 0, 45, 155, 44);
             }
             else {
+                this.drawImg(context, this.MINECRAFT_TITLE_IMG, j + 1, 30, 0, 0, 155, 44);
+                this.drawImg(context, this.MINECRAFT_TITLE_IMG, j - 1, 30, 0, 0, 155, 44);
+                this.drawImg(context, this.MINECRAFT_TITLE_IMG, j + 1, 29, 0, 0, 155, 44);
+                this.drawImg(context, this.MINECRAFT_TITLE_IMG, j - 1, 29, 0, 0, 155, 44);
                 this.drawImg(context, this.MINECRAFT_TITLE_IMG, j + 0, 30, 0, 0, 155, 44);
                 this.drawImg(context, this.MINECRAFT_TITLE_IMG, j + 155, 30, 0, 45, 155, 44);
             }
             this.drawImg(context, this.MINECRAFT_EDITION_IMG, j + 88, 67, 0, 0, 98, 14);
-            context.restore();
-            context.save();
             const miliT = new Date().getMilliseconds();
-            let f2 = 2.0 - Math.abs(Math.sin((miliT % 1000) / 1000.0 * (Math.PI * 2)) * 0.03);
+            let f2 = 1.8 - Math.abs(Math.sin((miliT % 1000) / 1000.0 * (Math.PI * 2)) * 0.1);
             try {
-                f2 = f2 * 100.0 / (FontRenderer_js_3.default.getTextWidth('sssssssssssssssssssssss') + 32);
+                f2 = f2 * 100.0 / (FontRenderer_js_2.default.getTextWidth(this.splashText) + 32);
             }
             catch {
                 f2 = f2 * 100.0 / (context.measureText('Error').width + 32);
             }
             context.scale(f2, f2);
             context.rotate(-20 * Math.PI / 180);
+            context.translate(180, 90);
             try {
-                this.drawCenteredString(context, this.splashText, j + 88 + 70, 67 + 100 - 20, 16776960);
+                this.drawCenteredString(context, this.splashText, j + 88 + 70 - (140 * f2), 67 + (this.height / (3)) - 20 - (70 * f2), 16776960);
             }
             catch {
                 this.drawCenteredString(context, 'Error', j + 88 + 70, 67 + 100, 16776960);
@@ -897,8 +1243,7 @@ define("gui/screens/MainMenuScreen", ["require", "exports", "index", "utils/Tran
             context.restore();
             let s = 'Minecraft JS 1.20.2';
             this.drawString(context, s, 2, this.height - 10, 16777215);
-            let f = 'Not affiliated with Mojang Studios!';
-            if (mouseX > (this.widthCopyrightRest) && mouseX < (this.widthCopyrightRest + this.widthCopyright) && mouseY > (this.height - 10) && mouseY < this.height) {
+            if (mouseX > this.widthCopyrightRest && mouseX < (this.widthCopyrightRest + this.widthCopyright) && mouseY > (this.height - 10) && mouseY < this.height) {
                 this.fill(context, (this.widthCopyrightRest - 1), this.height - 2, this.widthCopyright + 1, 1, 16777215);
             }
             this.drawString(context, 'Not affiliated with Mojang Studios!', this.widthCopyrightRest, this.height - 10, 16777215);
@@ -925,8 +1270,8 @@ define("utils/KeyboardListener", ["require", "exports"], function (require, expo
                 iguieventlistener.keyPressed(key, modifiers);
         }
         setupCallbacks() {
-            window.addEventListener('keypress', (e) => {
-                this.onKeyEvent(e.key, 1, {
+            const call_imit = (e, idx) => {
+                this.onKeyEvent(e.key, idx, {
                     altKeyDown: e.getModifierState('Alt'),
                     altGrKeyDown: e.getModifierState('AltGraph'),
                     capsLockKeyDown: e.getModifierState('CapsLock'),
@@ -934,28 +1279,13 @@ define("utils/KeyboardListener", ["require", "exports"], function (require, expo
                     numLockKeyDown: e.getModifierState('NumLock'),
                     shiftKeyDown: e.getModifierState('Shift')
                 });
-            });
-            window.addEventListener('keyup', (e) => {
-                this.onKeyEvent(e.key, 0, {
-                    altKeyDown: e.getModifierState('Alt'),
-                    altGrKeyDown: e.getModifierState('AltGraph'),
-                    capsLockKeyDown: e.getModifierState('CapsLock'),
-                    controlKeyDown: e.getModifierState('Control'),
-                    numLockKeyDown: e.getModifierState('NumLock'),
-                    shiftKeyDown: e.getModifierState('Shift')
-                });
-            });
+            };
+            window.addEventListener('keypress', (e) => call_imit(e, 1));
+            window.addEventListener('keyup', (e) => call_imit(e, 0));
             window.addEventListener('keydown', (e) => {
                 if (!(e.key == 'F11' || e.key == 'F12'))
                     e.preventDefault();
-                this.onKeyEvent(e.key, 2, {
-                    altKeyDown: e.getModifierState('Alt'),
-                    altGrKeyDown: e.getModifierState('AltGraph'),
-                    capsLockKeyDown: e.getModifierState('CapsLock'),
-                    controlKeyDown: e.getModifierState('CapsLoControlck'),
-                    numLockKeyDown: e.getModifierState('NumLock'),
-                    shiftKeyDown: e.getModifierState('Shift')
-                });
+                call_imit(e, 2);
             });
         }
     }
@@ -966,16 +1296,12 @@ define("utils/MouseHelper", ["require", "exports"], function (require, exports) 
     Object.defineProperty(exports, "__esModule", { value: true });
     class MouseHelper {
         constructor(minecraftIn, context) {
-            this.leftDown = false;
-            this.middleDown = false;
-            this.rightDown = false;
             this.mouseX = 0;
             this.mouseY = 0;
             this.ignoreFirstMove = true;
             this.xVelocity = 0;
             this.yVelocity = 0;
             this.eventTime = 0;
-            this.accumulatedScrollDelta = 0;
             this.activeButton = -1;
             this.mouseGrabbed = false;
             this.minecraft = minecraftIn;
@@ -1021,7 +1347,7 @@ define("utils/MouseHelper", ["require", "exports"], function (require, exports) 
             return this.mouseGrabbed;
         }
         scrollCallback(xoffset, yoffset) {
-            let d0 = (true ? Math.sign(yoffset) : yoffset) * 1;
+            let d0 = (this.minecraft.gameSettings.discreteMouseScroll ? Math.sign(yoffset) : yoffset) * this.minecraft.gameSettings.mouseWheelSensitivity;
             if (this.minecraft.currentScreen != null) {
                 let d1 = this.mouseX * this.minecraft.getScaleFactor();
                 let d2 = this.mouseY * this.minecraft.getScaleFactor();
@@ -1055,13 +1381,12 @@ define("utils/MouseHelper", ["require", "exports"], function (require, exports) 
         }
     }
     exports.default = MouseHelper;
-    MouseHelper;
 });
-define("Minecraft", ["require", "exports", "GameSettings", "gui/FontRenderer", "gui/screens/MainMenuScreen", "index", "utils/KeyboardListener", "utils/MouseHelper"], function (require, exports, GameSettings_js_1, FontRenderer_js_4, MainMenuScreen_js_1, index_js_6, KeyboardListener_js_1, MouseHelper_js_1) {
+define("Minecraft", ["require", "exports", "GameSettings", "gui/FontRenderer", "gui/screens/MainMenuScreen", "index", "utils/KeyboardListener", "utils/MouseHelper"], function (require, exports, GameSettings_js_1, FontRenderer_js_3, MainMenuScreen_js_1, index_js_7, KeyboardListener_js_1, MouseHelper_js_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     GameSettings_js_1 = __importDefault(GameSettings_js_1);
-    FontRenderer_js_4 = __importDefault(FontRenderer_js_4);
+    FontRenderer_js_3 = __importDefault(FontRenderer_js_3);
     MainMenuScreen_js_1 = __importDefault(MainMenuScreen_js_1);
     KeyboardListener_js_1 = __importDefault(KeyboardListener_js_1);
     MouseHelper_js_1 = __importDefault(MouseHelper_js_1);
@@ -1070,7 +1395,7 @@ define("Minecraft", ["require", "exports", "GameSettings", "gui/FontRenderer", "
             this.context = document.getElementById('root').getContext('2d');
             this.canvasX = 0;
             this.canvasY = 0;
-            this.ResourcesData = index_js_6.Resources;
+            this.ResourcesData = index_js_7.Resources;
             this.canvasWidth = window.innerWidth;
             this.canvasHeight = window.innerHeight;
             this.scaleFactor = 3;
@@ -1098,25 +1423,21 @@ define("Minecraft", ["require", "exports", "GameSettings", "gui/FontRenderer", "
             return this.gameSettings.showFPS;
         }
         getSplashText() {
-            function aaa() {
-                const splashes = index_js_6.ResourcesSplashes;
-                const date = new Date(), month = date.getMonth(), day = date.getDate();
+            function getRandSplash() {
+                const splashes = index_js_7.ResourcesSplashes, date = new Date(), month = date.getMonth(), day = date.getDate();
                 const getRandomSplashText = () => {
                     return splashes[~~(Math.random() * (splashes.length - 1))];
                 };
                 let randSplash = String(getRandomSplashText());
-                if (month + 1 === 12 && day === 24) {
+                if (month + 1 === 12 && day === 24)
                     randSplash = 'Merry X-mas!';
-                }
-                else if (month + 1 === 1 && day === 1) {
+                else if (month + 1 === 1 && day === 1)
                     randSplash = 'Happy new year!';
-                }
-                else if (month + 1 === 10 && day === 31) {
+                else if (month + 1 === 10 && day === 31)
                     randSplash = 'OOoooOOOoooo! Spooky!';
-                }
                 return randSplash;
             }
-            return aaa();
+            return getRandSplash();
         }
         run() {
             this.context.canvas.width = this.canvasWidth;
@@ -1130,7 +1451,7 @@ define("Minecraft", ["require", "exports", "GameSettings", "gui/FontRenderer", "
                     if (this.gameSettings.showFPS) {
                         this.context.save();
                         this.context.scale(0.666, 0.666);
-                        FontRenderer_js_4.default.drawStringWithShadow(this.context, `${String(this.getFPS())}/${this.gameSettings.framerateLimit}`, 2, 2, 16777215);
+                        FontRenderer_js_3.default.drawStringWithShadow(this.context, `${String(this.getFPS())}/${this.gameSettings.framerateLimit}`, 2, 2, 16777215, []);
                         this.context.restore();
                     }
                 }
@@ -1153,8 +1474,7 @@ define("Minecraft", ["require", "exports", "GameSettings", "gui/FontRenderer", "
             this.currentScreen = guiScreenIn;
             if (guiScreenIn !== null) {
                 try {
-                    const i = this.mouseHelper.getMouseX();
-                    const j = this.mouseHelper.getMouseY();
+                    const i = this.mouseHelper.getMouseX(), j = this.mouseHelper.getMouseY();
                     guiScreenIn.initScreen(this, this.canvasWidth / this.scaleFactor, this.canvasHeight / this.scaleFactor);
                     guiScreenIn.renderObject(this.context, i / this.scaleFactor, j / this.scaleFactor);
                 }
@@ -1179,29 +1499,209 @@ define("Minecraft", ["require", "exports", "GameSettings", "gui/FontRenderer", "
     }
     exports.default = Minecraft;
 });
-define("GameSettings", ["require", "exports"], function (require, exports) {
+define("settings/CloudOption", ["require", "exports"], function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
+    exports.CloudOptions = void 0;
+    exports.CloudOptions = {
+        OFF: {
+            id: 0,
+            key: 'options.clouds.off',
+            getKey() {
+                return this.key;
+            }
+        },
+        FAST: {
+            id: 1,
+            key: "options.clouds.fast",
+            getKey() {
+                return this.key;
+            }
+        },
+        FANCY: {
+            id: 2,
+            key: "options.clouds.fancy",
+            getKey() {
+                return this.key;
+            }
+        }
+    };
+    class CloudOptionEnum {
+        constructor() {
+            this.id = -1;
+            this.key = '';
+        }
+        getId() {
+            return this.id;
+        }
+        getKey() {
+            return this.key;
+        }
+        setValue(value) {
+            this.id = value.id;
+            this.key = value.key;
+            return this;
+        }
+        getValue() {
+            if (this.id === 0)
+                return exports.CloudOptions.OFF;
+            if (this.id === 1)
+                return exports.CloudOptions.FAST;
+            if (this.id === 2)
+                return exports.CloudOptions.FANCY;
+        }
+    }
+    const CloudOption = new CloudOptionEnum();
+    exports.default = CloudOption;
+});
+define("settings/GraphicsFanciness", ["require", "exports"], function (require, exports) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    class GraphicsFancinessEnum {
+        constructor(id, keyIn) {
+            this.id = id;
+            this.key = keyIn;
+        }
+        getId() {
+            return this.id;
+        }
+        getKey() {
+            return this.key;
+        }
+    }
+    class GraphicsFanciness {
+        static byId(id) {
+            return Object.values(GraphicsFanciness).find(o => o.getId() === id);
+        }
+    }
+    exports.default = GraphicsFanciness;
+    GraphicsFanciness.FAST = new GraphicsFancinessEnum(0, "options.graphics.fast");
+    GraphicsFanciness.FANCY = new GraphicsFancinessEnum(1, "options.graphics.fancy");
+    GraphicsFanciness.FABULOUS = new GraphicsFancinessEnum(2, "options.graphics.fabulous");
+});
+define("settings/KeyBinding", ["require", "exports"], function (require, exports) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    class Keybinding {
+        constructor(description, keyname, category) {
+            this.keyDescription = description;
+            this.keyName = keyname;
+            this.keyNameDefault = this.keyName;
+            this.keyCategory = category;
+            Keybinding.KEYBIND_ARRAY.set(description, this);
+            Keybinding.HASH.set(this.keyName, this);
+            Keybinding.KEYBIND_SET.add(category);
+        }
+    }
+    exports.default = Keybinding;
+    Keybinding.KEYBIND_ARRAY = new Map();
+    Keybinding.HASH = new Map();
+    Keybinding.CATEGORY_ORDER = new Map([
+        ["key.categories.movement", 1],
+        ["key.categories.gameplay", 2],
+        ["key.categories.inventory", 3],
+        ["key.categories.creative", 4],
+        ["key.categories.multiplayer", 5],
+        ["key.categories.ui", 6],
+        ["key.categories.misc", 7]
+    ]);
+    Keybinding.KEYBIND_SET = new Set();
+});
+define("GameSettings", ["require", "exports", "settings/CloudOption", "settings/GraphicsFanciness", "settings/KeyBinding"], function (require, exports, CloudOption_js_1, GraphicsFanciness_js_1, KeyBinding_js_1) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    CloudOption_js_1 = __importStar(CloudOption_js_1);
+    GraphicsFanciness_js_1 = __importDefault(GraphicsFanciness_js_1);
+    KeyBinding_js_1 = __importDefault(KeyBinding_js_1);
     class GameSettings {
         constructor(mcIn) {
+            this.optionsLS = 'GameSettings';
+            this.graphicFanciness = GraphicsFanciness_js_1.default.FANCY;
             this.mouseSensitivity = 0.5;
+            this.renderDistanceChunks = -1;
+            this.chatOpacity = 1.0;
+            this.chatLineSpacing = 0.0;
+            this.chatScale = 1.0;
+            this.chatWidth = 1.0;
+            this.chatHeightUnfocused = 0.44366196;
+            this.chatHeightFocused = 1.0;
+            this.chatDelay = 0.0;
+            this.accessibilityTextBackgroundOpacity = 0.5;
+            this.advancedItemTooltips = false;
+            this.heldItemTooltips = true;
             this.testthing = false;
             this.framerateLimit = 60;
             this.showFPS = true;
             this.skipMultiplayerWarning = false;
+            this.biomeBlendRadius = 2;
+            this.mouseWheelSensitivity = 1.0;
+            this.rawMouseInput = true;
+            this.autoJump = true;
+            this.autoSuggestCommands = true;
+            this.chatColor = true;
+            this.chatLinks = true;
+            this.chatLinksPrompt = true;
+            this.vsync = true;
+            this.entityShadows = true;
+            this.forceUnicodeFont = false;
+            this.invertMouse = false;
+            this.discreteMouseScroll = false;
+            this.realmsNotifications = true;
+            this.reducedDebugInfo = false;
+            this.snooper = true;
+            this.showSubtitles = false;
+            this.accessibilityTextBackground = true;
+            this.touchscreen = false;
+            this.fullscreen = false;
+            this.viewBobbing = true;
+            this.toggleCrouch = false;
+            this.toggleSprint = false;
             this.language = 'en_us';
+            this.hideGUI = false;
+            this.showDebugInfo = false;
+            this.fov = 70.0;
+            this.screenEffectScale = 1.0;
+            this.fovScaleEffect = 1.0;
+            this.gamma = 1.0;
+            this.guiScale = 3.0;
+            this.keyBindForward = new KeyBinding_js_1.default("key.forward", 'w', "key.categories.movement");
+            this.keyBindLeft = new KeyBinding_js_1.default("key.left", 'a', "key.categories.movement");
+            this.keyBindBack = new KeyBinding_js_1.default("key.back", 's', "key.categories.movement");
+            this.keyBindRight = new KeyBinding_js_1.default("key.right", 'd', "key.categories.movement");
+            this.keyBindJump = new KeyBinding_js_1.default("key.jump", ' ', "key.categories.movement");
+            this.keyBindInventory = new KeyBinding_js_1.default("key.inventory", 'e', "key.categories.inventory");
+            this.keyBindSwapHands = new KeyBinding_js_1.default("key.swapOffhand", 'f', "key.categories.inventory");
+            this.keyBindDrop = new KeyBinding_js_1.default("key.drop", 'q', "key.categories.inventory");
+            this.keyBindUseItem = new KeyBinding_js_1.default("key.use", 'button1', "key.categories.gameplay");
+            this.keyBindAttack = new KeyBinding_js_1.default("key.attack", 'button0', "key.categories.gameplay");
+            this.keyBindPickBlock = new KeyBinding_js_1.default("key.pickItem", 'button2', "key.categories.gameplay");
+            this.keyBindChat = new KeyBinding_js_1.default("key.chat", 't', "key.categories.multiplayer");
+            this.keyBindPlayerList = new KeyBinding_js_1.default("key.playerlist", 'tab', "key.categories.multiplayer");
+            this.keyBindCommand = new KeyBinding_js_1.default("key.command", ' ', "key.categories.multiplayer");
+            this.field_244602_au = new KeyBinding_js_1.default("key.socialInteractions", 'p', "key.categories.multiplayer");
+            this.keyBindScreenshot = new KeyBinding_js_1.default("key.screenshot", 'F2', "key.categories.misc");
+            this.keyBindTogglePerspective = new KeyBinding_js_1.default("key.togglePerspective", 'F5', "key.categories.misc");
+            this.keyBindSmoothCamera = new KeyBinding_js_1.default("key.smoothCamera", '', "key.categories.misc");
+            this.keyBindFullscreen = new KeyBinding_js_1.default("key.fullscreen", 'F11', "key.categories.misc");
+            this.keyBindSpectatorOutlines = new KeyBinding_js_1.default("key.spectatorOutlines", '', "key.categories.misc");
+            this.keyBindAdvancements = new KeyBinding_js_1.default("key.advancements", 'l', "key.categories.misc");
+            this.keyBindSaveToolbar = new KeyBinding_js_1.default("key.saveToolbarActivator", 'x', "key.categories.creative");
+            this.keyBindLoadToolbar = new KeyBinding_js_1.default("key.loadToolbarActivator", 'c', "key.categories.creative");
+            this.cloudOptions = CloudOption_js_1.default.setValue(CloudOption_js_1.CloudOptions.FANCY);
             this.mc = mcIn;
             this.loadOptions();
+            this.cloudOptions.setValue(CloudOption_js_1.CloudOptions.OFF);
+            console.log(this.cloudOptions.getId());
         }
         loadOptions() {
-            localStorage.getItem('GameSettings') ? () => {
+            if (localStorage.getItem('GameSettings')) {
                 const Options = JSON.parse(localStorage.getItem('GameSettings'));
                 this.testthing = Options.testthing;
                 this.framerateLimit = Options.framerateLimit;
                 this.showFPS = Options.showFPS;
                 this.skipMultiplayerWarning = Options.skipMultiplayerWarning;
                 this.language = Options.language;
-            } : null;
+            }
         }
         saveOptions() {
             localStorage.setItem('GameSettings', JSON.stringify({
@@ -1227,12 +1727,12 @@ define("GameSettings", ["require", "exports"], function (require, exports) {
     }
     exports.default = GameSettings;
 });
-define("settings/BooleanOption", ["require", "exports", "AbstractOption", "gui/widgets/button/OptionButton", "utils/TranslationText"], function (require, exports, AbstractOption_js_1, OptionButton_js_4, TranslationText_js_6) {
+define("settings/BooleanOption", ["require", "exports", "AbstractOption", "gui/widgets/button/OptionButton", "utils/TranslationText"], function (require, exports, AbstractOption_js_1, OptionButton_js_3, TranslationText_js_13) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     AbstractOption_js_1 = __importDefault(AbstractOption_js_1);
-    OptionButton_js_4 = __importDefault(OptionButton_js_4);
-    TranslationText_js_6 = __importDefault(TranslationText_js_6);
+    OptionButton_js_3 = __importDefault(OptionButton_js_3);
+    TranslationText_js_13 = __importDefault(TranslationText_js_13);
     class BooleanOption extends AbstractOption_js_1.default {
         constructor(translationKeyIn, getter, setter) {
             super();
@@ -1253,20 +1753,49 @@ define("settings/BooleanOption", ["require", "exports", "AbstractOption", "gui/w
             this.set(options, !this.get(options));
         }
         createWidget(options, xIn, yIn, widthIn) {
-            return new OptionButton_js_4.default(xIn, yIn, widthIn, 20, this, this.func_238152_c_(options), () => {
+            return new OptionButton_js_3.default(xIn, yIn, widthIn, 20, 0, this.func_238152_c_(options), () => {
                 this.nextValue(options);
+                options.saveOptions();
             });
         }
         func_238152_c_(p_238152_1_) {
-            return `${new TranslationText_js_6.default(this.text).get()}: ${this.get(p_238152_1_) == false ? new TranslationText_js_6.default('options.off').get() : new TranslationText_js_6.default('options.on').get()}`;
+            return `${new TranslationText_js_13.default(this.text).get()}: ${this.get(p_238152_1_) == false ? new TranslationText_js_13.default('options.off').get() : new TranslationText_js_13.default('options.on').get()}`;
         }
     }
     exports.default = BooleanOption;
 });
-define("GameOption", ["require", "exports", "settings/BooleanOption"], function (require, exports, BooleanOption_1) {
+define("settings/IteratableOption", ["require", "exports", "AbstractOption", "utils/TranslationText"], function (require, exports, AbstractOption_1, TranslationText_1) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    AbstractOption_1 = __importDefault(AbstractOption_1);
+    TranslationText_1 = __importDefault(TranslationText_1);
+    class IteratableOption extends AbstractOption_1.default {
+        constructor(translationKeyIn, getterIn, setterIn) {
+            super();
+            this.text = translationKeyIn;
+            this.setter = setterIn;
+            this.getter = getterIn;
+        }
+        setValueIndex(options, valueIn) {
+            this.setter(options, valueIn);
+            options.saveOptions();
+        }
+        createWidget(options, xIn, yIn, widthIn) {
+        }
+        get(options) {
+            return (this.getter(options));
+        }
+        getName(settings) {
+            return new TranslationText_1.default(this.text).get() + ': ' + new TranslationText_1.default(this.getter(settings)).get();
+        }
+    }
+    exports.default = IteratableOption;
+});
+define("GameOption", ["require", "exports", "settings/BooleanOption", "settings/IteratableOption"], function (require, exports, BooleanOption_1, IteratableOption_js_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     BooleanOption_1 = __importDefault(BooleanOption_1);
+    IteratableOption_js_1 = __importDefault(IteratableOption_js_1);
     class GameOption {
     }
     exports.default = GameOption;
@@ -1275,19 +1804,73 @@ define("GameOption", ["require", "exports", "settings/BooleanOption"], function 
     }, (settings, optionValues) => {
         settings.showFPS = optionValues;
     });
+    GameOption.AdvancedItemTooltipsOption = new BooleanOption_1.default('Advanced tooltips', (settings) => {
+        return settings.advancedItemTooltips;
+    }, (settings, optionValues) => {
+        settings.advancedItemTooltips = optionValues;
+    });
+    GameOption.HeldItemTooltipsOption = new BooleanOption_1.default('Held tooltips', (settings) => {
+        return settings.heldItemTooltips;
+    }, (settings, optionValues) => {
+        settings.heldItemTooltips = optionValues;
+    });
+    GameOption.RawMouseInputOption = new BooleanOption_1.default('options.rawMouseInput', (settings) => {
+        return settings.rawMouseInput;
+    }, (settings, optionValues) => {
+        settings.rawMouseInput = optionValues;
+    });
+    GameOption.SkipMultiplayerWarningOption = new BooleanOption_1.default('Skip Multiplayer Warning', (settings) => {
+        return settings.skipMultiplayerWarning;
+    }, (settings, optionValues) => {
+        settings.skipMultiplayerWarning = optionValues;
+    });
+    GameOption.AutoJumpOption = new BooleanOption_1.default('options.autoJump', (settings) => {
+        return settings.autoJump;
+    }, (settings, optionValues) => {
+        settings.autoJump = optionValues;
+    });
+    GameOption.VsyncOption = new BooleanOption_1.default('options.vsync', (settings) => {
+        return settings.vsync;
+    }, (settings, optionValues) => {
+        settings.vsync = optionValues;
+    });
+    GameOption.ForceUnicodeFont = new BooleanOption_1.default('options.forceUnicodeFont', (settings) => {
+        return settings.forceUnicodeFont;
+    }, (settings, optionValues) => {
+        settings.forceUnicodeFont = optionValues;
+    });
+    GameOption.ShowSubtitlesOption = new BooleanOption_1.default('options.showSubtitles', (settings) => {
+        return settings.showSubtitles;
+    }, (settings, optionValues) => {
+        settings.showSubtitles = optionValues;
+    });
+    GameOption.HideGUIOption = new BooleanOption_1.default('Hide GUI', (settings) => {
+        return settings.hideGUI;
+    }, (settings, optionValues) => {
+        settings.hideGUI = optionValues;
+    });
     GameOption.TestOption = new BooleanOption_1.default('Test', (settings) => {
         return settings.testthing;
     }, (settings, optionValues) => {
         settings.testthing = optionValues;
+    });
+    GameOption.RENDER_CLOUDS = new IteratableOption_js_1.default('options.renderClouds', (settings) => {
+        return settings.cloudOptions;
+    }, (settings) => {
+        let a;
+        try {
+            settings.cloudOptions.getId();
+        }
+        catch {
+            a = 0;
+        }
+        settings.cloudOptions = (a) + 1;
     });
 });
 define("utils/MathHelper", ["require", "exports"], function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     class MathHelper {
-        static floor(mouseX) {
-            throw new Error("Method not implemented.");
-        }
         static clamp(num, min, max) {
             if (num < min)
                 return min;
