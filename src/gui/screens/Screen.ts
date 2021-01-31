@@ -6,21 +6,21 @@ import AbstractGui from "../AbstractGui.js";
 import FocusableGui from "../FocusableGui.js";
 import OptionButton from "../widgets/button/OptionButton.js";
 import Widget from "../widgets/Widget.js";
+import Button from "../widgets/button/Button.js";
 
 export default class Screen extends AbstractGui implements IRenderable, IGuiEventListener {
   protected minecraft: any = null;
   public width: number = 0;
   public height: number = 0;
-  protected children: Array<Widget> = new Array();
-  protected buttons: Array<Widget> = new Array();
+  protected children: Array<Widget | Button> = new Array();
+  protected buttons: Array<Widget | Button> = new Array();
   protected focusedWidget = -1;
   protected title;
 
   constructor(...args: any[]) {
     super();
-    if(args.length == 1) {
-      this.title = args[0];
-    }
+
+    if(args.length === 1) this.title = args[0]
   }
 
   public initScreen(minecraft: Minecraft, width: number, height: number) {
@@ -30,7 +30,7 @@ export default class Screen extends AbstractGui implements IRenderable, IGuiEven
     this.width = width;
     this.height = height;
     this.init();
-    (this.focusedWidget !== -1 || this.focusedWidget !== null || this.focusedWidget !== undefined) && this.children[this.focusedWidget] ? this.children[this.focusedWidget].changeFocus(true) : null;
+    this.focusedWidget > -1 && this.children[this.focusedWidget] ? this.children[this.focusedWidget].changeFocus(true) : null;
   }
 
   protected init(): void {
@@ -43,12 +43,12 @@ export default class Screen extends AbstractGui implements IRenderable, IGuiEven
     }
   }
 
-  protected addButton(button: Widget): Widget {
+  protected addButton(button: Widget | Button): Widget | Button {
     this.buttons.push(button);
     return this.addListener(button);
   }
 
-  protected addListener(listener: Widget): Widget {
+  protected addListener(listener: Widget | Button) {
     this.children.push(listener);
     return listener;
   }
@@ -57,7 +57,7 @@ export default class Screen extends AbstractGui implements IRenderable, IGuiEven
     return this.children;
   }
 
-  protected render(context: CanvasRenderingContext2D, mouseX: number, mouseY: number): void {
+  public render(context: CanvasRenderingContext2D, mouseX: number, mouseY: number): void {
   }
 
   public mouseClicked(mouseX: number, mouseY: number, button: number): void {

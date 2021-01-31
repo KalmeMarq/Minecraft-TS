@@ -19,3 +19,17 @@ export default class TranslationTextComponent {
     }
   }
 }
+
+export function getKeyTranslation(key: string) {
+  try {
+    const lang = localStorage.getItem('GameSettings') && JSON.parse(localStorage.getItem('GameSettings')!).language ? JSON.parse(localStorage.getItem('GameSettings')!).language : 'en_us';
+    const displayLang: any = Resources.languages.find((id: any) => id.code === lang);
+    
+    if(!displayLang.data[key] || displayLang.data[key] === '') return String(key);
+    return displayLang.data[key];
+
+  } catch (err) {
+    console.error(err)
+    return ''
+  }
+}

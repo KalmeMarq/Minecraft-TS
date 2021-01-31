@@ -1,9 +1,7 @@
 import AbstractOption from "../../GameOption.js";
 import GameSettings from "../../GameSettings";
-import TranslationTextComponent from "../../utils/TranslationText.js";
-import AbstractButton from "../widgets/button/AbstractButton.js";
+import { getKeyTranslation } from "../../utils/TranslationText.js";
 import Button from "../widgets/button/Button.js";
-import OptionButton from "../widgets/button/OptionButton.js";
 import Screen from "./Screen.js";
 import SettingsScreen from "./SettingsScreen.js";
 
@@ -11,24 +9,24 @@ export default class AccessibilityScreen extends SettingsScreen {
   private SCREEN_OPTIONS: AbstractOption[] = [AbstractOption.ShowSubtitlesOption, AbstractOption.AutoJumpOption];
 
   constructor(parentScreen: Screen, gameSettingsObj: GameSettings) {
-    super(parentScreen, gameSettingsObj,  new TranslationTextComponent("options.accessibility.title").get())
+    super(parentScreen, gameSettingsObj, getKeyTranslation("options.accessibility.title"))
   }
 
   protected init(): void {
-    let i = 0;
+    let index = 0;
     for (const iterator of this.SCREEN_OPTIONS) {
-      let j = this.width / 2 - 155 + (i % 2) * 160;
-      let k = this.height / 6 - 12 + 24 * (i >> 1);
-      this.addButton((iterator as any).createWidget(this.minecraft.gameSettings, j, k, 150));
-      i++;
+      let x = this.width / 2 - 155 + (index % 2) * 160;
+      let y = this.height / 6 - 12 + 24 * (index >> 1);
+      this.addButton((iterator as any).createWidget(this.minecraft.gameSettings, x, y, 150));
+      index++;
     }
     
-    this.addButton(new Button(this.width / 2 - 100, this.height - 27, 200, 20, new TranslationTextComponent("gui.done").get(), () => {
+    this.addButton(new Button(this.width / 2 - 100, this.height - 27, 200, 20, getKeyTranslation("gui.done"), () => {
       this.minecraft.displayGuiScreen(this.parentScreen);
     }));
   }
 
-  protected render(context: CanvasRenderingContext2D, mouseX: number, mouseY: number): void {
+  public render(context: CanvasRenderingContext2D, mouseX: number, mouseY: number): void {
     super.render(context, mouseX, mouseY);
     this.drawCenteredString(context, this.title, this.width / 2, 20, 16777215);
   }

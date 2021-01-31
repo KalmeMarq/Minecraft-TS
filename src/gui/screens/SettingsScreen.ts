@@ -19,7 +19,7 @@ export default class SettingsScreen extends Screen {
     this.minecraft.displayGuiScreen(this.parentScreen);
   }
 
-  protected render(context: CanvasRenderingContext2D, mouseX: number, mouseY: number): void {
+  public render(context: CanvasRenderingContext2D, mouseX: number, mouseY: number): void {
     this.renderDirtBackground(context);
   }
 }

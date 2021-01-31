@@ -59,6 +59,8 @@ export async function getResources() {
   optionsBackgroundImg.src = `./${rootloc}/textures/gui/options_background.png`;
   clickSound.src = `https://raw.githubusercontent.com/KalmeMarq/Minecraft-JS-Assets/main/assets/sounds/click_stereo.ogg`;
 
+
+
   ['credits', 'end', 'splashes'].forEach(async (name) => {
     const s: string = name;
     await JSONUtils.getTextFile(`https://raw.githubusercontent.com/KalmeMarq/Minecraft-JS-Assets/main/assets/texts/${name}.txt`, (data: any) => data.split(/\r?\n/).forEach((line: any) => Resources.texts[s].push(line)));

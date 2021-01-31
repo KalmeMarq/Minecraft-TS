@@ -1,63 +1,63 @@
-import TranslationTextComponent from "../../utils/TranslationText.js";
+import { getKeyTranslation } from "../../utils/TranslationText.js";
 import Button from "../widgets/button/Button.js";
+import Widgets from "../widgets/Widget.js";
 import Screen from "./Screen.js";
 
 export default class MultiplayerScreen extends Screen {
   public parentScreen;
-  public btnEditServer: Button | any
-  public btnSelectServer: Button | any
-  public btnDeleteServer: Button | any
+  public btnEditServer!: Widgets
+  public btnSelectServer!: Widgets
+  public btnDeleteServer!: Widgets
   public selectedServer: any
   public flag: boolean;
 
   constructor(parentScreen: Screen) {
-    super();
+    super(getKeyTranslation('multiplayer.title'));
     this.parentScreen = parentScreen;
     this.flag = false;
   }
 
-  init() {
-    this.btnSelectServer = this.addButton(new Button(this.width / 2 - 154, this.height - 52, 100, 20, new TranslationTextComponent("selectServer.select").get(), () => {
+  protected init(): void {
+    this.btnSelectServer = this.addButton(new Button(this.width / 2 - 154, this.height - 52, 100, 20, getKeyTranslation("selectServer.select"), () => {
     }));
 
-    this.addButton(new Button(this.width / 2 - 50, this.height - 52, 100, 20, new TranslationTextComponent("selectServer.direct").get(), () => {
+    this.addButton(new Button(this.width / 2 - 50, this.height - 52, 100, 20, getKeyTranslation("selectServer.direct"), () => {
     }));
 
-    this.addButton(new Button(this.width / 2 + (4 + 50), this.height - 52, 100, 20, new TranslationTextComponent("selectServer.add").get(), () => {
-      this.flag = this.flag === true ? false : true;
-      this.V()
+    this.addButton(new Button(this.width / 2 + (4 + 50), this.height - 52, 100, 20, getKeyTranslation("selectServer.add"), () => {
+      this.flag = !this.flag;
     }));
 
-    this.btnEditServer = this.addButton(new Button(this.width / 2 - 154, this.height - 28, 70, 20, new TranslationTextComponent("selectServer.edit").get(), () => {
+    this.btnEditServer = this.addButton(new Button(this.width / 2 - 154, this.height - 28, 70, 20, getKeyTranslation("selectServer.edit"), () => {
     }));
 
-    this.btnDeleteServer = this.addButton(new Button(this.width / 2 - 74, this.height - 28, 70, 20, new TranslationTextComponent("selectServer.delete").get(), () => {
+    this.btnDeleteServer = this.addButton(new Button(this.width / 2 - 74, this.height - 28, 70, 20, getKeyTranslation("selectServer.delete"), () => {
     }));
     
-    this.addButton(new Button(this.width / 2 + 4, this.height - 28, 70, 20, new TranslationTextComponent("selectServer.refresh").get(), () => {
+    this.addButton(new Button(this.width / 2 + 4, this.height - 28, 70, 20, getKeyTranslation("selectServer.refresh"), () => {
       this.flag = false;
       this.refreshServerList();
     }));
     
-    this.addButton(new Button(this.width / 2 + (4 + 76), this.height - 28, 75, 20, new TranslationTextComponent("gui.cancel").get(), () => {
+    this.addButton(new Button(this.width / 2 + (4 + 76), this.height - 28, 75, 20, getKeyTranslation("gui.cancel"), () => {
       this.minecraft.displayGuiScreen(this.parentScreen);
     }));
 
-    this.V();
+    this.setActive();
   }
 
   refreshServerList() {
-    this.minecraft.displayGuiScreen(this);
+    this.minecraft.displayGuiScreen(new MultiplayerScreen(this.parentScreen));
   }
 
-  V() {
+  private setActive() {
     this.btnEditServer.active = this.flag;
     this.btnSelectServer.active = this.flag;
     this.btnDeleteServer.active = this.flag;
   }
 
-  protected render(context: CanvasRenderingContext2D, mouseX: number, mouseY: number): void {
+  public render(context: CanvasRenderingContext2D, mouseX: number, mouseY: number): void {
     this.renderDirtBackground(context)
-    this.drawCenteredString(context, new TranslationTextComponent("multiplayer.title").get(), this.width / 2, 20, 16777215);
+    this.drawCenteredString(context, this.title, this.width / 2, 20, 16777215);
   }
 }

@@ -1,12 +1,13 @@
 import Minecraft from "./Minecraft.js";
-import CloudOption, { CloudOptions } from "./settings/CloudOption.js";
+import CloudOption from "./settings/CloudOption.js";
 import GraphicsFanciness from "./settings/GraphicsFanciness.js";
 import KeyBinding from "./settings/KeyBinding.js";
 
 export default class GameSettings {
   protected mc;
   private optionsLS: string = 'GameSettings';
-  public graphicFanciness: GraphicsFanciness = GraphicsFanciness.FANCY;
+  public graphicFanciness = GraphicsFanciness[0];
+  public cloudsOption = CloudOption[0];
   public mouseSensitivity: number = 0.5;
   public renderDistanceChunks: number = -1;
   public chatOpacity: number = 1.0;
@@ -77,8 +78,6 @@ export default class GameSettings {
   public keyBindAdvancements: KeyBinding = new KeyBinding("key.advancements", 'l', "key.categories.misc");
   public keyBindSaveToolbar: KeyBinding = new KeyBinding("key.saveToolbarActivator", 'x', "key.categories.creative");
   public keyBindLoadToolbar: KeyBinding = new KeyBinding("key.loadToolbarActivator", 'c', "key.categories.creative");
-  // public cloudOption: CloudOption = 0;
-  public cloudOptions = CloudOption.setValue(CloudOptions.FANCY);
 
   constructor(mcIn: Minecraft) {
     this.mc = mcIn;
@@ -90,20 +89,21 @@ export default class GameSettings {
     if(localStorage.getItem('GameSettings')) {
       const Options: GameSettings = JSON.parse(localStorage.getItem('GameSettings')!);
 
-      this.testthing = Options.testthing;
-      this.framerateLimit = Options.framerateLimit;
-      this.showFPS = Options.showFPS;
-      this.skipMultiplayerWarning = Options.skipMultiplayerWarning;
-      this.language = Options.language;
-      this.advancedItemTooltips = Options.advancedItemTooltips;
-      this.heldItemTooltips = Options.heldItemTooltips;
-      this.rawMouseInput = Options.rawMouseInput;
-      this.skipMultiplayerWarning = Options.skipMultiplayerWarning;
-      this.autoJump = Options.autoJump;
-      this.vsync = Options.vsync;
-      this.forceUnicodeFont = Options.forceUnicodeFont;
-      this.showSubtitles = Options.showSubtitles;
-      this.hideGUI = Options.hideGUI;
+      this.testthing = Options.testthing ? Options.testthing : this.testthing;
+      this.framerateLimit = Options.framerateLimit ? Options.framerateLimit : this.framerateLimit;
+      this.showFPS = Options.showFPS ? Options.showFPS : this.showFPS;
+      this.language = Options.language ? Options.language : this.language;
+      this.advancedItemTooltips = Options.advancedItemTooltips ? Options.advancedItemTooltips : this.advancedItemTooltips;
+      this.heldItemTooltips = Options.heldItemTooltips ? Options.heldItemTooltips : this.heldItemTooltips;
+      this.rawMouseInput = Options.rawMouseInput ? Options.rawMouseInput : this.rawMouseInput;
+      this.skipMultiplayerWarning = Options.skipMultiplayerWarning ? Options.skipMultiplayerWarning : this.skipMultiplayerWarning;
+      this.autoJump = Options.autoJump ? Options.autoJump : this.autoJump;
+      this.vsync = Options.vsync ? Options.vsync : this.vsync;
+      this.forceUnicodeFont = Options.forceUnicodeFont ? Options.forceUnicodeFont : this.forceUnicodeFont;
+      this.showSubtitles = Options.showSubtitles ? Options.showSubtitles : this.showSubtitles;
+      this.hideGUI = Options.hideGUI ? Options.hideGUI : this.hideGUI;
+      this.graphicFanciness = Options.graphicFanciness ? Options.graphicFanciness : this.graphicFanciness;
+      this.cloudsOption = Options.cloudsOption ? Options.cloudsOption : this.cloudsOption;
     }
   }
 
@@ -121,7 +121,9 @@ export default class GameSettings {
       vsync: this.vsync,
       forceUnicodeFont: this.forceUnicodeFont,
       showSubtitles: this.showSubtitles,
-      hideGUI: this.hideGUI
+      hideGUI: this.hideGUI,
+      graphicFanciness: this.graphicFanciness,
+      cloudsOption: this.cloudsOption
     }));
 
     // this.mc.outputLog += '\n Game Options Saved'

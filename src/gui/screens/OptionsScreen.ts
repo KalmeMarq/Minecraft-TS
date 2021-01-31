@@ -1,24 +1,23 @@
-import AbstractOption from "../../GameOption.js";
-import GameSettings from "../../GameSettings.js";
-import TranslationTextComponent from "../../utils/TranslationText.js";
-import Button from "../widgets/button/Button.js";
-import OptionButton from "../widgets/button/OptionButton.js";
-import AccessibilityScreen from "./AccessibilityScreen.js";
-import ChatOptionsScreen from "./ChatOptionsScreen.js";
-import ControlsScreen from "./ControlsScreen.js";
-import CustomizeSkinScreen from "./CustomizeSkinScreen.js";
-import LanguageScreen from "./LanguageScreen.js";
-import OptionsSoundsScreen from "./OptionsSoundsScreen.js";
-import Screen from "./Screen.js";
-import VideoSettingsScreen from "./VideoSettingsScreen.js";
+import AbstractOption from '../../GameOption.js';
+import GameSettings from '../../GameSettings.js';
+import { getKeyTranslation } from '../../utils/TranslationText.js';
+import Button from '../widgets/button/Button.js';
+import AccessibilityScreen from './AccessibilityScreen.js';
+import ChatOptionsScreen from './ChatOptionsScreen.js';
+import ControlsScreen from './ControlsScreen.js';
+import CustomizeSkinScreen from './CustomizeSkinScreen.js';
+import LanguageScreen from './LanguageScreen.js';
+import OptionsSoundsScreen from './OptionsSoundsScreen.js';
+import Screen from './Screen.js';
+import VideoSettingsScreen from './VideoSettingsScreen.js';
 
 export default class OptionsScreen extends Screen {
-  private SCREEN_OPTIONS: AbstractOption[] = [AbstractOption.TestOption, AbstractOption.ShowFPSOption];
+  private SCREEN_OPTIONS: AbstractOption[] = [AbstractOption.TestOption, AbstractOption.ShowFPSOption, AbstractOption.GRAPHICS_FANCINESS];
   public parentScreen;
   private settings: GameSettings;
 
   constructor(parentScreen: Screen, gameSettingsObj: GameSettings) {
-    super(new TranslationTextComponent("options.title").get());
+    super(getKeyTranslation('options.title'));
     this.parentScreen = parentScreen;
     this.settings = gameSettingsObj;
   }
@@ -28,39 +27,50 @@ export default class OptionsScreen extends Screen {
   }
   
   protected init(): void {
-    let i = 0;
+    let index = 0;
     
-    for (const iterator of this.SCREEN_OPTIONS) {
-      let j = this.width / 2 - 155 + (i % 2) * 160;
-      let k = this.height / 6 - 12 + 24 * (i >> 1);
-      this.addButton((iterator as any).createWidget(this.minecraft.gameSettings, j, k, 150));
-      i++;
+    for(const iterator of this.SCREEN_OPTIONS) {
+      let x = this.width / 2 - 155 + (index % 2) * 160;
+      let y = this.height / 6 - 12 + 24 * (index >> 1);
+      this.addButton((iterator as any).createWidget(this.minecraft.gameSettings, x, y, 150));
+      index++;
     }
 
-    this.addButton(new Button(this.width / 2 - 155, this.height / 6 + 48 - 6, 150, 20, new TranslationTextComponent("options.skinCustomisation").get(), () => {
+    const baseY = this.height / 6 - 6;
+    const baseX0 = this.width / 2 - 155;
+    const baseX1 = baseX0 + 160;
+
+    this.addButton(new Button(baseX0, baseY + 48, 150, 20, getKeyTranslation('options.skinCustomisation'), () => {
       this.minecraft.displayGuiScreen(new CustomizeSkinScreen(this, this.settings));
     }));
-    this.addButton(new Button(this.width / 2 + 5, this.height / 6 + 48 - 6, 150, 20, new TranslationTextComponent("options.sounds").get(), () => {
-        this.minecraft.displayGuiScreen(new OptionsSoundsScreen(this, this.settings));
+
+    this.addButton(new Button(baseX1, baseY + 48, 150, 20, getKeyTranslation('options.sounds'), () => {
+      this.minecraft.displayGuiScreen(new OptionsSoundsScreen(this, this.settings));
     }));
-    this.addButton(new Button(this.width / 2 - 155, this.height / 6 + 72 - 6, 150, 20, new TranslationTextComponent("options.video").get(), () => {
-        this.minecraft.displayGuiScreen(new VideoSettingsScreen(this, this.settings));
+
+    this.addButton(new Button(baseX0, baseY + 72, 150, 20, getKeyTranslation('options.video'), () => {
+      this.minecraft.displayGuiScreen(new VideoSettingsScreen(this, this.settings));
     }));
-    this.addButton(new Button(this.width / 2 + 5, this.height / 6 + 72 - 6, 150, 20, new TranslationTextComponent("options.controls").get(), () => {
-        this.minecraft.displayGuiScreen(new ControlsScreen(this, this.settings));
+
+    this.addButton(new Button(baseX1, baseY + 72, 150, 20, getKeyTranslation('options.controls'), () => {
+      this.minecraft.displayGuiScreen(new ControlsScreen(this, this.settings));
     }));
-    this.addButton(new Button(this.width / 2 - 155, this.height / 6 + 96 - 6, 150, 20, new TranslationTextComponent("options.language").get(), () => {
-        this.minecraft.displayGuiScreen(new LanguageScreen(this, this.settings));
+
+    this.addButton(new Button(baseX0, baseY + 96, 150, 20, getKeyTranslation('options.language'), () => {
+      this.minecraft.displayGuiScreen(new LanguageScreen(this, this.settings));
     }));
-    this.addButton(new Button(this.width / 2 + 5, this.height / 6 + 96 - 6, 150, 20, new TranslationTextComponent("options.chat.title").get(), () => {
-        this.minecraft.displayGuiScreen(new ChatOptionsScreen(this, this.settings));
+
+    this.addButton(new Button(baseX1, baseY + 96, 150, 20, getKeyTranslation('options.chat.title'), () => {
+      this.minecraft.displayGuiScreen(new ChatOptionsScreen(this, this.settings));
     }));
-    this.addButton(new Button(this.width / 2 - 155, this.height / 6 + 120 - 6, 150, 20, new TranslationTextComponent("options.resourcepack").get(), () => {
+
+    this.addButton(new Button(baseX0, baseY + 120, 150, 20, getKeyTranslation('options.resourcepack'), () => {}));
+
+    this.addButton(new Button(baseX1, baseY + 120, 150, 20, getKeyTranslation('options.accessibility.title'), () => {
+      this.minecraft.displayGuiScreen(new AccessibilityScreen(this, this.settings));
     }));
-    this.addButton(new Button(this.width / 2 + 5, this.height / 6 + 120 - 6, 150, 20, new TranslationTextComponent("options.accessibility.title").get(), () => {
-        this.minecraft.displayGuiScreen(new AccessibilityScreen(this, this.settings));
-    }));
-    this.addButton(new Button(this.width / 2 - 100, this.height / 6 + 168, 200, 20, new TranslationTextComponent("gui.done").get(), () => {
+
+    this.addButton(new Button(this.width / 2 - 100, baseY + 174, 200, 20, getKeyTranslation('gui.done'), () => {
       this.minecraft.displayGuiScreen(this.parentScreen);
     }));
   }

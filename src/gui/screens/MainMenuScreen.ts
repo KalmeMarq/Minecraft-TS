@@ -1,6 +1,7 @@
 import { editionImg, minecraftImg, widgetsImg, accessibilityImg } from "../../utils/GetResources.js";
 import { playSound } from "../../utils/PlaySound.js";
-import TranslationTextComponent from "../../utils/TranslationText.js";
+import { consoleOutput, isInside } from "../../utils/Test.js";
+import { getKeyTranslation } from "../../utils/TranslationText.js";
 import FontRenderer from "../FontRenderer.js";
 import Button from "../widgets/button/Button.js";
 import ImageButton from "../widgets/button/ImageButton.js";
@@ -19,7 +20,7 @@ export default class MainMenuScreen extends Screen {
   protected MINECRAFT_EDITION_IMG: HTMLImageElement = editionImg;
   protected WIDGETS_LOCATION: HTMLImageElement = widgetsImg;
   protected ACCESSIBILITY_TEXTURES: HTMLImageElement = accessibilityImg;
-  private showTitleWronglySpelled: boolean = (Math.random() < 1.0E-1);
+  private showTitleWronglySpelled: boolean = (Math.random() < 1.0E-4);
   private splashText: string = '';
   private buttonResetDemo: Widgets | null = null;
 
@@ -37,49 +38,51 @@ export default class MainMenuScreen extends Screen {
     this.widthCopyright = FontRenderer.getTextWidth("Not affiliated with Mojang Studios!");
     this.widthCopyrightRest = this.width - this.widthCopyright - 2;
 
-    let i = 24;
-    let j = this.height / 4 + 48;
+    const rowGapHeight = 24;
+    const basePosY = this.height / 4 + 48;
 
-    if(this.minecraft.isDemo()) this.addDemoButtons(j, i);
-    else this.addSingleplayerMultiplayerButtons(j, i);
+    if(this.minecraft.isDemo()) this.addDemoButtons(basePosY, rowGapHeight);
+    else this.addSingleplayerMultiplayerButtons(basePosY, rowGapHeight);
 
-    this.addButton(new ImageButton(this.width / 2 - 124, j + 72 + 12, 20, 20, 0, 106, 20, this.WIDGETS_LOCATION, 256, 256, () => {
+    this.addButton(new ImageButton(this.width / 2 - 124, basePosY + 72 + 12, 20, 20, 0, 106, 20, this.WIDGETS_LOCATION, 256, 256, () => {
       this.minecraft.displayGuiScreen(new OptionsScreen(this, this.minecraft.gameSettings));
     }, ''));
 
-    this.addButton(new Button(this.width  / 2 - 100, j + 72 + 12, 98, 20, new TranslationTextComponent('menu.options').get(), () => {
+    this.addButton(new Button(this.width  / 2 - 100, basePosY + 72 + 12, 98, 20, getKeyTranslation('menu.options'), () => {
       this.minecraft.displayGuiScreen(new OptionsScreen(this, this.minecraft.gameSettings))
     }));
 
-    this.addButton(new Button(this.width  / 2 + 2, j + 72 + 12, 98, 20, new TranslationTextComponent('menu.quit').get(), () => {
+    this.addButton(new Button(this.width  / 2 + 2, basePosY + 72 + 12, 98, 20, getKeyTranslation('menu.quit'), () => {
       this.minecraft.shutdown();
     }));
 
-    this.addButton(new ImageButton(this.width / 2 + 104, j + 72 + 12, 20, 20, 0, 0, 20, this.ACCESSIBILITY_TEXTURES, 32, 64, () => {
+    this.addButton(new ImageButton(this.width / 2 + 104, basePosY + 72 + 12, 20, 20, 0, 0, 20, this.ACCESSIBILITY_TEXTURES, 32, 64, () => {
       this.minecraft.displayGuiScreen(new AccessibilityScreen(this, this.minecraft.gameSettings));
     }, ''));
   }
 
   private addSingleplayerMultiplayerButtons(yIn: number, rowHeightIn: number): void {
-    this.addButton(new Button(this.width / 2 - 100, yIn, 200, 20, new TranslationTextComponent("menu.singleplayer").get(), () => {
+    this.addButton(new Button(this.width / 2 - 100, yIn, 200, 20, getKeyTranslation("menu.singleplayer"), () => {
        this.minecraft.displayGuiScreen(new WorldSelectionScreen(this));
     }));
 
-    (this.addButton(new Button(this.width / 2 - 100, yIn + rowHeightIn * 1, 200, 20, new TranslationTextComponent("menu.multiplayer").get(), () => {
+    (this.addButton(new Button(this.width / 2 - 100, yIn + rowHeightIn * 1, 200, 20, getKeyTranslation("menu.multiplayer"), () => {
        let screen: Screen | null = (this.minecraft.gameSettings.skipMultiplayerWarning ? new MultiplayerScreen(this) : new MultiplayerWarningScreen(this));
        this.minecraft.displayGuiScreen(screen);
     })));
 
-    (this.addButton(new Button(this.width / 2 - 100, yIn + rowHeightIn * 2, 200, 20, new TranslationTextComponent("menu.online").get(), () => {
-      //  this.switchToRealms();
+    (this.addButton(new Button(this.width / 2 - 100, yIn + rowHeightIn * 2, 200, 20, getKeyTranslation("menu.online"), () => {
+      consoleOutput('error', 'No action')
     })));
   }
 
   private addDemoButtons(yIn: number, rowHeightIn: number): void  {
-    this.addButton(new Button(this.width / 2 - 100, yIn, 200, 20, new TranslationTextComponent("menu.playdemo").get(), () => {
+    this.addButton(new Button(this.width / 2 - 100, yIn, 200, 20, getKeyTranslation("menu.playdemo"), () => {
+      consoleOutput('log', 'No action')
     }));
 
-    this.buttonResetDemo = this.addButton(new Button(this.width / 2 - 100, yIn + rowHeightIn * 1, 200, 20, new TranslationTextComponent("menu.resetdemo").get(), () => {
+    this.buttonResetDemo = this.addButton(new Button(this.width / 2 - 100, yIn + rowHeightIn * 1, 200, 20, getKeyTranslation("menu.resetdemo"), () => {
+      consoleOutput('log', 'No action')
     }));
 
     this.buttonResetDemo.active = false;
@@ -88,13 +91,13 @@ export default class MainMenuScreen extends Screen {
   public mouseClicked(mouseX: number, mouseY: number, button: number) {
     super.mouseClicked(mouseX, mouseY, button);
 
-    if(mouseX > this.widthCopyrightRest && mouseX < (this.widthCopyrightRest + this.widthCopyright) && mouseY > (this.height - 10) && mouseY < this.height) {
+    isInside(mouseX, mouseY, this.widthCopyrightRest, this.widthCopyright, (this.height - 10), 10, () => {
       playSound('resources/assets/minecraft/sounds/click_stereo.ogg', 0.2);
       console.log('No credits sry :(');
-    }
+    })
   }
 
-  protected render(context: CanvasRenderingContext2D, mouseX: number, mouseY: number): void {
+  public render(context: CanvasRenderingContext2D, mouseX: number, mouseY: number): void {
     this.fill(context, 0, 0, this.width, this.height, 3355443)
 
     context.save();
@@ -138,18 +141,17 @@ export default class MainMenuScreen extends Screen {
     }
     context.restore();
 
-    let s = "Minecraft JS " + this.minecraft.getVersion();
-    if(this.minecraft.isDemo()) s += " Demo";
-    else s += (this.minecraft.getVersionType() === "release" ? '' : '/' + this.minecraft.getVersionType());
-    s += `/${this.minecraft.getUsername()}`;
-
-    if(this.minecraft.isModdedClient()) s += new TranslationTextComponent("menu.modded").get();
+    let gameInfo = "Minecraft JS " + this.minecraft.getVersion();
+    if(this.minecraft.isDemo()) gameInfo += " Demo";
+    else gameInfo += (this.minecraft.getVersionType() === "release" ? '' : '/' + this.minecraft.getVersionType());
+    gameInfo += `/${this.minecraft.getUsername()}`;
+    if(this.minecraft.isModdedClient()) gameInfo += getKeyTranslation("menu.modded");
     
-    this.drawString(context, s, 2, this.height - 10, 16777215);
+    this.drawString(context, gameInfo, 2, this.height - 10, 16777215);
 
-    if(mouseX > this.widthCopyrightRest && mouseX < (this.widthCopyrightRest + this.widthCopyright) && mouseY > (this.height - 10) && mouseY < this.height) {
+    isInside(mouseX, mouseY, this.widthCopyrightRest, this.widthCopyright, (this.height - 10), 10, () => {
       this.fill(context, (this.widthCopyrightRest - 1), this.height - 2, this.widthCopyright + 1, 1, 16777215)
-    }
+    })
 
     this.drawString(context, 'Not affiliated with Mojang Studios!', this.widthCopyrightRest, this.height - 10, 16777215);
   }

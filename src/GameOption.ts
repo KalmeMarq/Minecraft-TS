@@ -1,6 +1,7 @@
 import GameSettings from "./GameSettings";
 import BooleanOption from "./settings/BooleanOption";
 import CloudOption from "./settings/CloudOption";
+import GraphicsFanciness from "./settings/GraphicsFanciness";
 import IteratableOption from "./settings/IteratableOption.js";
 import TranslationTextComponent from "./utils/TranslationText.js";
 
@@ -71,17 +72,23 @@ export default abstract class GameOption {
     settings.testthing = optionValues;
   });
 
-  public static RENDER_CLOUDS: IteratableOption = new IteratableOption('options.renderClouds', (settings: GameSettings) => {
-    return settings.cloudOptions;
-
+  public static GRAPHICS_FANCINESS: IteratableOption = new IteratableOption('options.graphics', (settings: GameSettings) => {
+    return settings.graphicFanciness;
   }, (settings: GameSettings) => {
-    let a: any;
-    try {
-      settings.cloudOptions.getId()
-    } catch {
-      a = 0
-    }
+    let i = settings.graphicFanciness.id;
+    if(i + 1 == GraphicsFanciness.length) i = 0;
+    else i++;
+    
+    settings.graphicFanciness = GraphicsFanciness[i];
+  });
 
-    settings.cloudOptions = (a) + 1;
+  public static CLOUDS_OPTION: IteratableOption = new IteratableOption('options.renderClouds', (settings: GameSettings) => {
+    return settings.cloudsOption;
+  }, (settings: GameSettings) => {
+    let i = settings.cloudsOption.id;
+    if(i + 1 == CloudOption.length) i = 0;
+    else i++;
+    
+    settings.cloudsOption = CloudOption[i];
   });
 }

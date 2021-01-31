@@ -22,9 +22,9 @@ export default class IteratableOption extends AbstractOption {
   }
 
   public createWidget(options: GameSettings, xIn: number, yIn: number, widthIn: number) {
-    // return new OptionButton(xIn, yIn, widthIn, 20, this, this.getName(options), () => {
-    //   this.setValueIndex(options, 1);
-    // });
+    return new OptionButton(xIn, yIn, widthIn, 20, this, this.getName(options), () => {
+      this.setValueIndex(options, 1);
+    });
   }
 
   public get(options: GameSettings): boolean {
@@ -32,8 +32,7 @@ export default class IteratableOption extends AbstractOption {
   }
 
   public getName(settings: GameSettings) {
-    
-    return new TranslationTextComponent(this.text).get() + ': ' + new TranslationTextComponent(this.getter(settings)).get();
+    return new TranslationTextComponent(this.text).get() + ': ' + new TranslationTextComponent(this.getter(settings).key).get();
   }
   
 //   protected getGenericValueComponent(valueMessage: ) {

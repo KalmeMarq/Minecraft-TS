@@ -17,7 +17,7 @@ export default class ChatOptionsScreen extends SettingsScreen {
     }));
   }
 
-  protected render(context: CanvasRenderingContext2D, mouseX: number, mouseY: number) {
+  public render(context: CanvasRenderingContext2D, mouseX: number, mouseY: number) {
     super.render(context, mouseX, mouseY);
     this.drawCenteredString(context, this.title, this.width / 2, 20, 16777215);
   }

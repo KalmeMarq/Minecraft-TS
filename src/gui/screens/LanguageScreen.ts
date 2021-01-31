@@ -17,7 +17,7 @@ export default class LanguageScreen extends SettingsScreen {
     }));
   }
 
-  protected render(context: CanvasRenderingContext2D, mouseX: number, mouseY: number): void {
+  public render(context: CanvasRenderingContext2D, mouseX: number, mouseY: number): void {
     super.render(context, mouseX, mouseY);
     this.drawCenteredString(context, this.title, this.width / 2, 20, 16777215);
   }
