@@ -1,6 +1,6 @@
-import GameConfiguration from "./GameConfiguration.js";
-import Minecraft from "./Minecraft.js";
-import { getResources, IResources } from "./utils/GetResources.js";
+import GameConfiguration from "./GameConfiguration";
+import Minecraft from "./Minecraft";
+import { getResources, IResources } from "./utils/GetResources";
 
 export var Resources: IResources;
 class Main {

@@ -1,16 +1,18 @@
-import TranslationTextComponent, { getKeyTranslation } from "../../utils/TranslationText.js";
-import Button from "../widgets/button/Button.js";
-import Widget from "../widgets/Widget.js";
-import CreateWorldScreen from "./CreateWorldScreen.js";
-import Screen from "./Screen.js";
+import TranslationTextComponent, { getKeyTranslation } from "../../utils/TranslationText";
+import Button from "../widgets/button/Button";
+import TextFieldWidget from "../widgets/TextFieldWidget";
+import Widget from "../widgets/Widget";
+import CreateWorldScreen from "./CreateWorldScreen";
+import Screen from "./Screen";
 
 export default class WorldSelectionScreen extends Screen {
   public parentScreen;
-  public deleteButton!: Widget;
-  public selectButton!: Widget;
-  public renameButton!: Widget;
-  public copyButton!: Widget;
+  public deleteButton!: Button;
+  public selectButton!: Button;
+  public renameButton!: Button;
+  public copyButton!: Button;
   private flag;
+  protected searchField: TextFieldWidget | any;
   
   constructor(parentScreen: Screen) {
     super(getKeyTranslation('selectWorld.title'));
@@ -22,7 +24,15 @@ export default class WorldSelectionScreen extends Screen {
     this.minecraft.displayGuiScreen(this.parentScreen);
   }
 
+  public tick(): void {
+    this.searchField.tick();
+  }
+
   protected init(): void {
+    this.searchField = new TextFieldWidget(this.width / 2 - 100, 22, 200, 20, this.searchField, 'Placeholder here');
+    this.children.push(this.searchField);
+    // this.searchField.setMaxStringLength(44);
+
     this.addButton(new Button(this.width / 2 - 75, this.height / 2 - 20, 150, 20, getKeyTranslation("Simulate Select/Deselect"), () => this.flag = !this.flag));
 
     this.selectButton = this.addButton(new Button(this.width / 2 - 154, this.height - 52, 150, 20, getKeyTranslation("selectWorld.select"), () => {}));
@@ -54,5 +64,6 @@ export default class WorldSelectionScreen extends Screen {
   public render(context: CanvasRenderingContext2D, mouseX: number, mouseY: number): void {
     this.renderDirtBackground(context)
     this.drawCenteredString(context, this.title, this.width / 2, 8, 16777215);
+    this.searchField.renderObject(context, mouseX, mouseY);
   }
 }

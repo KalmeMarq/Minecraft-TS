@@ -1,8 +1,8 @@
-import { getKeyTranslation } from "../../utils/TranslationText.js";
-import Screen from "../screens/Screen.js";
-import Button from "../widgets/button/Button.js";
-import { CheckboxButton } from "../widgets/button/CheckboxButton.js";
-import MultiplayerScreen from "./MultiplayerScreen.js";
+import { getKeyTranslation } from "../../utils/TranslationText";
+import Screen from "../screens/Screen";
+import Button from "../widgets/button/Button";
+import { CheckboxButton } from "../widgets/button/CheckboxButton";
+import MultiplayerScreen from "./MultiplayerScreen";
 
 export default class MultiplayerWarningScreen extends Screen {
    private prevScreen: Screen;

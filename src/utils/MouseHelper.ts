@@ -1,5 +1,5 @@
-import IGuiEventListener from "../interfaces/IGuiEventListener.js";
-import Minecraft from "../Minecraft.js";
+import IGuiEventListener from "../interfaces/IGuiEventListener";
+import Minecraft from "../Minecraft";
 
 export default class MouseHelper {
   private minecraft: any;

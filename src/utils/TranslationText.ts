@@ -1,4 +1,4 @@
-import { Resources } from '../index.js';
+import { Resources } from '../index';
 
 export default class TranslationTextComponent {
   public translateKey;

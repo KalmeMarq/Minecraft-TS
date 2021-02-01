@@ -1,17 +1,19 @@
-import { editionImg, minecraftImg, widgetsImg, accessibilityImg } from "../../utils/GetResources.js";
-import { playSound } from "../../utils/PlaySound.js";
-import { consoleOutput, isInside } from "../../utils/Test.js";
-import { getKeyTranslation } from "../../utils/TranslationText.js";
-import FontRenderer from "../FontRenderer.js";
-import Button from "../widgets/button/Button.js";
-import ImageButton from "../widgets/button/ImageButton.js";
-import Widgets from "../widgets/Widget.js";
-import AccessibilityScreen from "./AccessibilityScreen.js";
-import MultiplayerScreen from "./MultiplayerScreen.js";
-import MultiplayerWarningScreen from "./MultiplayerWarningScreen.js";
-import OptionsScreen from "./OptionsScreen.js";
-import Screen from "./Screen.js";
-import WorldSelectionScreen from "./WorldSelectionScreen.js";
+import { editionImg, minecraftImg, widgetsImg, accessibilityImg } from "../../utils/GetResources";
+import { playSound } from "../../utils/PlaySound";
+import { consoleOutput, isInside } from "../../utils/Test";
+import { getKeyTranslation } from "../../utils/TranslationText";
+import FontRenderer from "../FontRenderer";
+import Button from "../widgets/button/Button";
+import ImageButton from "../widgets/button/ImageButton";
+import TextFieldWidget from "../widgets/TextFieldWidget";
+import Widgets from "../widgets/Widget";
+import AccessibilityScreen from "./AccessibilityScreen";
+import LanguageScreen from "./LanguageScreen";
+import MultiplayerScreen from "./MultiplayerScreen";
+import MultiplayerWarningScreen from "./MultiplayerWarningScreen";
+import OptionsScreen from "./OptionsScreen";
+import Screen from "./Screen";
+import WorldSelectionScreen from "./WorldSelectionScreen";
 
 export default class MainMenuScreen extends Screen {
   private widthCopyright: number = 0;
@@ -31,7 +33,8 @@ export default class MainMenuScreen extends Screen {
   public shouldCloseOnEsc(): boolean {
     return false;
   }
-  
+
+ 
   protected init(): void {
     this.splashText = this.splashText !== '' ? this.splashText : this.minecraft.getSplashText();
 
@@ -45,7 +48,7 @@ export default class MainMenuScreen extends Screen {
     else this.addSingleplayerMultiplayerButtons(basePosY, rowGapHeight);
 
     this.addButton(new ImageButton(this.width / 2 - 124, basePosY + 72 + 12, 20, 20, 0, 106, 20, this.WIDGETS_LOCATION, 256, 256, () => {
-      this.minecraft.displayGuiScreen(new OptionsScreen(this, this.minecraft.gameSettings));
+      this.minecraft.displayGuiScreen(new LanguageScreen(this, this.minecraft.gameSettings));
     }, ''));
 
     this.addButton(new Button(this.width  / 2 - 100, basePosY + 72 + 12, 98, 20, getKeyTranslation('menu.options'), () => {

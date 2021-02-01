@@ -1,10 +1,10 @@
-import AbstractOption from "../../GameOption.js";
+import AbstractOption from "../../GameOption";
 import GameSettings from "../../GameSettings";
-import { getKeyTranslation } from "../../utils/TranslationText.js";
-import Button from "../widgets/button/Button.js";
-import OptionButton from "../widgets/button/OptionButton.js";
-import Screen from "./Screen.js";
-import SettingsScreen from "./SettingsScreen.js";
+import { getKeyTranslation } from "../../utils/TranslationText";
+import Button from "../widgets/button/Button";
+import OptionButton from "../widgets/button/OptionButton";
+import Screen from "./Screen";
+import SettingsScreen from "./SettingsScreen";
 
 export default class OptionsSoundsScreen extends SettingsScreen {
   constructor(parentScreen: Screen, gameSettingsObj: GameSettings) {

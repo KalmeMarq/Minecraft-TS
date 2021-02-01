@@ -1,19 +1,19 @@
-import { optionsBackgroundImg } from "../../utils/GetResources.js";
-import IGuiEventListener from "../../interfaces/IGuiEventListener.js";
-import IRenderable from "../../interfaces/IRenderable.js";
-import Minecraft from "../../Minecraft.js";
-import AbstractGui from "../AbstractGui.js";
-import FocusableGui from "../FocusableGui.js";
-import OptionButton from "../widgets/button/OptionButton.js";
-import Widget from "../widgets/Widget.js";
-import Button from "../widgets/button/Button.js";
+import { optionsBackgroundImg } from "../../utils/GetResources";
+import IGuiEventListener from "../../interfaces/IGuiEventListener";
+import IRenderable from "../../interfaces/IRenderable";
+import Minecraft from "../../Minecraft";
+import AbstractGui from "../AbstractGui";
+import FocusableGui from "../FocusableGui";
+import OptionButton from "../widgets/button/OptionButton";
+import Widget from "../widgets/Widget";
+import Button from "../widgets/button/Button";
 
 export default class Screen extends AbstractGui implements IRenderable, IGuiEventListener {
   protected minecraft: any = null;
   public width: number = 0;
   public height: number = 0;
-  protected children: Array<Widget | Button> = new Array();
-  protected buttons: Array<Widget | Button> = new Array();
+  protected children = new Array();
+  protected buttons = new Array();
   protected focusedWidget = -1;
   protected title;
 
@@ -43,12 +43,12 @@ export default class Screen extends AbstractGui implements IRenderable, IGuiEven
     }
   }
 
-  protected addButton(button: Widget | Button): Widget | Button {
+  protected addButton<T extends Widget>(button: T): T {
     this.buttons.push(button);
     return this.addListener(button);
   }
 
-  protected addListener(listener: Widget | Button) {
+  protected addListener<T extends Widget>(listener: T): T {
     this.children.push(listener);
     return listener;
   }
@@ -104,6 +104,9 @@ export default class Screen extends AbstractGui implements IRenderable, IGuiEven
     }
   }
 
+  public tick(): void {
+  }
+
   public keyDown(key: string, modifiers: any): void {
     let flag = true;
     for (let i = 0; i < this.getEventListeners().length; i++) {
@@ -146,10 +149,12 @@ export default class Screen extends AbstractGui implements IRenderable, IGuiEven
   }
 
   public changeFocus(focus: boolean): boolean {
+    
     if(this.focusedWidget + 2 > this.children.length) this.focusedWidget = -1;
     while(true) {
       this.focusedWidget++;
       if(this.children[this.focusedWidget].active) {
+        for(var i = 0; i < this.children.length; i++) this.children[i].focused = false;
         break;
       }
     }

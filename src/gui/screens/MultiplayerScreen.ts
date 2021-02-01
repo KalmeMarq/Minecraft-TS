@@ -1,13 +1,12 @@
-import { getKeyTranslation } from "../../utils/TranslationText.js";
-import Button from "../widgets/button/Button.js";
-import Widgets from "../widgets/Widget.js";
-import Screen from "./Screen.js";
+import { getKeyTranslation } from "../../utils/TranslationText";
+import Button from "../widgets/button/Button";
+import Screen from "./Screen";
 
 export default class MultiplayerScreen extends Screen {
   public parentScreen;
-  public btnEditServer!: Widgets
-  public btnSelectServer!: Widgets
-  public btnDeleteServer!: Widgets
+  public btnEditServer!: Button
+  public btnSelectServer!: Button
+  public btnDeleteServer!: Button
   public selectedServer: any
   public flag: boolean;
 

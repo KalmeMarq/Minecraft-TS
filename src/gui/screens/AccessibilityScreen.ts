@@ -1,12 +1,12 @@
-import AbstractOption from "../../GameOption.js";
+import AbstractOption from "../../GameOption";
 import GameSettings from "../../GameSettings";
-import { getKeyTranslation } from "../../utils/TranslationText.js";
-import Button from "../widgets/button/Button.js";
-import Screen from "./Screen.js";
-import SettingsScreen from "./SettingsScreen.js";
+import { getKeyTranslation } from "../../utils/TranslationText";
+import Button from "../widgets/button/Button";
+import Screen from "./Screen";
+import SettingsScreen from "./SettingsScreen";
 
 export default class AccessibilityScreen extends SettingsScreen {
-  private SCREEN_OPTIONS: AbstractOption[] = [AbstractOption.ShowSubtitlesOption, AbstractOption.AutoJumpOption];
+  private SCREEN_OPTIONS: AbstractOption[] = [AbstractOption.NARRATOR_STATUS, AbstractOption.ShowSubtitlesOption, AbstractOption.AutoJumpOption, AbstractOption.SNEAK, AbstractOption.SPRINT];
 
   constructor(parentScreen: Screen, gameSettingsObj: GameSettings) {
     super(parentScreen, gameSettingsObj, getKeyTranslation("options.accessibility.title"))

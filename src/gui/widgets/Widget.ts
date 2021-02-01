@@ -1,10 +1,10 @@
-import { widgetsImg } from "../../utils/GetResources.js";
-import IGuiEventListener from "../../interfaces/IGuiEventListener.js";
-import IRenderable from "../../interfaces/IRenderable.js";
-import { playSound } from "../../utils/PlaySound.js";
-import AbstractGui from "../AbstractGui.js";
+import { widgetsImg } from "../../utils/GetResources";
+import IGuiEventListener from "../../interfaces/IGuiEventListener";
+import IRenderable from "../../interfaces/IRenderable";
+import { playSound } from "../../utils/PlaySound";
+import AbstractGui from "../AbstractGui";
 
-export default class Widgets extends AbstractGui implements IRenderable, IGuiEventListener {
+export default abstract class Widgets extends AbstractGui implements IRenderable, IGuiEventListener {
   protected width: number;
   protected height: number;
   public x: number;
@@ -15,7 +15,7 @@ export default class Widgets extends AbstractGui implements IRenderable, IGuiEve
   public active = true;
   public visible = true;
   protected alpha = 1.0;
-  public focused: boolean = false;
+  protected focused: boolean = false;
 
   constructor(x: number, y: number, width: number, height: number, title: string) {
     super();
@@ -79,13 +79,12 @@ export default class Widgets extends AbstractGui implements IRenderable, IGuiEve
       if(this.isValidClickButton(button)) {
         let flag = this.clicked(mouseX, mouseY);
         if (flag) {
+          this.focused = true
           playSound('resources/assets/minecraft/sounds/click_stereo.ogg', 0.2);
           this.onClick(mouseX, mouseY);
-          return true;
         }
       }
-      return false;
-    } else return false;
+    }
   }
 
   public mouseReleased(mouseX: number, mouseY: number, button: number): boolean {

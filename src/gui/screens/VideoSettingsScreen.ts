@@ -1,13 +1,13 @@
-import AbstractOption from "../../GameOption.js";
+import AbstractOption from "../../GameOption";
 import GameSettings from "../../GameSettings";
-import { getKeyTranslation } from "../../utils/TranslationText.js";
-import Button from "../widgets/button/Button.js";
-import OptionButton from "../widgets/button/OptionButton.js";
-import Screen from "./Screen.js";
-import SettingsScreen from "./SettingsScreen.js";
+import { getKeyTranslation } from "../../utils/TranslationText";
+import Button from "../widgets/button/Button";
+import OptionButton from "../widgets/button/OptionButton";
+import Screen from "./Screen";
+import SettingsScreen from "./SettingsScreen";
 
 export default class VideoSettingsScreen extends SettingsScreen {
-  private SCREEN_OPTIONS: AbstractOption[] = [AbstractOption.AdvancedItemTooltipsOption, AbstractOption.AutoJumpOption, AbstractOption.ForceUnicodeFont, AbstractOption.HeldItemTooltipsOption, AbstractOption.HideGUIOption, AbstractOption.RawMouseInputOption, AbstractOption.ShowFPSOption, AbstractOption.SkipMultiplayerWarningOption, AbstractOption.VsyncOption, AbstractOption.CLOUDS_OPTION, AbstractOption.GRAPHICS_FANCINESS];
+  private SCREEN_OPTIONS: AbstractOption[] = [AbstractOption.AdvancedItemTooltipsOption, AbstractOption.AutoJumpOption, AbstractOption.ForceUnicodeFont, AbstractOption.HeldItemTooltipsOption, AbstractOption.HideGUIOption, AbstractOption.RawMouseInputOption, AbstractOption.ShowFPSOption, AbstractOption.SkipMultiplayerWarningOption, AbstractOption.VsyncOption, AbstractOption.CLOUDS_OPTION, AbstractOption.GRAPHICS_FANCINESS, AbstractOption.AMBIENT_OCCLUSION_STATUS, AbstractOption.ATTACK_INDICATOR_STATUS, AbstractOption.CHAT_VISIBILITY, AbstractOption.HAND_SIDE, AbstractOption.PARTICLE_STATUS, AbstractOption.POINT_OF_VIEW];
   
   constructor(parentScreen: Screen, gameSettingsObj: GameSettings) {
     super(parentScreen, gameSettingsObj, getKeyTranslation("options.videoTitle"))

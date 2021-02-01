@@ -1,4 +1,4 @@
-import { checkboxImg } from "../../../utils/GetResources.js";
+import { checkboxImg } from "../../../utils/GetResources";
 import AbstractButton from "./AbstractButton";
 
 export class CheckboxButton extends AbstractButton {

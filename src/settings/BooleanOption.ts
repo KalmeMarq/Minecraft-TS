@@ -1,8 +1,8 @@
-import AbstractOption from "../AbstractOption.js";
-import GameSettings from "../GameSettings.js";
-import OptionButton from "../gui/widgets/button/OptionButton.js";
-import Widget from "../gui/widgets/Widget.js";
-import TranslationTextComponent from "../utils/TranslationText.js";
+import AbstractOption from "../AbstractOption";
+import GameSettings from "../GameSettings";
+import OptionButton from "../gui/widgets/button/OptionButton";
+import Widget from "../gui/widgets/Widget";
+import TranslationTextComponent from "../utils/TranslationText";
 
 export default class BooleanOption extends AbstractOption {
   private text: string;

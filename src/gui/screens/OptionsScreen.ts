@@ -1,18 +1,18 @@
-import AbstractOption from '../../GameOption.js';
-import GameSettings from '../../GameSettings.js';
-import { getKeyTranslation } from '../../utils/TranslationText.js';
-import Button from '../widgets/button/Button.js';
-import AccessibilityScreen from './AccessibilityScreen.js';
-import ChatOptionsScreen from './ChatOptionsScreen.js';
-import ControlsScreen from './ControlsScreen.js';
-import CustomizeSkinScreen from './CustomizeSkinScreen.js';
-import LanguageScreen from './LanguageScreen.js';
-import OptionsSoundsScreen from './OptionsSoundsScreen.js';
-import Screen from './Screen.js';
-import VideoSettingsScreen from './VideoSettingsScreen.js';
+import AbstractOption from '../../GameOption';
+import GameSettings from '../../GameSettings';
+import { getKeyTranslation } from '../../utils/TranslationText';
+import Button from '../widgets/button/Button';
+import AccessibilityScreen from './AccessibilityScreen';
+import ChatOptionsScreen from './ChatOptionsScreen';
+import ControlsScreen from './ControlsScreen';
+import CustomizeSkinScreen from './CustomizeSkinScreen';
+import LanguageScreen from './LanguageScreen';
+import OptionsSoundsScreen from './OptionsSoundsScreen';
+import Screen from './Screen';
+import VideoSettingsScreen from './VideoSettingsScreen';
 
 export default class OptionsScreen extends Screen {
-  private SCREEN_OPTIONS: AbstractOption[] = [AbstractOption.TestOption, AbstractOption.ShowFPSOption, AbstractOption.GRAPHICS_FANCINESS];
+  private SCREEN_OPTIONS: AbstractOption[] = [AbstractOption.TestOption, AbstractOption.ShowFPSOption];
   public parentScreen;
   private settings: GameSettings;
 

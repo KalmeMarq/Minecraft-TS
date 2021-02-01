@@ -1,12 +1,34 @@
-import GameConfiguration from "./GameConfiguration.js";
-import GameSettings from "./GameSettings.js";
-import FontRenderer from "./gui/FontRenderer.js";
-import MainMenuScreen from "./gui/screens/MainMenuScreen.js";
-import Screen from "./gui/screens/Screen.js";
-import { Resources } from "./index.js";
-import { IResources } from "./utils/GetResources.js";
-import KeyboardListener from "./utils/KeyboardListener.js";
-import MouseHelper from "./utils/MouseHelper.js";
+import GameConfiguration from "./GameConfiguration";
+import GameSettings from "./GameSettings";
+import FontRenderer from "./gui/FontRenderer";
+import MainMenuScreen from "./gui/screens/MainMenuScreen";
+import Screen from "./gui/screens/Screen";
+import { Resources } from "./index";
+import { IResources } from "./utils/GetResources";
+import KeyboardListener from "./utils/KeyboardListener";
+import MouseHelper from "./utils/MouseHelper";
+
+class Timer {
+  public renderPartialTicks = 0;
+  public elapsedPartialTicks = 0;
+  private lastSyncSysClock = 0;
+  private tickLength = 0;
+
+  constructor(ticks: number, lastSyncSysClock: number) {
+     this.tickLength = 1000.0 / ticks;
+     this.lastSyncSysClock = lastSyncSysClock;
+  }
+
+  public getPartialTicks(gameTime: number) {
+     this.elapsedPartialTicks = (gameTime - this.lastSyncSysClock) / this.tickLength;
+     this.lastSyncSysClock = gameTime;
+     this.renderPartialTicks += this.elapsedPartialTicks;
+     let i = Math.ceil(this.renderPartialTicks);
+     this.renderPartialTicks -= i;
+     return i;
+  }
+}
+
 
 export default class Minecraft {
   protected gameconfiguration: GameConfiguration;
@@ -21,6 +43,7 @@ export default class Minecraft {
   public canvasHeight = window.innerHeight;
   public scaleFactor = 3;
   private fps: number = 0;
+  private timer: Timer = new Timer(20.0, 0);
   private times: Array<number> = [];
   public running: boolean = true;
   public currentScreen: Screen | null = null;
@@ -85,6 +108,15 @@ export default class Minecraft {
 
       if(this.running) {
         this.displayGuiScreen(this.currentScreen);
+
+        if (true) {
+          let j = this.timer.getPartialTicks(new Date().getMilliseconds());
+
+          for(var k = 0; k < Math.min(10, j); ++k) {
+              this.runTick();
+          }
+        }
+
         if(this.gameSettings.showFPS) {
           this.context.save();
           this.context.scale(0.666, 0.666);
@@ -92,7 +124,6 @@ export default class Minecraft {
           FontRenderer.drawStringWithShadow(this.context, `${String(fps)}/${this.gameSettings.framerateLimit}`, 2, 2, 16777215, []);
           this.context.restore();
         }
-       
       }
     }
 
@@ -105,6 +136,12 @@ export default class Minecraft {
     this.times.push(now);
     this.fps = this.times.length;
     return this.fps;
+  }
+
+  public runTick(): void {
+    if(this.currentScreen != null) {
+      this.currentScreen.tick();
+    }
   }
 
   public displayGuiScreen(guiScreenIn: Screen | null): void {

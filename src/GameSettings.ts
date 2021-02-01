@@ -1,13 +1,29 @@
-import Minecraft from "./Minecraft.js";
-import CloudOption from "./settings/CloudOption.js";
-import GraphicsFanciness from "./settings/GraphicsFanciness.js";
-import KeyBinding from "./settings/KeyBinding.js";
+import Minecraft from "./Minecraft";
+import AmbientOcclusionStatus from "./settings/AmbientOcclusionStatus";
+import AttackIndicatorStatus from "./settings/AttackIndicatorStatus";
+import ChatVisibility from "./settings/ChatVisibility";
+import CloudOption from "./settings/CloudOption";
+import GraphicsFanciness from "./settings/GraphicsFanciness";
+import HandSide from "./settings/HandSide";
+import KeyBinding from "./settings/KeyBinding";
+import NarratorStatus from "./settings/NarratorStatus";
+import ParticleStatus from "./settings/ParticleStatus";
+import PointOfView from "./settings/PointOfView";
+import SneakOption from "./settings/SneakOption";
+import SprintOption from "./settings/SprintOption";
 
 export default class GameSettings {
   protected mc;
   private optionsLS: string = 'GameSettings';
-  public graphicFanciness = GraphicsFanciness[0];
-  public cloudsOption = CloudOption[0];
+  public graphicFanciness = GraphicsFanciness.FANCY;
+  public cloudsOption = CloudOption.FANCY;
+  public ambientOcclusion = AmbientOcclusionStatus.MAX;
+  public attackIndicator = AttackIndicatorStatus.CROSSHAIR;
+  public narratorStatus = NarratorStatus.OFF;
+  public chatVisibility = ChatVisibility.FULL;
+  public handSide = HandSide.LEFT;
+  public particleStatus = ParticleStatus.ALL;
+  public pointOfView = PointOfView.FIRST_PERSON;
   public mouseSensitivity: number = 0.5;
   public renderDistanceChunks: number = -1;
   public chatOpacity: number = 1.0;
@@ -45,8 +61,8 @@ export default class GameSettings {
   public touchscreen: boolean = false;
   public fullscreen: boolean = false;
   public viewBobbing: boolean = true;
-  public toggleCrouch: boolean = false;
-  public toggleSprint: boolean = false;
+  public toggleCrouch: any = SneakOption.HOLD;
+  public toggleSprint: any = SprintOption.HOLD;
   public language: string = 'en_us';
   public hideGUI: boolean = false;
   public showDebugInfo: boolean = false;
@@ -104,6 +120,15 @@ export default class GameSettings {
       this.hideGUI = Options.hideGUI ? Options.hideGUI : this.hideGUI;
       this.graphicFanciness = Options.graphicFanciness ? Options.graphicFanciness : this.graphicFanciness;
       this.cloudsOption = Options.cloudsOption ? Options.cloudsOption : this.cloudsOption;
+      this.ambientOcclusion = Options.ambientOcclusion ? Options.ambientOcclusion : this.ambientOcclusion;
+      this.attackIndicator = Options.attackIndicator ? Options.attackIndicator : this.attackIndicator;
+      this.chatVisibility = Options.chatVisibility ? Options.chatVisibility : this.chatVisibility;
+      this.handSide = Options.handSide ? Options.handSide : this.handSide;
+      this.particleStatus = Options.particleStatus ? Options.particleStatus : this.particleStatus;
+      this.pointOfView = Options.pointOfView ? Options.pointOfView : this.pointOfView;
+      this.narratorStatus = Options.narratorStatus ? Options.narratorStatus : this.narratorStatus;
+      this.toggleCrouch = Options.toggleCrouch ? Options.toggleCrouch : this.toggleCrouch;
+      this.toggleSprint = Options.toggleSprint ? Options.toggleSprint : this.toggleSprint;
     }
   }
 
@@ -123,7 +148,16 @@ export default class GameSettings {
       showSubtitles: this.showSubtitles,
       hideGUI: this.hideGUI,
       graphicFanciness: this.graphicFanciness,
-      cloudsOption: this.cloudsOption
+      cloudsOption: this.cloudsOption,
+      ambientOcclusion: this.ambientOcclusion,
+      attackIndicator: this.attackIndicator,
+      chatVisibility: this.chatVisibility,
+      handSide: this.handSide,
+      particleStatus: this.particleStatus,
+      pointOfView: this.pointOfView,
+      narratorStatus: this.narratorStatus,
+      toggleCrouch: this.toggleCrouch,
+      toggleSprint: this.toggleSprint
     }));
 
     // this.mc.outputLog += '\n Game Options Saved'

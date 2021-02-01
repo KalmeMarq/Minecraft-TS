@@ -1,8 +1,7 @@
-import AbstractOption from "../AbstractOption";
-import GameSettings from "../GameSettings";
-import OptionButton from "../gui/widgets/button/OptionButton";
-import TranslationTextComponent from "../utils/TranslationText";
-import CloudOption from "./CloudOption.js";
+import AbstractOption from '../AbstractOption';
+import GameSettings from '../GameSettings';
+import OptionButton from '../gui/widgets/button/OptionButton';
+import TranslationTextComponent from '../utils/TranslationText';
 
 export default class IteratableOption extends AbstractOption {
   private text: string;
@@ -36,6 +35,6 @@ export default class IteratableOption extends AbstractOption {
   }
   
 //   protected getGenericValueComponent(valueMessage: ) {
-//     return new TranslationTextComponent("options.generic_value", this.getBaseMessageTranslation(), valueMessage);
+//     return new TranslationTextComponent('options.generic_value', this.getBaseMessageTranslation(), valueMessage);
 //  }
 }

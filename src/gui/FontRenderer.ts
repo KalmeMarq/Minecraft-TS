@@ -1,5 +1,5 @@
-import { addCharacterRenderer, characterRenderers, fontImg, getFontChars } from "../utils/GetResources.js";
-import ColorHelper from "../utils/ColorHelper.js";
+import { addCharacterRenderer, characterRenderers, fontImg, getFontChars } from "../utils/GetResources";
+import ColorHelper from "../utils/ColorHelper";
 
 // let getFontChars: any = getFontgetFontChars;
 
@@ -45,7 +45,7 @@ export class CharacterRenderer {
     ctxfont.save();
     let myImg = ctxfont.getImageData(0, 0, this.charWidth * 3, this.charHeight * 3);
     ctxfont.clearRect(0, 0, this.charWidth, this.charHeight);
-    for(var p = 0; p < myImg.data.length; p += 4) myImg.data[p] = this.r - (42.5 * 5.4), myImg.data[p + 1] = this.g - (42.5 * 5.4), myImg.data[p + 2] = this.b - (42.5 * 5.4);
+    for(var p = 0; p < myImg.data.length; p += 4) myImg.data[p] = this.r * 0.18, myImg.data[p + 1] = this.g * 0.18, myImg.data[p + 2] = this.b * 0.18;
     ctxfont.restore();
 
     ctxfont.putImageData(myImg, 0, 0);
