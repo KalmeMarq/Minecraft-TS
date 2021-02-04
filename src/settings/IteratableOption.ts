@@ -1,7 +1,7 @@
-import AbstractOption from '../AbstractOption';
-import GameSettings from '../GameSettings';
-import OptionButton from '../gui/widgets/button/OptionButton';
-import TranslationTextComponent from '../utils/TranslationText';
+import AbstractOption from '../AbstractOption.js';
+import GameSettings from '../GameSettings.js';
+import OptionButton from '../gui/widgets/button/OptionButton.js';
+import { getKeyTranslation } from '../utils/TranslationText.js';
 
 export default class IteratableOption extends AbstractOption {
   private text: string;
@@ -31,7 +31,7 @@ export default class IteratableOption extends AbstractOption {
   }
 
   public getName(settings: GameSettings) {
-    return new TranslationTextComponent(this.text).get() + ': ' + new TranslationTextComponent(this.getter(settings).key).get();
+    return getKeyTranslation(this.text) + ': ' + getKeyTranslation(this.getter(settings).key);
   }
   
 //   protected getGenericValueComponent(valueMessage: ) {

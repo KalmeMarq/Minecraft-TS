@@ -1,6 +1,6 @@
-import { getKeyTranslation } from "../../utils/TranslationText";
-import Button from "../widgets/button/Button";
-import Screen from "./Screen";
+import { getKeyTranslation } from "../../utils/TranslationText.js";
+import Button from "../widgets/button/Button.js";
+import Screen from "./Screen.js";
 
 export default class MultiplayerScreen extends Screen {
   public parentScreen;

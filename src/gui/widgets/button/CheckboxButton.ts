@@ -1,9 +1,9 @@
-import { checkboxImg } from "../../../utils/GetResources";
-import AbstractButton from "./AbstractButton";
+import { getResourceLocation } from "../../../utils/Resources.js";
+import AbstractButton from "./AbstractButton.js";
 
 export class CheckboxButton extends AbstractButton {
   // public PressFunc: any;
-  private TEXTURE = checkboxImg;
+  private TEXTURE = getResourceLocation('textures', 'gui/checkbox');
   public checked: boolean = false;
   private field_238499_c_: boolean | any;
 

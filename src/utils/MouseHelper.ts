@@ -1,5 +1,5 @@
-import IGuiEventListener from "../interfaces/IGuiEventListener";
-import Minecraft from "../Minecraft";
+import IGuiEventListener from "../interfaces/IGuiEventListener.js";
+import Minecraft from "../Minecraft.js";
 
 export default class MouseHelper {
   private minecraft: any;
@@ -29,13 +29,16 @@ export default class MouseHelper {
     let x = this.mouseX / 3;
     let y = this.mouseY / 3;
     if(flag) {
-      this.minecraft.currentScreen.mouseClicked(x, y, btn);
+      this.activeButton = button;
+      if(this.minecraft.currentScreen) this.minecraft.currentScreen.mouseClicked(x, y, btn);
+
     } else {
-      this.minecraft.currentScreen.mouseReleased(x, y, btn);
+      this.activeButton = -1;
+      if(this.minecraft.currentScreen) this.minecraft.currentScreen.mouseReleased(x, y, btn);
     }
   }
 
-  private cursorPosCallback(xpos: number, ypos: number) {
+  private cursorPosCallback(xpos: number, ypos: number, button: number) {
     if (this.ignoreFirstMove) {
       this.mouseX = xpos;
       this.mouseY = ypos;
@@ -43,15 +46,17 @@ export default class MouseHelper {
     }
 
     let iguieventlistener: IGuiEventListener = this.minecraft.currentScreen;
-      if (iguieventlistener != null && this.minecraft.loadingGui == null) {
-        let d0: number = xpos * this.minecraft.getScaleFactor()
-        let d1: number = ypos * this.minecraft.getScaleFactor();
+      if (iguieventlistener != null/*  && this.minecraft.loadingGui == null */) {
+        let d0: number = xpos / this.minecraft.getScaleFactor()
+        let d1: number = ypos / this.minecraft.getScaleFactor();
 
         iguieventlistener.mouseMoved(d0, d1);
 
-        if (this.activeButton != -1 && this.eventTime > 0.0) {
+        if (this.activeButton != -1/*  && this.eventTime > 0.0 *//* button == 0 */) {
+          
             let d2: number = (xpos - this.mouseX) * this.minecraft.getScaleFactor();
             let d3: number = (ypos - this.mouseY) * this.minecraft.getScaleFactor();
+          // console.log('is dragging', d2);
             iguieventlistener.mouseDragged(d0, d1, this.activeButton, d2, d3);
         }
       }
@@ -61,7 +66,7 @@ export default class MouseHelper {
         this.yVelocity += ypos - this.mouseY;
       }
 
-      this.mouseX = xpos;
+       this.mouseX = xpos;
       this.mouseY = ypos;
   }
 
@@ -74,19 +79,19 @@ export default class MouseHelper {
     if(this.minecraft.currentScreen != null) {
       let d1 = this.mouseX * this.minecraft.getScaleFactor();
       let d2 = this.mouseY * this.minecraft.getScaleFactor();
-      this.minecraft.currentScreen.mouseScrolled(d1, d2, d0);
+      if(this.minecraft.currentScreen) this.minecraft.currentScreen.mouseScrolled(d1, d2, d0);
     }
   }
 
   public registerCallbacks(): void {
     this.context.canvas.addEventListener('mousemove', (e: MouseEvent) => {
-      this.mouseX = e.clientX - this.minecraft.canvasX;
-      this.mouseY = e.clientY - this.minecraft.canvasY;
+      this.mouseX = e.clientX/*  - (<HTMLCanvasElement>document.querySelector('.window'))!.offsetLeft */;
+      this.mouseY = e.clientY/*  - (<HTMLCanvasElement>document.querySelector('.window'))!.offsetTop - 40 */;
+      this.cursorPosCallback(e.clientX, e.clientY, e.button);
     });
 
     this.context.canvas.addEventListener('mousedown', (e: MouseEvent) => {
       this.mouseButtonCallback(e.button, 1);
-      this.cursorPosCallback(e.clientX, e.clientY);
     });
 
     this.context.canvas.addEventListener('mouseup', (e: MouseEvent) => {
@@ -109,4 +114,56 @@ export default class MouseHelper {
   public getMouseY() {
     return this.mouseY;
   }
+}
+
+const isByte = (a: number) => {
+  if(Number.isInteger(a) && !(a < -128 || a > 127)) return a
+  else throw new Error('Number is not a byte')
+}
+
+const isShort = (a: number) => {
+  if(Number.isInteger(a) && !(a < -32768 || a > 32767)) return a
+  else throw new Error('Number is not a short')
+}
+
+const isInt = (a: number) => {
+  if((Number.isInteger(a) || 0)  && !(a < 2E-21 && a > 2E31 - 1)) return a
+  else throw new Error('Number is not an integer') 
+}
+
+const isLong = (a: number) => {
+  if(Number.isInteger(a) && !(a < 2E-63 && a > 2E63 - 1)) return a
+  else throw new Error('Number is not a long') 
+}
+
+const isFloat = (a: number) => {
+  if(!(Number.isInteger(a) && (a < 2E-21 || a > 2E31 - 1))) return a
+  else throw new Error('Number is not a float') 
+}
+
+const isDouble = (a: number) => {
+  if(!(Number.isInteger(a) && a < 2E-63 || a > 2E63 - 1)) return a
+  else throw new Error('Number is not a double') 
+}
+
+const byte = (a: number) => isByte(~~a);
+const short = (a: number) => isShort(~~a);
+const int = (a: number) => isInt(~~a);
+const long = (a: number) => isLong(~~a);
+const float = (a: number) => isFloat(a);
+const double = (a: number) => isDouble(a);
+
+export {
+  isByte,
+  isShort,
+  isInt,
+  isLong,
+  isFloat,
+  isDouble,
+  byte,
+  short,
+  int,
+  long,
+  float,
+  double
 }

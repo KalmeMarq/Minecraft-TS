@@ -1,27 +1,29 @@
-import { editionImg, minecraftImg, widgetsImg, accessibilityImg } from "../../utils/GetResources";
-import { playSound } from "../../utils/PlaySound";
-import { consoleOutput, isInside } from "../../utils/Test";
-import { getKeyTranslation } from "../../utils/TranslationText";
-import FontRenderer from "../FontRenderer";
-import Button from "../widgets/button/Button";
-import ImageButton from "../widgets/button/ImageButton";
-import TextFieldWidget from "../widgets/TextFieldWidget";
-import Widgets from "../widgets/Widget";
-import AccessibilityScreen from "./AccessibilityScreen";
-import LanguageScreen from "./LanguageScreen";
-import MultiplayerScreen from "./MultiplayerScreen";
-import MultiplayerWarningScreen from "./MultiplayerWarningScreen";
-import OptionsScreen from "./OptionsScreen";
-import Screen from "./Screen";
-import WorldSelectionScreen from "./WorldSelectionScreen";
+import { int } from "../../utils/MouseHelper.js";
+import { playSound } from "../../utils/PlaySound.js";
+import { getResourceLocation, MCUI } from "../../utils/Resources.js";
+import { consoleOutput, isInside } from "../../utils/Test.js";
+import { getKeyTranslation } from "../../utils/TranslationText.js";
+import FontRenderer from "../FontRenderer.js";
+import Button from "../widgets/button/Button.js";
+import ImageButton from "../widgets/button/ImageButton.js";
+import { GameSettingsSlider } from "../widgets/GameSettingsSlider.js";
+import OptionSlider from "../widgets/OptionSlider.js";
+import Widgets from "../widgets/Widget.js";
+import AccessibilityScreen from "./AccessibilityScreen.js";
+import LanguageScreen from "./LanguageScreen.js";
+import MultiplayerScreen from "./MultiplayerScreen.js";
+import MultiplayerWarningScreen from "./MultiplayerWarningScreen.js";
+import OptionsScreen from "./OptionsScreen.js";
+import Screen from "./Screen.js";
+import WorldSelectionScreen from "./WorldSelectionScreen.js";
 
 export default class MainMenuScreen extends Screen {
   private widthCopyright: number = 0;
   private widthCopyrightRest: number = 0;
-  protected MINECRAFT_TITLE_IMG: HTMLImageElement = minecraftImg;
-  protected MINECRAFT_EDITION_IMG: HTMLImageElement = editionImg;
-  protected WIDGETS_LOCATION: HTMLImageElement = widgetsImg;
-  protected ACCESSIBILITY_TEXTURES: HTMLImageElement = accessibilityImg;
+  protected MINECRAFT_TITLE_IMG = getResourceLocation('textures', 'gui/title/minecraft');
+  protected MINECRAFT_EDITION_IMG = getResourceLocation('textures', 'gui/title/edition');
+  protected WIDGETS_LOCATION = getResourceLocation('textures', 'gui/widgets');
+  protected ACCESSIBILITY_TEXTURES = getResourceLocation('textures', 'gui/accessibility');
   private showTitleWronglySpelled: boolean = (Math.random() < 1.0E-4);
   private splashText: string = '';
   private buttonResetDemo: Widgets | null = null;
@@ -33,7 +35,6 @@ export default class MainMenuScreen extends Screen {
   public shouldCloseOnEsc(): boolean {
     return false;
   }
-
  
   protected init(): void {
     this.splashText = this.splashText !== '' ? this.splashText : this.minecraft.getSplashText();
@@ -41,61 +42,381 @@ export default class MainMenuScreen extends Screen {
     this.widthCopyright = FontRenderer.getTextWidth("Not affiliated with Mojang Studios!");
     this.widthCopyrightRest = this.width - this.widthCopyright - 2;
 
-    const rowGapHeight = 24;
-    const basePosY = this.height / 4 + 48;
+   /*  this.addButton(new OptionSlider(this.minecraft.gameSettings, 1, 1, 200, 20, this.minecraft.gameSettings.chatScale)); */
 
-    if(this.minecraft.isDemo()) this.addDemoButtons(basePosY, rowGapHeight);
-    else this.addSingleplayerMultiplayerButtons(basePosY, rowGapHeight);
-
-    this.addButton(new ImageButton(this.width / 2 - 124, basePosY + 72 + 12, 20, 20, 0, 106, 20, this.WIDGETS_LOCATION, 256, 256, () => {
-      this.minecraft.displayGuiScreen(new LanguageScreen(this, this.minecraft.gameSettings));
-    }, ''));
-
-    this.addButton(new Button(this.width  / 2 - 100, basePosY + 72 + 12, 98, 20, getKeyTranslation('menu.options'), () => {
-      this.minecraft.displayGuiScreen(new OptionsScreen(this, this.minecraft.gameSettings))
-    }));
-
-    this.addButton(new Button(this.width  / 2 + 2, basePosY + 72 + 12, 98, 20, getKeyTranslation('menu.quit'), () => {
-      this.minecraft.shutdown();
-    }));
-
-    this.addButton(new ImageButton(this.width / 2 + 104, basePosY + 72 + 12, 20, 20, 0, 0, 20, this.ACCESSIBILITY_TEXTURES, 32, 64, () => {
-      this.minecraft.displayGuiScreen(new AccessibilityScreen(this, this.minecraft.gameSettings));
-    }, ''));
+    this.genInit();
   }
 
-  private addSingleplayerMultiplayerButtons(yIn: number, rowHeightIn: number): void {
-    this.addButton(new Button(this.width / 2 - 100, yIn, 200, 20, getKeyTranslation("menu.singleplayer"), () => {
-       this.minecraft.displayGuiScreen(new WorldSelectionScreen(this));
-    }));
+  public genInit() {
+    let screen: any = MCUI['main_menu_screen'];
 
-    (this.addButton(new Button(this.width / 2 - 100, yIn + rowHeightIn * 1, 200, 20, getKeyTranslation("menu.multiplayer"), () => {
-       let screen: Screen | null = (this.minecraft.gameSettings.skipMultiplayerWarning ? new MultiplayerScreen(this) : new MultiplayerWarningScreen(this));
-       this.minecraft.displayGuiScreen(screen);
-    })));
+    const getType = (superObj: any, obj: any) => {
+      if(superObj === null) {
+        if(obj.type) {
+          return obj.type;
+        } else {
+          return new Error('Type not specified');
+        }
+      } else {
+        if((obj.type && superObj.type) || (obj.type && !superObj.type)) {
+          return obj.type;
+        } else if(!obj.type && superObj.type) {
+          return superObj.type;
+        } else {
+          throw new Error('Type not specified')
+        } 
+      }
+    }
 
-    (this.addButton(new Button(this.width / 2 - 100, yIn + rowHeightIn * 2, 200, 20, getKeyTranslation("menu.online"), () => {
-      consoleOutput('error', 'No action')
-    })));
+    const getOffsetX = (superObj: any, obj: any) => {
+      if(superObj === null) {
+        if(obj.offset) {
+          return obj.offset[0].replace('px', '').replace('100%', 'this.width');
+        } else {
+          return new Error('Offset not specified');
+        }
+      } else {
+        if((obj.offset && superObj.offset) || (obj.offset && !superObj.offset)) {
+          return obj.offset[0].replace('px', '').replace('100%', 'this.width');
+        } else if(!obj.offset && superObj.offset) {
+          return superObj.offset[0].replace('px', '').replace('100%', 'this.width');
+        } else {
+          throw new Error('Offset not specified')
+        } 
+      }
+    }
+
+    const getOffsetY = (superObj: any, obj: any) => {
+      if(superObj === null) {
+        if(obj.offset) {
+          return obj.offset[1].replace('px', '').replace('100%', 'this.height');
+        } else {
+          return new Error('Offset not specified');
+        }
+      } else {
+        if((obj.offset && superObj.offset) || (obj.offset && !superObj.offset)) {
+          return obj.offset[1].replace('px', '').replace('100%', 'this.height');
+        } else if(!obj.offset && superObj.offset) {
+          return superObj.offset[1].replace('px', '').replace('100%', 'this.height');
+        } else {
+          throw new Error('Offset not specified')
+        } 
+      }
+    }
+
+    const getWidth = (superObj: any, obj: any) => {
+      if(superObj === null) {
+        if(obj.size) {
+          return obj.size[0];
+        } else {
+          return new Error('Size not specified');
+        }
+      } else {
+        if((obj.size && superObj.size) || (obj.size && !superObj.size)) {
+          return obj.size[0];
+        } else if(!obj.size && superObj.size) {
+          return superObj.size[0];
+        } else {
+          throw new Error('Size not specified')
+        } 
+      }
+    }
+
+    const getHeight = (superObj: any, obj: any) => {
+      if(superObj === null) {
+        if(obj.size) {
+          return obj.size[1];
+        } else {
+          return new Error('Size not specified');
+        }
+      } else {
+        if((obj.size && superObj.size) || (obj.size && !superObj.size)) {
+          return obj.size[1];
+        } else if(!obj.size && superObj.size) {
+          return superObj.size[1];
+        } else {
+          throw new Error('Size not specified')
+        } 
+      }
+    }
+
+    const getText = (superObj: any, obj: any) => {
+      if(superObj === null) {
+        if(obj.text) {
+          return obj.text;
+        } else {
+          return new Error('Text not specified');
+        }
+      } else {
+        if((obj.text && superObj.text) || (obj.text && !superObj.text)) {
+          return obj.text;
+        } else if(!obj.text && superObj.text) {
+          return superObj.text;
+        } else {
+          throw new Error('Text not specified')
+        } 
+      }
+    }
+
+    const getTexture = (superObj: any, obj: any) => {
+      if(superObj === null) {
+        if(obj.texture) {
+          return obj.texture;
+        } else {
+          return new Error('Texture not specified');
+        }
+      } else {
+        if((obj.texture && superObj.texture) || (obj.texture && !superObj.texture)) {
+          return obj.texture;
+        } else if(!obj.texture && superObj.texture) {
+          return superObj.texture;
+        } else {
+          throw new Error('Texture not specified')
+        } 
+      }
+    }
+
+    const getPressFunc = (superObj: any, obj: any): Function => {
+      let id: string = obj.button_id || superObj.button_id || '';
+
+      switch(id) {
+        case 'button.menu_singleplayer':
+          return () => {
+            this.minecraft.displayGuiScreen(new WorldSelectionScreen(this));
+          }
+        case 'button.menu_multiplayer':
+          return () => {
+            let screen: Screen | null = (this.minecraft.gameSettings.skipMultiplayerWarning ? new MultiplayerScreen(this) : new MultiplayerWarningScreen(this));
+            this.minecraft.displayGuiScreen(screen);
+          }
+        case 'button.menu_online':
+          return function() {}
+        case 'button.menu_options':
+          return () => {
+            this.minecraft.displayGuiScreen(new OptionsScreen(this, this.minecraft.gameSettings))
+          }
+        case 'button.settings_language':
+          return () => {
+            this.minecraft.displayGuiScreen(new LanguageScreen(this, this.minecraft.gameSettings))
+          }
+        case 'button.settings_accessibility':
+          return () => {
+            this.minecraft.displayGuiScreen(new AccessibilityScreen(this, this.minecraft.gameSettings));
+          }
+        case 'button.menu_quit':
+          return () => {
+            window.close()
+          }
+        default:
+          return function() {}
+      }
+    }
+
+    const getActive = (superObj: any, obj: any) => {
+      if(superObj === null) {
+        if(obj.active) {
+          return obj.active;
+        } else {
+          return true;
+        }
+      } else {
+        if((obj.active && superObj.active) || (obj.active && !superObj.active)) {
+          return obj.active;
+        } else if(!obj.active && superObj.active) {
+          return superObj.active;
+        } else {
+          return true
+        } 
+      }
+    }
+
+    const getIgnored = (superObj: any, obj: any) => {
+      if(superObj === null) {
+        if(obj.ignored) {
+          return obj.ignored;
+        } else {
+          return false;
+        }
+      } else {
+        if((obj.ignored && superObj.ignored) || (obj.ignored && !superObj.ignored)) {
+          return !obj.ignored;
+        } else if(!obj.ignored && superObj.ignored) {
+          return !superObj.ignored;
+        } else {
+          return false
+        } 
+      }
+    }
+  
+    Object.entries(screen.init.controls).forEach(([a, b]: any) => {
+      Object.entries(b).forEach(([c, d]: any) => {
+        let type: string;
+        let x: number;
+        let y: number;
+        let width: number;
+        let height: number;
+        let text: string;
+        let ignored: boolean;
+        let active: boolean;
+        let pressFunc: Function;
+  
+        if(!(c.includes('@'))) {
+          type = getType(null, d);
+          x = eval(getOffsetX(null, d)), y = eval(getOffsetY(null, d));
+          width = getWidth(null, d), height = getHeight(null, d);
+          text = getText(null, d), pressFunc = getPressFunc(null, d);
+          active = getActive(null, d);
+          ignored = getIgnored(null, d);
+
+          if(type === 'button') {
+            let btn = new Button(x, y, width, height, getKeyTranslation(text), pressFunc);
+            btn.active = active;
+            btn.visible = !ignored;
+            this.addButton(btn);
+          } else if(type === 'button_image') {
+            let texture = getTexture(null, d);
+            let btn = new ImageButton(x, y, width, height, texture.base_uv[0], texture.base_uv[1], texture.base_uv_size[1], getResourceLocation('textures', texture.image), 256, 256, pressFunc, '');
+            btn.active = active;
+            btn.visible = !ignored;
+            this.addButton(btn);
+          }
+        } else {
+          let superName: any = c.substr(c.indexOf('@') + 1);
+          let namespace: any = superName.substr(0, superName.indexOf("."));
+          let superObj: any;
+          if(namespace !== '') {
+            let a = superName.substr(superName.indexOf('.') + 1);
+            superObj = MCUI[namespace][a];
+          } else {
+            superObj = screen[superName]
+          }
+          
+          type = getType(superObj, d);
+          x = eval(getOffsetX(superObj, d)), y = eval(getOffsetY(superObj, d));
+          width = getWidth(superObj, d), height = getHeight(superObj, d);
+          text = getText(superObj, d), pressFunc = getPressFunc(superObj, d);
+          active = getActive(superObj, d);
+          ignored = getIgnored(superObj, d);
+
+          if(type === 'button') {
+            let btn = new Button(x, y, width, height, getKeyTranslation(text), pressFunc);
+            btn.active = active;
+            btn.visible = !ignored;
+            this.addButton(btn);
+          } else if(type === 'button_image') {
+            let texture = getTexture(superObj, d);
+            let btn = new ImageButton(x, y, width, height, texture.base_uv[0], texture.base_uv[1], texture.base_uv_size[1], getResourceLocation('textures', texture.image), 256, 256, pressFunc, '');
+            btn.active = active;
+            btn.visible = !ignored;
+            this.addButton(btn);
+          }
+        }
+      })
+    })
   }
 
-  private addDemoButtons(yIn: number, rowHeightIn: number): void  {
-    this.addButton(new Button(this.width / 2 - 100, yIn, 200, 20, getKeyTranslation("menu.playdemo"), () => {
-      consoleOutput('log', 'No action')
-    }));
+  public genRender(context: CanvasRenderingContext2D, mouseX: number, mouseY: number) {
+    let data = [
+      {
+        type: 'custom',
+        renderer: 'title_renderer',
+        offset: ['0px', '0px']
+      },
+      {
+        type: 'custom',
+        renderer: 'splash_renderer',
+        offset: ['0px', '0px']
+      },
+      {
+        type: 'label',
+        text: '#mc_name',
+        offset: ['2px', "100% - 10px"],
+        color: [255, 255, 255]
+      },
+      {
+        type: 'label',
+        text: 'Not affiliated with Mojang Studios!',
+        offset: ['100% - 170px', "100% - 10px"],
+        color: [255, 255, 255]
+      }
+    ];
 
-    this.buttonResetDemo = this.addButton(new Button(this.width / 2 - 100, yIn + rowHeightIn * 1, 200, 20, getKeyTranslation("menu.resetdemo"), () => {
-      consoleOutput('log', 'No action')
-    }));
+    for(var i = 0; i < data.length; i++) {
+      const obj = data[i];
 
-    this.buttonResetDemo.active = false;
+      let offsetX = eval(obj.offset[0].replace('px', '').replace('100%', 'this.width'));
+      let offsetY = eval(obj.offset[1].replace('px', '').replace('100%c', 'FontRenderer.getTextWidth(' + obj.text + ')').replace('100%', 'this.height'));
+
+      if(obj.type === 'label' && obj.text) {
+        let text = obj.text;
+        if(text === '#mc_name') {
+          text = "Minecraft JS " + this.minecraft.getVersion();
+          if(this.minecraft.isDemo()) text += " Demo";
+          else text += (this.minecraft.getVersionType() === "release" ? '' : '/' + this.minecraft.getVersionType());
+          text += `/${this.minecraft.getUsername()}`;
+          if(this.minecraft.isModdedClient()) text += getKeyTranslation("menu.modded");
+        }
+
+        this.drawString(context, text, offsetX, offsetY, 16777215);
+      } else if(obj.type === 'custom') {
+        if(obj.renderer!) {
+          if(obj.renderer === 'title_renderer') {
+            context.save();
+            let j = this.width / 2 - 137;
+            if(this.showTitleWronglySpelled) {
+              this.drawImg(context, this.MINECRAFT_TITLE_IMG, j + 0, 30, 0, 0, 99, 44);
+              this.drawImg(context, this.MINECRAFT_TITLE_IMG, j + 0, 30, 0, 0, 99, 44);
+              this.drawImg(context, this.MINECRAFT_TITLE_IMG, j + 99, 30, 129, 0, 27, 44);
+              this.drawImg(context, this.MINECRAFT_TITLE_IMG, j + 99 + 26, 30, 126, 0, 3, 44);
+              this.drawImg(context, this.MINECRAFT_TITLE_IMG, j + 99 + 26 + 3, 30, 99, 0, 26, 44);
+              this.drawImg(context, this.MINECRAFT_TITLE_IMG, j + 155, 30, 0, 45, 155, 44);
+            } else {
+              this.drawImg(context, this.MINECRAFT_TITLE_IMG, j + 1, 30, 0, 0, 155, 44);
+              this.drawImg(context, this.MINECRAFT_TITLE_IMG, j - 1, 30, 0, 0, 155, 44);
+              this.drawImg(context, this.MINECRAFT_TITLE_IMG, j + 0, 31, 0, 0, 155, 44);
+              this.drawImg(context, this.MINECRAFT_TITLE_IMG, j + 0, 29, 0, 0, 155, 44);
+              this.drawImg(context, this.MINECRAFT_TITLE_IMG, j + 0, 30, 0, 0, 155, 44);
+              this.drawImg(context, this.MINECRAFT_TITLE_IMG, j + 155 + 1, 30, 0, 45, 155, 44);
+              this.drawImg(context, this.MINECRAFT_TITLE_IMG, j + 155 - 1, 30, 0, 45, 155, 44);
+              this.drawImg(context, this.MINECRAFT_TITLE_IMG, j + 155, 29, 0, 45, 155, 44);
+              this.drawImg(context, this.MINECRAFT_TITLE_IMG, j + 155, 31, 0, 45, 155, 44);
+              this.drawImg(context, this.MINECRAFT_TITLE_IMG, j + 155, 30, 0, 45, 155, 44);
+            }
+            this.drawImg(context, this.MINECRAFT_EDITION_IMG, j + 88, 67, 0, 0, 98, 14);
+            
+            context.restore();
+          } else if(obj.renderer === 'splash_renderer') {
+            context.save();
+            let j = this.width / 2 - 137;
+            const miliT = new Date().getMilliseconds();
+            let f2 = 1.8 - Math.abs(Math.sin((miliT % 1000) / 1000.0 * (Math.PI * 2)) * 0.1);
+            try {
+              f2 = f2 * 100.0 / (FontRenderer.getTextWidth('ddddddddddddddddddddddd') + 32);
+            } catch {
+              f2 = f2 * 100.0 / (context.measureText('Error').width + 32);
+            }
+            
+            context.scale(f2, f2);
+            context.rotate(-20 * Math.PI / 180);
+            context.translate(180, 90)
+
+            try {
+              this.drawCenteredString(context, this.splashText, j + 88 + 70 - (140 * f2), 67 + (this.height / (3)) - 20 - (70 * f2), 16776960);
+            } catch {
+              this.drawCenteredString(context, 'Error', j + 88 + 70, 67 + 100, 16776960);
+            }
+            context.restore();
+          }
+        }
+      }
+    }
   }
 
   public mouseClicked(mouseX: number, mouseY: number, button: number) {
     super.mouseClicked(mouseX, mouseY, button);
 
     isInside(mouseX, mouseY, this.widthCopyrightRest, this.widthCopyright, (this.height - 10), 10, () => {
-      playSound('resources/assets/minecraft/sounds/click_stereo.ogg', 0.2);
+      playSound('click_stereo', 0.2);
       console.log('No credits sry :(');
     })
   }
@@ -103,59 +424,10 @@ export default class MainMenuScreen extends Screen {
   public render(context: CanvasRenderingContext2D, mouseX: number, mouseY: number): void {
     this.fill(context, 0, 0, this.width, this.height, 3355443)
 
-    context.save();
-    let j = this.width / 2 - 137;
-    if(this.showTitleWronglySpelled) {
-      this.drawImg(context, this.MINECRAFT_TITLE_IMG, j + 0, 30, 0, 0, 99, 44);
-      this.drawImg(context, this.MINECRAFT_TITLE_IMG, j + 0, 30, 0, 0, 99, 44);
-      this.drawImg(context, this.MINECRAFT_TITLE_IMG, j + 99, 30, 129, 0, 27, 44);
-      this.drawImg(context, this.MINECRAFT_TITLE_IMG, j + 99 + 26, 30, 126, 0, 3, 44);
-      this.drawImg(context, this.MINECRAFT_TITLE_IMG, j + 99 + 26 + 3, 30, 99, 0, 26, 44);
-      this.drawImg(context, this.MINECRAFT_TITLE_IMG, j + 155, 30, 0, 45, 155, 44);
-    } else {
-      this.drawImg(context, this.MINECRAFT_TITLE_IMG, j + 1, 30, 0, 0, 155, 44);
-      this.drawImg(context, this.MINECRAFT_TITLE_IMG, j - 1, 30, 0, 0, 155, 44);
-      this.drawImg(context, this.MINECRAFT_TITLE_IMG, j + 0, 31, 0, 0, 155, 44);
-      this.drawImg(context, this.MINECRAFT_TITLE_IMG, j + 0, 29, 0, 0, 155, 44);
-      this.drawImg(context, this.MINECRAFT_TITLE_IMG, j + 0, 30, 0, 0, 155, 44);
-      this.drawImg(context, this.MINECRAFT_TITLE_IMG, j + 155 + 1, 30, 0, 45, 155, 44);
-      this.drawImg(context, this.MINECRAFT_TITLE_IMG, j + 155 - 1, 30, 0, 45, 155, 44);
-      this.drawImg(context, this.MINECRAFT_TITLE_IMG, j + 155, 29, 0, 45, 155, 44);
-      this.drawImg(context, this.MINECRAFT_TITLE_IMG, j + 155, 31, 0, 45, 155, 44);
-      this.drawImg(context, this.MINECRAFT_TITLE_IMG, j + 155, 30, 0, 45, 155, 44);
-    }
-    this.drawImg(context, this.MINECRAFT_EDITION_IMG, j + 88, 67, 0, 0, 98, 14);
-    const miliT = new Date().getMilliseconds();
-    let f2 = 1.8 - Math.abs(Math.sin((miliT % 1000) / 1000.0 * (Math.PI * 2)) * 0.1);
-    try {
-      f2 = f2 * 100.0 / (FontRenderer.getTextWidth('ddddddddddddddddddddddd') + 32);
-    } catch {
-      f2 = f2 * 100.0 / (context.measureText('Error').width + 32);
-    }
-    
-    context.scale(f2, f2);
-    context.rotate(-20 * Math.PI / 180);
-    context.translate(180, 90)
-
-    try {
-      this.drawCenteredString(context, this.splashText, j + 88 + 70 - (140 * f2), 67 + (this.height / (3)) - 20 - (70 * f2), 16776960);
-    } catch {
-      this.drawCenteredString(context, 'Error', j + 88 + 70, 67 + 100, 16776960);
-    }
-    context.restore();
-
-    let gameInfo = "Minecraft JS " + this.minecraft.getVersion();
-    if(this.minecraft.isDemo()) gameInfo += " Demo";
-    else gameInfo += (this.minecraft.getVersionType() === "release" ? '' : '/' + this.minecraft.getVersionType());
-    gameInfo += `/${this.minecraft.getUsername()}`;
-    if(this.minecraft.isModdedClient()) gameInfo += getKeyTranslation("menu.modded");
-    
-    this.drawString(context, gameInfo, 2, this.height - 10, 16777215);
-
     isInside(mouseX, mouseY, this.widthCopyrightRest, this.widthCopyright, (this.height - 10), 10, () => {
       this.fill(context, (this.widthCopyrightRest - 1), this.height - 2, this.widthCopyright + 1, 1, 16777215)
     })
 
-    this.drawString(context, 'Not affiliated with Mojang Studios!', this.widthCopyrightRest, this.height - 10, 16777215);
+    this.genRender(context, mouseX, mouseY)
   }
 }

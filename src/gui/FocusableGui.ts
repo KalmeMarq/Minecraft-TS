@@ -1,5 +1,5 @@
-import IGuiEventListener from "../interfaces/IGuiEventListener";
-import AbstractGui from "./AbstractGui";
+import IGuiEventListener from "../interfaces/IGuiEventListener.js";
+import AbstractGui from "./AbstractGui.js";
 
 export default abstract class FocusableGui extends AbstractGui {
   private listener: IGuiEventListener | null = null;

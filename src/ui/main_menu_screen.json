@@ -1,0 +1,126 @@
+{
+  "namespace": "main_menu_screen",
+
+  "button_base": {
+    "type": "button",
+    "size": [200, 20]
+  },
+
+  "init": {
+    "controls": [
+      {
+        "play_demo": {
+          "type": "button",
+          "text": "menu.playdemo",
+          "size": [200, 20],
+          "offset": ["100% / 2 - 100px", "100% / 4 + 48px"],
+          "button_id": "button.menu_playdemo",
+          "ignored": "(not $is_demo)"
+        }
+      },
+      {
+        "reset_demo@main_menu_screen.button_base": {
+          "text": "menu.resetdemo",
+          "offset": ["100% / 2 - 100px", "100% / 4 + 72px"],
+          "button_id": "button.menu_resetdemo",
+          "ignored": "(not $is_demo)",
+          "active": false
+        }
+      },
+      {
+        "singleplayer@test_screen.main_button": {
+          "text": "menu.singleplayer",
+          "offset": ["100% / 2 - 100px", "100% / 4 + 48px"],
+          "button_id": "button.menu_singleplayer",
+          "ignored": "$is_demo"
+        }
+      },
+      {
+        "multiplayer@button_base": {
+          "text": "menu.multiplayer",
+          "offset": ["100% / 2 - 100px", "100% / 4 + 72px"],
+          "button_id": "button.menu_multiplayer",
+          "ignored": "$is_demo"
+        }
+      },
+      {
+        "realms@button_base": {
+          "text": "menu.online",
+          "offset": ["100% / 2 - 100px", "100% / 4 + 96px"],
+          "button_id": "button.menu_online",
+          "ignored": "$is_demo"
+        }
+      },
+      { 
+        "options": {
+          "type": "button",
+          "size": [98, 20],
+          "text": "menu.options",
+          "offset": ["100% / 2 - 100px", "100% / 4 + 132px"],
+          "button_id": "button.menu_options"
+        }
+      },
+      {
+        "quit": {
+          "type": "button",
+          "size": [98, 20],
+          "text": "menu.quit",
+          "offset": ["100% / 2 + 2px", "100% / 4 + 132px"],
+          "button_id": "button.menu_quit"
+        }
+      },
+      {
+        "language": {
+          "type": "button_image",
+          "size": [20, 20],
+          "offset": ["100% / 2 - 124px", "100% / 4 + 132px"],
+          "button_id": "button.settings_language",
+          "texture": { "image": "gui/widgets", "base_uv_size": [20, 20], "base_uv": [0, 106] }
+        }
+      },
+      { 
+        "accessibility": {
+          "type": "button_image",
+          "size": [20, 20],
+          "offset": ["100% / 2 + 104px", "100% / 4 + 132px"],
+          "button_id": "button.settings_accessibility",
+          "texture": { "image": "gui/accessibility", "base_uv_size": [20, 20], "base_uv": [0, 0] }
+        }
+      }
+    ]
+  },
+
+  "base_label": {
+    "type": "label",
+    "color": [255, 255, 255]
+  },
+
+  "render": [
+    {
+      "title": {
+        "type": "custom",
+        "renderer": "title_renderer",
+        "offset": ["0px", "0px"]
+      }
+    },
+    {
+      "splash": {
+        "type": "custom",
+        "renderer": "splash_renderer",
+        "offset": ["0px", "0px"]
+      }
+    },
+    {
+      "version_info@main_menu_screen.base_label": {
+        "text": "#mc_name",
+        "offset": ["2px", "100% - 10px"]
+      }
+    },
+    {
+      "cr@base_label": {
+        "text": "Not affiliated with Mojang Studios!",
+        "offset": ["100% - 170px", "100% - 10px"]
+      }
+    }
+  ]
+}

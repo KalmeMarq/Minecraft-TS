@@ -1,12 +1,14 @@
-import GameConfiguration from "./GameConfiguration";
-import GameSettings from "./GameSettings";
-import FontRenderer from "./gui/FontRenderer";
-import MainMenuScreen from "./gui/screens/MainMenuScreen";
-import Screen from "./gui/screens/Screen";
-import { Resources } from "./index";
-import { IResources } from "./utils/GetResources";
-import KeyboardListener from "./utils/KeyboardListener";
-import MouseHelper from "./utils/MouseHelper";
+import GameConfiguration from "./GameConfiguration.js";
+import GameSettings from "./GameSettings.js";
+import FontRenderer from "./gui/FontRenderer.js";
+import MainMenuScreen from "./gui/screens/MainMenuScreen.js";
+import Screen from "./gui/screens/Screen.js";
+import { shutdown } from "./index.js";
+import { getResourceLocation} from "./utils/Resources.js";
+import KeyboardListener from "./utils/KeyboardListener.js";
+import MouseHelper from "./utils/MouseHelper.js";
+import IMCResources from "./interfaces/IResources.js";
+import IngameGui from "./gui/IngameGui.js";
 
 class Timer {
   public renderPartialTicks = 0;
@@ -38,7 +40,7 @@ export default class Minecraft {
   public canvasX = 0;
   public canvasY = 0;
   public gameSettings: GameSettings;
-  public ResourcesData: IResources = Resources;
+  // public ResourcesData: IMCResources = MCResources;
   public canvasWidth = window.innerWidth;
   public canvasHeight = window.innerHeight;
   public scaleFactor = 3;
@@ -46,10 +48,14 @@ export default class Minecraft {
   private timer: Timer = new Timer(20.0, 0);
   private times: Array<number> = [];
   public running: boolean = true;
+  public ingameGUI: IngameGui;
   public currentScreen: Screen | null = null;
   public outputLog = ''
+  static instance: Minecraft;
+  static Minecraft: Minecraft;
 
   constructor(gameConfig: GameConfiguration) {
+    Minecraft.instance = this;
     this.gameconfiguration = gameConfig;
     this.gameSettings = new GameSettings(this);
     this.mouseHelper = new MouseHelper(this, this.context);
@@ -58,13 +64,18 @@ export default class Minecraft {
     this.keyboardListener.setupCallbacks();
     this.updateCanvasSize();
     this.run();
+    this.ingameGUI = new IngameGui(this);
     this.outputLog = ''
+  }
+
+  public static getInstance(): Minecraft {
+    return this.instance;
   }
 
   public shutdown() {
     this.running = false;
     console.log(this.outputLog);
-    window.close()
+    shutdown()
   }
 
   public setFpsVisibility(state: boolean) {
@@ -77,11 +88,12 @@ export default class Minecraft {
 
   public getSplashText(): string {
     function getRandSplash() {
-      const splashes = Resources.texts.splashes,
+
+      const splashes = getResourceLocation('texts', 'splashes'),
             date = new Date(),
             month = date.getMonth(),
             day = date.getDate();
-  
+
       const getRandomSplashText = () => {
         return splashes[~~(Math.random() * (splashes.length - 1))]
       }
@@ -94,7 +106,6 @@ export default class Minecraft {
   
       return randSplash;
     }
-
     return getRandSplash();
   }
 

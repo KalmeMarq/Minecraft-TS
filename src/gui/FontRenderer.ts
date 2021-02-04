@@ -1,7 +1,16 @@
-import { addCharacterRenderer, characterRenderers, fontImg, getFontChars } from "../utils/GetResources";
-import ColorHelper from "../utils/ColorHelper";
+import { getResourceLocation } from "../utils/Resources.js";
+import ColorHelper from "../utils/ColorHelper.js";
 
-// let getFontChars: any = getFontgetFontChars;
+export let characterRenderers: any = {};
+export let addCharacterRenderer = (color: number, char: string) => {
+  if(!characterRenderers[color]) {
+    characterRenderers[color] = {}
+  }
+  characterRenderers[color][char] = {
+    text: new CharacterRenderer(char, color).create(),
+    textShadow: new CharacterRenderer(char, color).createShadow()
+  };
+}
 
 export class CharacterRenderer {
   private r;
@@ -13,8 +22,8 @@ export class CharacterRenderer {
 
   constructor(char: string, color: number) {
     this.char =  char;
-    this.charWidth =  getFontChars[this.char].w;
-    this.charHeight =  getFontChars[this.char].h;
+    this.charWidth =  getResourceLocation('fonts', 'font')[this.char].w;
+    this.charHeight =  getResourceLocation('fonts', 'font')[this.char].h;
     this.r = ColorHelper.getRed(color);
     this.g = ColorHelper.getGreen(color);
     this.b = ColorHelper.getBlue(color);
@@ -24,7 +33,7 @@ export class CharacterRenderer {
     const ctxfont = document.createElement('canvas')!.getContext('2d')!;
     ctxfont.canvas.width = this.charWidth;
     ctxfont.canvas.height = this.charHeight;
-    ctxfont.drawImage(fontImg, getFontChars[this.char].x, getFontChars[this.char].y, this.charWidth, this.charHeight, 0, 0, this.charWidth, this.charHeight);
+    ctxfont.drawImage(getResourceLocation('textures', 'font/ascii'), getResourceLocation('fonts', 'font')[this.char].x, getResourceLocation('fonts', 'font')[this.char].y, this.charWidth, this.charHeight, 0, 0, this.charWidth, this.charHeight);
         
     ctxfont.save();
     let myImg = ctxfont.getImageData(0, 0, this.charWidth * 3, this.charHeight * 3);
@@ -40,7 +49,7 @@ export class CharacterRenderer {
     const ctxfont = document.createElement('canvas')!.getContext('2d')!;
     ctxfont.canvas.width = this.charWidth;
     ctxfont.canvas.height = this.charHeight;
-    ctxfont.drawImage(fontImg, getFontChars[this.char].x, getFontChars[this.char].y, this.charWidth, this.charHeight, 0, 0, this.charWidth, this.charHeight);
+    ctxfont.drawImage(getResourceLocation('textures', 'font/ascii'), getResourceLocation('fonts', 'font')[this.char].x, getResourceLocation('fonts', 'font')[this.char].y, this.charWidth, this.charHeight, 0, 0, this.charWidth, this.charHeight);
 
     ctxfont.save();
     let myImg = ctxfont.getImageData(0, 0, this.charWidth * 3, this.charHeight * 3);
@@ -56,7 +65,7 @@ export class CharacterRenderer {
 export default class FontRenderer {
   public static getTextWidth(text: string) {
     let width = 0;
-    text.split('').forEach((char, idx) => width += getFontChars[text[idx]].w - 1)
+    text.split('').forEach((char, idx) => width += getResourceLocation('fonts', 'font')[text[idx]].w - 1)
     return width;
   }
 
@@ -68,7 +77,7 @@ export default class FontRenderer {
       context.drawImage(characterRenderers[color][char]['textShadow'], k - 1 + 1, posY + 1);
       context.drawImage(characterRenderers[color][char]['text'], k - 1, posY);
 
-      k += getFontChars[char].w - 1;
+      k += getResourceLocation('fonts', 'font')[char].w - 1;
     }
   }
 

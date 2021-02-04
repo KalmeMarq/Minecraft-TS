@@ -1,16 +1,16 @@
-import Minecraft from "./Minecraft";
-import AmbientOcclusionStatus from "./settings/AmbientOcclusionStatus";
-import AttackIndicatorStatus from "./settings/AttackIndicatorStatus";
-import ChatVisibility from "./settings/ChatVisibility";
-import CloudOption from "./settings/CloudOption";
-import GraphicsFanciness from "./settings/GraphicsFanciness";
-import HandSide from "./settings/HandSide";
-import KeyBinding from "./settings/KeyBinding";
-import NarratorStatus from "./settings/NarratorStatus";
-import ParticleStatus from "./settings/ParticleStatus";
-import PointOfView from "./settings/PointOfView";
-import SneakOption from "./settings/SneakOption";
-import SprintOption from "./settings/SprintOption";
+import Minecraft from "./Minecraft.js";
+import AmbientOcclusionStatus from "./settings/AmbientOcclusionStatus.js";
+import AttackIndicatorStatus from "./settings/AttackIndicatorStatus.js";
+import ChatVisibility from "./settings/ChatVisibility.js";
+import CloudOption from "./settings/CloudOption.js";
+import GraphicsFanciness from "./settings/GraphicsFanciness.js";
+import HandSide from "./settings/HandSide.js";
+import KeyBinding from "./settings/KeyBinding.js";
+import NarratorStatus from "./settings/NarratorStatus.js";
+import ParticleStatus from "./settings/ParticleStatus.js";
+import PointOfView from "./settings/PointOfView.js";
+import SneakOption from "./settings/SneakOption.js";
+import SprintOption from "./settings/SprintOption.js";
 
 export default class GameSettings {
   protected mc;
@@ -28,7 +28,7 @@ export default class GameSettings {
   public renderDistanceChunks: number = -1;
   public chatOpacity: number = 1.0;
   public chatLineSpacing: number = 0.0;
-  public chatScale: number = 1.0;
+  public chatScale: number = 0.7;
   public chatWidth: number = 1.0;
   public chatHeightUnfocused: number = 0.44366196;
   public chatHeightFocused: number = 1.0;
@@ -129,6 +129,7 @@ export default class GameSettings {
       this.narratorStatus = Options.narratorStatus ? Options.narratorStatus : this.narratorStatus;
       this.toggleCrouch = Options.toggleCrouch ? Options.toggleCrouch : this.toggleCrouch;
       this.toggleSprint = Options.toggleSprint ? Options.toggleSprint : this.toggleSprint;
+      this.chatScale = Options.chatScale ? Options.chatScale : this.chatScale;
     }
   }
 
@@ -157,7 +158,8 @@ export default class GameSettings {
       pointOfView: this.pointOfView,
       narratorStatus: this.narratorStatus,
       toggleCrouch: this.toggleCrouch,
-      toggleSprint: this.toggleSprint
+      toggleSprint: this.toggleSprint,
+      chatScale: this.chatScale
     }));
 
     // this.mc.outputLog += '\n Game Options Saved'

@@ -1,8 +1,8 @@
-import GameSettings from "../../GameSettings";
-import { getKeyTranslation } from "../../utils/TranslationText";
-import Button from "../widgets/button/Button";
-import Screen from "./Screen";
-import SettingsScreen from "./SettingsScreen";
+import GameSettings from "../../GameSettings.js";
+import { getKeyTranslation } from "../../utils/TranslationText.js";
+import Button from "../widgets/button/Button.js";
+import Screen from "./Screen.js";
+import SettingsScreen from "./SettingsScreen.js";
 
 export default class CustomizeSkinScreen extends SettingsScreen {
   constructor(parentScreen: Screen, gameSettingsObj: GameSettings) {

@@ -1,17 +1,18 @@
-import GameSettings from "./GameSettings";
-import AmbientOcclusionStatus from "./settings/AmbientOcclusionStatus";
-import AttackIndicatorStatus from "./settings/AttackIndicatorStatus";
-import BooleanOption from "./settings/BooleanOption";
-import ChatVisibility from "./settings/ChatVisibility";
-import CloudOption from "./settings/CloudOption";
-import GraphicsFanciness from "./settings/GraphicsFanciness";
-import HandSide from "./settings/HandSide";
-import IteratableOption from "./settings/IteratableOption";
-import NarratorStatus from "./settings/NarratorStatus";
-import ParticleStatus from "./settings/ParticleStatus";
-import PointOfView from "./settings/PointOfView";
-import SneakOption from "./settings/SneakOption";
-import SprintOption from "./settings/SprintOption";
+import GameSettings from "./GameSettings.js";
+import AmbientOcclusionStatus from "./settings/AmbientOcclusionStatus.js";
+import AttackIndicatorStatus from "./settings/AttackIndicatorStatus.js";
+import BooleanOption from "./settings/BooleanOption.js";
+import ChatVisibility from "./settings/ChatVisibility.js";
+import CloudOption from "./settings/CloudOption.js";
+import GraphicsFanciness from "./settings/GraphicsFanciness.js";
+import HandSide from "./settings/HandSide.js";
+import IteratableOption from "./settings/IteratableOption.js";
+import NarratorStatus from "./settings/NarratorStatus.js";
+import ParticleStatus from "./settings/ParticleStatus.js";
+import PointOfView from "./settings/PointOfView.js";
+// import SliderPercentageOption from "./settings/SliderPercentageOption";
+import SneakOption from "./settings/SneakOption.js";
+import SprintOption from "./settings/SprintOption.js";
 
 export default abstract class GameOption {
   public static ShowFPSOption: BooleanOption = new BooleanOption('Show FPS', (settings: GameSettings) => {
@@ -163,4 +164,12 @@ export default abstract class GameOption {
   }, (settings: GameSettings) => {
     settings.pointOfView = PointOfView.byId(settings.pointOfView.id + 1);
   });
+
+  // public static ACCESSIBILITY_TEXT_BACKGROUND_OPACITY: SliderPercentageOption = new SliderPercentageOption(/* "options.accessibility.text_background_opacity", 0.0, 1.0, 0.0, (settings: GameSettings) => {
+  //   return settings.accessibilityTextBackgroundOpacity;
+  // }, (settings: GameSettings, optionValues: any) => {
+  //     settings.accessibilityTextBackgroundOpacity = optionValues;
+  // }, (settings: GameSettings, optionValues: any) => {
+  //     return optionValues.getPercentValueComponent(optionValues.normalizeValue(optionValues.get(settings)));
+  // } */);
 }

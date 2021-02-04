@@ -1,9 +1,9 @@
-import IGuiEventListener from "../../interfaces/IGuiEventListener";
-import IRenderable from "../../interfaces/IRenderable";
-import ColorHelper from "../../utils/ColorHelper";
-import MathHelper from "../../utils/MathHelper";
-import FontRenderer from "../FontRenderer";
-import Widget from "./Widget";
+import IGuiEventListener from "../../interfaces/IGuiEventListener.js";
+import IRenderable from "../../interfaces/IRenderable.js";
+import ColorHelper from "../../utils/ColorHelper.js";
+import MathHelper from "../../utils/MathHelper.js";
+import FontRenderer from "../FontRenderer.js";
+import Widget from "./Widget.js";
 
 export default class TextFieldWidget extends Widget implements IRenderable, IGuiEventListener {
   public text: string = '';

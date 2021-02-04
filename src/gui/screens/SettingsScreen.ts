@@ -1,5 +1,5 @@
-import GameSettings from "../../GameSettings";
-import Screen from "./Screen";
+import GameSettings from "../../GameSettings.js";
+import Screen from "./Screen.js";
 
 export default class SettingsScreen extends Screen {
   protected parentScreen: Screen;

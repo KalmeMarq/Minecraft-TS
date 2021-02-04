@@ -1,4 +1,4 @@
-import { Resources } from '../index';
+import { getResourceLocation } from './Resources.js';
 
 export default class TranslationTextComponent {
   public translateKey;
@@ -8,11 +8,11 @@ export default class TranslationTextComponent {
 
   get() {
     try {
-      const s = /* localStorage.getItem('GameSettings') ? JSON.parse(localStorage.getItem('GameSettings')!).languages :  */'en_us';
-      const displayLang: any = Resources.languages.find((id: any) => id.code === s);
+      const lang = localStorage.getItem('GameSettings') && JSON.parse(localStorage.getItem('GameSettings')!).language ? JSON.parse(localStorage.getItem('GameSettings')!).language : 'en_us';
+      const displayLang: any = getResourceLocation('langs', lang);
       
-      if(!displayLang.data[this.translateKey] || displayLang.data[this.translateKey] === '') return String(this.translateKey);
-      return displayLang.data[this.translateKey];
+      if(!displayLang[this.translateKey] || displayLang[this.translateKey] === '') return String(this.translateKey);
+      return displayLang[this.translateKey];
   
     } catch (err) {
       console.error(err)
@@ -23,10 +23,10 @@ export default class TranslationTextComponent {
 export function getKeyTranslation(key: string) {
   try {
     const lang = localStorage.getItem('GameSettings') && JSON.parse(localStorage.getItem('GameSettings')!).language ? JSON.parse(localStorage.getItem('GameSettings')!).language : 'en_us';
-    const displayLang: any = Resources.languages.find((id: any) => id.code === lang);
+    const displayLang: any = getResourceLocation('langs', lang);
     
-    if(!displayLang.data[key] || displayLang.data[key] === '') return String(key);
-    return displayLang.data[key];
+    if(!displayLang[key] || displayLang[key] === '') return String(key);
+    return displayLang[key];
 
   } catch (err) {
     console.error(err)

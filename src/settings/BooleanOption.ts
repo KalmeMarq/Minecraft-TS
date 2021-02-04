@@ -1,8 +1,8 @@
-import AbstractOption from "../AbstractOption";
-import GameSettings from "../GameSettings";
-import OptionButton from "../gui/widgets/button/OptionButton";
-import Widget from "../gui/widgets/Widget";
-import TranslationTextComponent from "../utils/TranslationText";
+import AbstractOption from "../AbstractOption.js";
+import GameSettings from "../GameSettings.js";
+import OptionButton from "../gui/widgets/button/OptionButton.js";
+import Widget from "../gui/widgets/Widget.js";
+import { getKeyTranslation } from "../utils/TranslationText.js";
 
 export default class BooleanOption extends AbstractOption {
   private text: string;
@@ -40,6 +40,6 @@ export default class BooleanOption extends AbstractOption {
   }
 
   public func_238152_c_(p_238152_1_: GameSettings) {
-    return `${new TranslationTextComponent(this.text).get()}: ${this.get(p_238152_1_) == false ? new TranslationTextComponent('options.off').get() : new TranslationTextComponent('options.on').get()}`;
+    return `${getKeyTranslation(this.text)}: ${this.get(p_238152_1_) == false ? getKeyTranslation('options.off') : getKeyTranslation('options.on')}`;
    }
 }

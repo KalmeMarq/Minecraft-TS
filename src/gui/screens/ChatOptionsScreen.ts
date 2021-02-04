@@ -1,16 +1,15 @@
-import AbstractOption from "../../GameOption";
-import GameSettings from "../../GameSettings";
-import TranslationTextComponent from "../../utils/TranslationText";
-import Button from "../widgets/button/Button";
-import OptionButton from "../widgets/button/OptionButton";
-import Screen from "./Screen";
-import SettingsScreen from "./SettingsScreen";
+import AbstractOption from "../../GameOption.js";
+import GameSettings from "../../GameSettings.js";
+import { getKeyTranslation } from "../../utils/TranslationText.js";
+import Button from "../widgets/button/Button.js";
+import Screen from "./Screen.js";
+import SettingsScreen from "./SettingsScreen.js";
 
 export default class ChatOptionsScreen extends SettingsScreen {
   private SCREEN_OPTIONS: AbstractOption[] = [AbstractOption.CHAT_VISIBILITY, AbstractOption.CHAT_COLOR, AbstractOption.CHAT_LINKS, AbstractOption.CHAT_LINKS_PROMPT, AbstractOption.NARRATOR_STATUS];
 
   constructor(parentScreen: Screen, gameSettingsObj: GameSettings) {
-    super(parentScreen, gameSettingsObj,  new TranslationTextComponent("options.chat.title").get())
+    super(parentScreen, gameSettingsObj,  getKeyTranslation("options.chat.title"))
   }
 
   protected init(): void {
@@ -22,7 +21,7 @@ export default class ChatOptionsScreen extends SettingsScreen {
       index++;
     }
 
-    this.addButton(new Button(this.width / 2 - 100, this.height - 27, 200, 20, new TranslationTextComponent("gui.done").get(), () => {
+    this.addButton(new Button(this.width / 2 - 100, this.height - 27, 200, 20, getKeyTranslation("gui.done"), () => {
       this.minecraft.displayGuiScreen(this.parentScreen);
     }));
   }

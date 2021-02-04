@@ -1,5 +1,5 @@
-import { playSound } from "../../../utils/PlaySound";
-import Widget from "../Widget";
+import { playSound } from "../../../utils/PlaySound.js";
+import Widget from "../Widget.js";
 
 export default abstract class AbstractButton extends Widget {
   public PressFunc: any;
@@ -17,7 +17,7 @@ export default abstract class AbstractButton extends Widget {
       if(keyName != 'Enter' && keyName != ' ') {
         return false;
       } else {
-        playSound('resources/assets/minecraft/sounds/click_stereo.ogg', 0.2);
+        playSound('sounds/click_stereo', 0.2);
         this.PressFunc();
         return true;
       }

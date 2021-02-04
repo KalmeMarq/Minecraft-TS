@@ -1,4 +1,4 @@
-import Button from "./Button";
+import Button from "./Button.js";
 
 export default class ImageButton extends Button {
    private resourceLocation: any;

@@ -1,13 +1,17 @@
-import GameConfiguration from "./GameConfiguration";
-import Minecraft from "./Minecraft";
-import { getResources, IResources } from "./utils/GetResources";
+import GameConfiguration from "./GameConfiguration.js";
+import IMCResources from "./interfaces/IResources.js";
+import Minecraft from "./Minecraft.js";
+import { getAllResources, MCResources } from "./utils/Resources.js";
 
-export var Resources: IResources;
-class Main {
+
+export default class Main {
   public static async main(): Promise<void> {
-    (<HTMLCanvasElement>document.getElementById('root')).getContext('2d')!.clearRect(0, 0, window.innerWidth, window.innerHeight);
-    Resources = (await getResources() as any);
-    console.log(Resources);
+    await getAllResources();
+    await getAllResources();
+    await getAllResources();
+
+    // console.log(MCResources);
+    // (<HTMLCanvasElement>document.getElementById('root')).getContext('2d')!.clearRect(0, 0, document.querySelector('.window')!.clientWidth, document.querySelector('.window')!.clientHeight);
 
     const gameconfigs = new GameConfiguration(new GameConfiguration.UserInformation('KalmeMarq'), new GameConfiguration.GameInformation(false, '1.42.0', 'release', 'vanilla'));
     let minecraft: Minecraft;
@@ -21,6 +25,8 @@ class Main {
   }
 }
 
+export function shutdown() {
+  window.close()
+}
+
 Main.main();
-
-

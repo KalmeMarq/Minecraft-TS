@@ -1,5 +1,5 @@
-import ColorHelper from "../utils/ColorHelper";
-import FontRenderer from "./FontRenderer";
+import ColorHelper from "../utils/ColorHelper.js";
+import FontRenderer from "./FontRenderer.js";
 
 abstract class AbstractGui {
   public testConsole(text: string) {

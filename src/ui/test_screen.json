@@ -1,0 +1,8 @@
+{
+  "namespace": "test_screen",
+
+  "main_button": {
+    "type": "button",
+    "size": [200, 20]
+  }
+}

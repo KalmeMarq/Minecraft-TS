@@ -1,14 +1,13 @@
-import { optionsBackgroundImg } from "../../utils/GetResources";
-import IGuiEventListener from "../../interfaces/IGuiEventListener";
-import IRenderable from "../../interfaces/IRenderable";
-import Minecraft from "../../Minecraft";
-import AbstractGui from "../AbstractGui";
-import FocusableGui from "../FocusableGui";
-import OptionButton from "../widgets/button/OptionButton";
-import Widget from "../widgets/Widget";
-import Button from "../widgets/button/Button";
+import IGuiEventListener from "../../interfaces/IGuiEventListener.js";
+import IRenderable from "../../interfaces/IRenderable.js";
+import Minecraft from "../../Minecraft.js";
+import AbstractGui from "../AbstractGui.js";
+import OptionButton from "../widgets/button/OptionButton.js";
+import Widget from "../widgets/Widget.js";
+import { getResourceLocation } from "../../utils/Resources.js";
 
 export default class Screen extends AbstractGui implements IRenderable, IGuiEventListener {
+  protected OPTIONS_BACKGROUND = getResourceLocation('textures', 'gui/options_background')
   protected minecraft: any = null;
   public width: number = 0;
   public height: number = 0;
@@ -16,11 +15,20 @@ export default class Screen extends AbstractGui implements IRenderable, IGuiEven
   protected buttons = new Array();
   protected focusedWidget = -1;
   protected title;
+  private isDragging: boolean = false;
 
   constructor(...args: any[]) {
     super();
 
     if(args.length === 1) this.title = args[0]
+  }
+
+  public getDragging(): boolean {
+    return this.isDragging;
+ }
+
+  public setDragging(dragging: boolean): void {
+    this.isDragging = dragging;
   }
 
   public initScreen(minecraft: Minecraft, width: number, height: number) {
@@ -64,9 +72,11 @@ export default class Screen extends AbstractGui implements IRenderable, IGuiEven
     for(const iguieventlistener of this.getEventListeners()) {
       iguieventlistener.mouseClicked(mouseX, mouseY, button);
     }
+    this.setDragging(true);
   }
 
   public mouseReleased(mouseX: number, mouseY: number, button: number): void {
+    this.setDragging(false);
     for(const iguieventlistener of this.getEventListeners()) {
       iguieventlistener.mouseReleased(mouseX, mouseY, button);
     }
@@ -74,8 +84,11 @@ export default class Screen extends AbstractGui implements IRenderable, IGuiEven
     this.focusedWidget = -1;
   }
 
-  public mouseDragged(mouseX: number, mouseY: number, button: number, dragX: number, dragY: number): boolean {
-    return false;
+  public mouseDragged(mouseX: number, mouseY: number, button: number, dragX: number, dragY: number): void {
+    // console.log(mouseX, mouseY, dragX, dragY);
+    this.children[0].mouseDragged(mouseX, mouseY, button, dragX, dragY)
+    
+    // return this.focusedWidget != -1 && this.getDragging() && button == 0 ? this.children[this.focusedWidget].mouseDragged(mouseX, mouseY, button, dragX, dragY) : false;
   }
   
   public isMouseOver(mouseX: number, mouseY: number): boolean {
@@ -140,7 +153,7 @@ export default class Screen extends AbstractGui implements IRenderable, IGuiEven
     if(this.minecraft !== null) {
       context.save();
       context.scale(this.minecraft.getScaleFactor() * 0.65, this.minecraft.getScaleFactor() * 0.65)
-      context.fillStyle = context.createPattern(optionsBackgroundImg, 'repeat')!;
+      context.fillStyle = context.createPattern(this.OPTIONS_BACKGROUND, 'repeat')!;
       context.fillRect(0, 0, context.canvas.width, context.canvas.height);
       context.fillStyle = 'rgba(0, 0, 0, 0.7)';
       context.fillRect(0, 0, context.canvas.width, context.canvas.height);

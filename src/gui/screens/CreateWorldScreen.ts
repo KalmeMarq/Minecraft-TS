@@ -1,7 +1,6 @@
-import TranslationTextComponent, { getKeyTranslation } from "../../utils/TranslationText";
-import Button from "../widgets/button/Button";
-import Widget from "../widgets/Widget";
-import Screen from "./Screen";
+import { getKeyTranslation } from "../../utils/TranslationText.js";
+import Button from "../widgets/button/Button.js";
+import Screen from "./Screen.js";
 
 export default class WorldSelectionScreen extends Screen {
   public parentScreen;

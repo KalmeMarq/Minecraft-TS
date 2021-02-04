@@ -1,10 +1,9 @@
-import AbstractOption from "../../GameOption";
-import GameSettings from "../../GameSettings";
-import { getKeyTranslation } from "../../utils/TranslationText";
-import Button from "../widgets/button/Button";
-import OptionButton from "../widgets/button/OptionButton";
-import Screen from "./Screen";
-import SettingsScreen from "./SettingsScreen";
+import AbstractOption from "../../GameOption.js";
+import GameSettings from "../../GameSettings.js";
+import { getKeyTranslation } from "../../utils/TranslationText.js";
+import Button from "../widgets/button/Button.js";
+import Screen from "./Screen.js";
+import SettingsScreen from "./SettingsScreen.js";
 
 export default class VideoSettingsScreen extends SettingsScreen {
   private SCREEN_OPTIONS: AbstractOption[] = [AbstractOption.AdvancedItemTooltipsOption, AbstractOption.AutoJumpOption, AbstractOption.ForceUnicodeFont, AbstractOption.HeldItemTooltipsOption, AbstractOption.HideGUIOption, AbstractOption.RawMouseInputOption, AbstractOption.ShowFPSOption, AbstractOption.SkipMultiplayerWarningOption, AbstractOption.VsyncOption, AbstractOption.CLOUDS_OPTION, AbstractOption.GRAPHICS_FANCINESS, AbstractOption.AMBIENT_OCCLUSION_STATUS, AbstractOption.ATTACK_INDICATOR_STATUS, AbstractOption.CHAT_VISIBILITY, AbstractOption.HAND_SIDE, AbstractOption.PARTICLE_STATUS, AbstractOption.POINT_OF_VIEW];
