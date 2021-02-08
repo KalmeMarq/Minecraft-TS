@@ -80,7 +80,7 @@ export async function getAllResources() {
 
   await JSONUtils.getJSONFile('ui/_ui_defs.json', ((data: any) => {
     data.ui_defs.forEach(async (file: any) => {
-      await JSONUtils.getJSONFile('./src/' + file, ((dataa: any) => {
+      await JSONUtils.getJSONFile('' + file, ((dataa: any) => {
         if(!MCUI[dataa.namespace]) {
           MCUI[dataa.namespace] = dataa;
         }
