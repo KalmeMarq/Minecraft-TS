@@ -208,7 +208,7 @@ define("utils/Resources", ["require", "exports", "utils/JSONUtils"], function (r
                 });
             }
         });
-        await JSONUtils_js_2.default.getJSONFile('src/ui/_ui_defs.json', ((data) => {
+        await JSONUtils_js_2.default.getJSONFile('ui/_ui_defs.json', ((data) => {
             data.ui_defs.forEach(async (file) => {
                 await JSONUtils_js_2.default.getJSONFile('./src/' + file, ((dataa) => {
                     if (!exports.MCUI[dataa.namespace]) {
