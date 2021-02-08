@@ -1,40 +1,30 @@
-import AbstractOption from '../AbstractOption.js';
 import GameSettings from '../GameSettings.js';
 import OptionButton from '../gui/widgets/button/OptionButton.js';
-import { getKeyTranslation } from '../utils/TranslationText.js';
+import Widgets from '../gui/widgets/Widget.js';
+import AbstractOption from './AbstractOption.js';
 
-export default class IteratableOption extends AbstractOption {
-  private text: string;
-  private setter;
-  private getter;
+export default class NewIteratableOption extends AbstractOption {
+  private setter: Function;
+  private getter: Function;
 
-  constructor(translationKeyIn: string, getterIn: any,  setterIn: any) {
-    super();
-    this.text = translationKeyIn;
+  constructor(translationKeyIn: string, setterIn: Function, getterIn: Function) {
+    super(translationKeyIn);
     this.setter = setterIn;
     this.getter = getterIn;
   }
 
-   public setValueIndex(options: GameSettings, valueIn: number) {
+  public setValueIndex(options: GameSettings, valueIn: number) {
     this.setter(options, valueIn);
     options.saveOptions();
   }
 
-  public createWidget(options: GameSettings, xIn: number, yIn: number, widthIn: number) {
+  public createWidget(options: GameSettings, xIn: number, yIn: number, widthIn: number): Widgets {
     return new OptionButton(xIn, yIn, widthIn, 20, this, this.getName(options), () => {
       this.setValueIndex(options, 1);
     });
   }
 
-  public get(options: GameSettings): boolean {
-    return (this.getter(options));
-  }
-
   public getName(settings: GameSettings) {
-    return getKeyTranslation(this.text) + ': ' + getKeyTranslation(this.getter(settings).key);
+    return this.getter(settings, this);
   }
-  
-//   protected getGenericValueComponent(valueMessage: ) {
-//     return new TranslationTextComponent('options.generic_value', this.getBaseMessageTranslation(), valueMessage);
-//  }
 }

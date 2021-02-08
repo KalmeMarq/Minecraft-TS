@@ -11,5 +11,13 @@ export default class MathHelper {
   public static ceil(value: number) {
     let i = ~~value;
     return value > i ? i + 1 : i;
-   }
+  }
+
+  public static normalizeAngle(x: number, y: number) {
+    return x - (y * Math.floor(x / y));
+  }
+
+  public static sqrt(value: number) {
+    return Math.sqrt(value);
+  }
 } 

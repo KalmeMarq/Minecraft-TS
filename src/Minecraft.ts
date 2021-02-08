@@ -52,6 +52,7 @@ export default class Minecraft {
   public currentScreen: Screen | null = null;
   public outputLog = ''
   static instance: Minecraft;
+  public instanceNew: Minecraft = this;
   static Minecraft: Minecraft;
 
   constructor(gameConfig: GameConfiguration) {
@@ -72,15 +73,28 @@ export default class Minecraft {
     return this.instance;
   }
 
+  public getInstanceNew(): Minecraft {
+    return this.instanceNew;
+  }
+
+  public openFullscreen() {
+    let elem = document.documentElement;
+    if(elem.requestFullscreen) elem.requestFullscreen();
+  }
+  
+  public closeFullscreen() {
+    if(document.exitFullscreen) document.exitFullscreen();
+  }
+
   public shutdown() {
     this.running = false;
     console.log(this.outputLog);
     shutdown()
   }
 
-  public setFpsVisibility(state: boolean) {
+ /*  public setFpsVisibility(state: boolean) {
     this.gameSettings.showFPS = state;
-  }
+  } */
 
   public isFpsVisible() {
     return this.gameSettings.showFPS;
@@ -156,7 +170,7 @@ export default class Minecraft {
   }
 
   public displayGuiScreen(guiScreenIn: Screen | null): void {
-    if (this.currentScreen != null) this.currentScreen.onClose();
+    // if (this.currentScreen != null) this.currentScreen.onClose();
 
     if(guiScreenIn === null) guiScreenIn = new MainMenuScreen();
 
@@ -207,5 +221,9 @@ export default class Minecraft {
 
   public getUsername(): string {
     return this.gameconfiguration.userInfo.userName;
+  }
+
+  public getForceUnicodeFont(): boolean {
+    return this.gameSettings.forceUnicodeFont;
   }
 }

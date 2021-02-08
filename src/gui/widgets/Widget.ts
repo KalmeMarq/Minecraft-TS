@@ -61,9 +61,9 @@ export default abstract class Widgets extends AbstractGui implements IRenderable
     context.globalAlpha = this.alpha;
     this.blit(context, this.WIDGETS, this.x, this.y, 0, 46 + yUV * 20, this.width / 2, this.height);
     this.blit(context, this.WIDGETS, this.x + this.width / 2, this.y, 200 - this.width / 2, 46 + yUV * 20, this.width / 2, this.height);
+    this.renderBg(context, minecraft, mouseX, mouseY);
     let color = this.active ? 16777215 : 10526880;
     this.drawCenteredString(context, this.message, this.x + this.width / 2, this.y + (this.height - 8) / 2, color);
-    this.renderBg(context, minecraft, mouseX, mouseY);
     context.restore();
   }
 
@@ -89,15 +89,19 @@ export default abstract class Widgets extends AbstractGui implements IRenderable
         let flag = this.clicked(mouseX, mouseY);
         if(flag) {
           this.focused = true
-          playSound('click_stereo', 0.2);
+          this.playClickSound();
           this.onClick(mouseX, mouseY);
         }
       }
     }
   }
 
+  public playClickSound() {
+    playSound('click_stereo', 0.2);
+  }
+
   public mouseReleased(mouseX: number, mouseY: number, button: number): boolean {
-    if(this.isValidClickButton(button)) {
+    if(this.clicked(mouseX, mouseY) && this.isValidClickButton(button)) {
       this.onRelease(mouseX, mouseY);
       return true;
     } else return false;
@@ -115,14 +119,13 @@ export default abstract class Widgets extends AbstractGui implements IRenderable
   }
 
   public mouseDragged(mouseX: number, mouseY: number, button: number, dragX: number, dragY: number): boolean {
-    // console.log(mouseX);
-    
-   /*  if(this.isValidClickButton(button)) { */
+  /*   if(this.isValidClickButton(button)) {
       this.onDrag(mouseX, mouseY, dragX, dragY);
       return true;
- /*   } else {
+   } else {
       return false;
    } */
+   return true
   }
 
   public mouseScrolled(mouseX: number, mouseY: number, delta: number): void {

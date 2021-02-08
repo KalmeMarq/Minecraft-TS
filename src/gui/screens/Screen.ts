@@ -86,8 +86,9 @@ export default class Screen extends AbstractGui implements IRenderable, IGuiEven
 
   public mouseDragged(mouseX: number, mouseY: number, button: number, dragX: number, dragY: number): void {
     // console.log(mouseX, mouseY, dragX, dragY);
-    this.children[0].mouseDragged(mouseX, mouseY, button, dragX, dragY)
-    
+    for(const iguieventlistener of this.getEventListeners()) {
+      iguieventlistener.mouseDragged(mouseX, mouseY, button, dragX, dragY);
+    }
     // return this.focusedWidget != -1 && this.getDragging() && button == 0 ? this.children[this.focusedWidget].mouseDragged(mouseX, mouseY, button, dragX, dragY) : false;
   }
   
@@ -129,7 +130,10 @@ export default class Screen extends AbstractGui implements IRenderable, IGuiEven
     }
 
     if(key === 'F3') this.minecraft.gameSettings.showFPS = !this.minecraft.gameSettings.showFPS;
-    else if(key == 'Escape' && this.shouldCloseOnEsc()) this.closeScreen();
+    else if(key == 'Escape' && this.shouldCloseOnEsc()) {
+      this.closeScreen();
+      this.onClose();
+    }
     else if (key == 'Tab') this.changeFocus(true);
     else if(key == 'Enter' && this.focusedWidget !== -1 && flag) this.focusedWidget = -1;
   }

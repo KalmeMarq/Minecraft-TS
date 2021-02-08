@@ -1,32 +1,25 @@
 import GameSettings from "../../GameSettings.js";
 import Minecraft from "../../Minecraft.js";
+import SliderPercentageOption from "../../settings/SliderPercentageOption.js";
 import MathHelper from "../../utils/MathHelper.js";
-import { int } from "../../utils/MouseHelper.js";
-// import SliderPercentageOption from "../../settings/SliderPercentageOption";
+import { double, float, int } from "../../utils/MouseHelper.js";
 import { GameSettingsSlider } from "./GameSettingsSlider.js";
 import Widgets from "./Widget.js";
 
-export default class OptionSlider extends Widgets {
-  // protected func_230979_b_(): void {
-  //   throw new Error("Method not implemented.");
-  // }
-  // protected func_230972_a_(): void {
-  //   throw new Error("Method not implemented.");
-  // }
+/* export default class OptionSlider extends Widgets {
   protected settings: GameSettings;
   protected sliderValue: number;
-  private option: any;
+  private option: SliderPercentageOption;
 
-   constructor(settings: GameSettings, xIn: number, yIn: number, widthIn: number, heightIn: number, defaultValue: number) {
-      super(xIn, yIn, widthIn, heightIn, '');
-      console.log(defaultValue);
-      this.option = defaultValue;
-      this.settings = settings;
-      this.sliderValue = defaultValue;
-      this.setMessage('Chat Scale: ' + int(defaultValue * 100) + '%')
-   }
+  constructor(settings: GameSettings, xIn: number, yIn: number, widthIn: number, heightIn: number, optionIn: SliderPercentageOption) {
+    super(xIn, yIn, widthIn, heightIn, '');
+    this.settings = settings;
+    this.option = optionIn;
+    this.sliderValue = (optionIn.normalizeValue(optionIn.get(settings)));
+    this.func_230979_b_();
+  }
 
-   protected getYImage(isHovered: boolean): number {
+  protected getYImage(isHovered: boolean): number {
     return 0;
   }
 
@@ -58,28 +51,41 @@ export default class OptionSlider extends Widgets {
     let d0 = this.sliderValue;
     this.sliderValue = MathHelper.clamp(value, 0.0, 1.0);
     if (d0 != this.sliderValue) {
-      console.log(this.sliderValue);
-      this.setSaveOptionValue(this.option);
+      this.setSaveOptionValue();
     }
   }
 
-   protected setSaveOptionValue(oqption: any): void {
-      // this.option = ~~this.sliderValue /* .set(this.settings, this.option.denormalizeValue(this.sliderValue)) */;
-    this.settings.chatScale = this.sliderValue;
-      this.settings.saveOptions();
-   }
+  public mouseDragged(mouseX: number, mouseY: number, dragX: number, dragY: number) {
+    this.changeSliderValue(mouseX);
+    return true
+  }
 
-   protected func_230979_b_(): void {
-      // this.setMessage(this.option.func_238334_c_(this.settings));
-   }
+  protected setSaveOptionValue() {
+    this.option.set(this.settings, this.option.denormalizeValue(this.sliderValue));
+    this.settings.saveOptions();
+  }
 
-    public mouseDragged(mouseX: number, mouseY: number, dragX: number, dragY: number) {
-      this.changeSliderValue(mouseX);
-      return true
-    }
+  protected func_230979_b_() {
+    this.setMessage(this.option.getName(this.settings));
+  }
+} */
 
 
-  //  public func_241867_d() {
-  //    /*  return this.option.getOptionValues(); */
-  //  }
+export default class OptionSlider extends GameSettingsSlider {
+  private option: SliderPercentageOption;
+
+  constructor(settings: GameSettings, xIn: number, yIn: number, widthIn: number, heightIn: number, optionIn: SliderPercentageOption) {
+    super(settings, xIn, yIn, widthIn, heightIn, (optionIn.normalizeValue(optionIn.get(settings))));
+    this.option = optionIn;
+    this.func_230979_b_();
+  }
+
+  protected setSaveOptionValue() {
+    this.option.set(this.settings, this.option.denormalizeValue(this.sliderValue));
+    this.settings.saveOptions();
+  }
+
+  protected func_230979_b_() {
+    this.setMessage(this.option.getName(this.settings));
+  }
 }

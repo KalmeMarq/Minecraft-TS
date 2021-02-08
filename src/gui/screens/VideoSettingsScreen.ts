@@ -1,12 +1,30 @@
-import AbstractOption from "../../GameOption.js";
 import GameSettings from "../../GameSettings.js";
+import GameOption from "../../GameOption.js";
 import { getKeyTranslation } from "../../utils/TranslationText.js";
 import Button from "../widgets/button/Button.js";
 import Screen from "./Screen.js";
 import SettingsScreen from "./SettingsScreen.js";
 
 export default class VideoSettingsScreen extends SettingsScreen {
-  private SCREEN_OPTIONS: AbstractOption[] = [AbstractOption.AdvancedItemTooltipsOption, AbstractOption.AutoJumpOption, AbstractOption.ForceUnicodeFont, AbstractOption.HeldItemTooltipsOption, AbstractOption.HideGUIOption, AbstractOption.RawMouseInputOption, AbstractOption.ShowFPSOption, AbstractOption.SkipMultiplayerWarningOption, AbstractOption.VsyncOption, AbstractOption.CLOUDS_OPTION, AbstractOption.GRAPHICS_FANCINESS, AbstractOption.AMBIENT_OCCLUSION_STATUS, AbstractOption.ATTACK_INDICATOR_STATUS, AbstractOption.CHAT_VISIBILITY, AbstractOption.HAND_SIDE, AbstractOption.PARTICLE_STATUS, AbstractOption.POINT_OF_VIEW];
+  private SCREEN_OPTIONS: any[] = [
+    GameOption.GRAPHICS_FANCINESS,
+    GameOption.RENDER_DISTANCE,
+    GameOption.AO,
+    GameOption.FRAMERATE_LIMIT,
+    GameOption.VSYNC,
+    GameOption.VIEW_BOBBING,
+    GameOption.GUI_SCALE,
+    GameOption.ATTACK_INDICATOR,
+    GameOption.GAMMA,
+    GameOption.RENDER_CLOUDS,
+    GameOption.FULLSCREEN,
+    GameOption.PARTICLES,
+    GameOption.MIPMAP_LEVELS,
+    GameOption.ENTITY_SHADOWS,
+    GameOption.SCREEN_EFFECT_SCALE_SLIDER,
+    GameOption.ENTITY_DISTANCE_SCALING,
+    GameOption.FOV_EFFECT_SCALE_SLIDER
+  ];
   
   constructor(parentScreen: Screen, gameSettingsObj: GameSettings) {
     super(parentScreen, gameSettingsObj, getKeyTranslation("options.videoTitle"))
@@ -28,6 +46,6 @@ export default class VideoSettingsScreen extends SettingsScreen {
 
   public render(context: CanvasRenderingContext2D, mouseX: number, mouseY: number): void {
     super.render(context, mouseX, mouseY);
-    this.drawCenteredString(context, this.title, this.width / 2, 20, 16777215);
+    this.drawCenteredString(context, this.title, this.width / 2, 5, 16777215);
   }
 }

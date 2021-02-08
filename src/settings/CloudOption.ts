@@ -1,18 +1,29 @@
-export default class CloudOption {
-  protected static AllValues: { [id: number]: CloudOption } = {};
+import MathHelper from "../utils/MathHelper";
+import Utils from "../utils/Utils";
 
+export default class CloudOption {
   static readonly OFF = new CloudOption(0, 'options.off');
   static readonly FAST = new CloudOption(1, 'options.clouds.fast');
   static readonly FANCY = new CloudOption(2, 'options.clouds.fancy');
 
-  protected constructor(public readonly id: number, public readonly key: string) {
-    CloudOption.AllValues[id] = this;
+  private static BY_ID: CloudOption[] = Object.values(CloudOption).sort(Utils.sortIteratable);
+
+  public id: number;
+  public key: string;
+  private constructor(id: number, key: string) {
+    this.id = id;
+    this.key = key;
+  }
+
+  public getId(): number {
+    return this.id;
+  }
+
+  public getKey() {
+    return this.key;
   }
 
   public static byId(id: number): CloudOption {
-    let ids: number[] = [];
-    Object.keys(this.AllValues).forEach((id: any) => ids.push(Number(id)));
-    if(id == ids.length) id = 0;
-    return this.AllValues[id];
+    return CloudOption.BY_ID[MathHelper.normalizeAngle(id, CloudOption.BY_ID.length)];
   }
 }

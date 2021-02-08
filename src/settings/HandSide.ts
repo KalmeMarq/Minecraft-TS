@@ -1,17 +1,28 @@
-export default class HandSide {
-  protected static AllValues: { [id: number]: HandSide } = {};
+import MathHelper from "../utils/MathHelper";
+import Utils from "../utils/Utils";
 
+export default class HandSide {
   static readonly LEFT = new HandSide(0, 'options.mainHand.left');
   static readonly RIGHT = new HandSide(1, 'options.mainHand.right');
 
-  protected constructor(public readonly id: number, public readonly key: string) {
-    HandSide.AllValues[id] = this;
+  private static BY_ID: HandSide[] = Object.values(HandSide).sort(Utils.sortIteratable);
+
+  public id: number;
+  public key: string;
+  private constructor(id: number, key: string) {
+    this.id = id;
+    this.key = key;
+  }
+
+  public getId(): number {
+    return this.id;
+  }
+
+  public getKey() {
+    return this.key;
   }
 
   public static byId(id: number): HandSide {
-    let ids: number[] = [];
-    Object.keys(this.AllValues).forEach((id: any) => ids.push(Number(id)));
-    if(id == ids.length) id = 0;
-    return this.AllValues[id];
+    return HandSide.BY_ID[MathHelper.normalizeAngle(id, HandSide.BY_ID.length)];
   }
 }

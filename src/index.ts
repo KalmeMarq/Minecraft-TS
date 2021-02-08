@@ -1,17 +1,17 @@
 import GameConfiguration from "./GameConfiguration.js";
-import IMCResources from "./interfaces/IResources.js";
 import Minecraft from "./Minecraft.js";
-import { getAllResources, MCResources } from "./utils/Resources.js";
+import { getAllResources } from "./utils/Resources.js";
+import './utils/String';
 
+if(localStorage.getItem('GameSettings')) localStorage.removeItem('GameSettings');
+if(localStorage.getItem('Resources')) localStorage.removeItem('Resources');
+if(localStorage.getItem('prevScreen')) localStorage.removeItem('prevScreen');
 
 export default class Main {
   public static async main(): Promise<void> {
     await getAllResources();
     await getAllResources();
     await getAllResources();
-
-    // console.log(MCResources);
-    // (<HTMLCanvasElement>document.getElementById('root')).getContext('2d')!.clearRect(0, 0, document.querySelector('.window')!.clientWidth, document.querySelector('.window')!.clientHeight);
 
     const gameconfigs = new GameConfiguration(new GameConfiguration.UserInformation('KalmeMarq'), new GameConfiguration.GameInformation(false, '1.42.0', 'release', 'vanilla'));
     let minecraft: Minecraft;

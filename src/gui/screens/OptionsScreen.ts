@@ -1,5 +1,5 @@
-import AbstractOption from '../../GameOption.js';
 import GameSettings from '../../GameSettings.js';
+import GameOption from '../../GameOption.js';
 import { getKeyTranslation } from '../../utils/TranslationText.js';
 import Button from '../widgets/button/Button.js';
 import AccessibilityScreen from './AccessibilityScreen.js';
@@ -10,9 +10,13 @@ import LanguageScreen from './LanguageScreen.js';
 import OptionsSoundsScreen from './OptionsSoundsScreen.js';
 import Screen from './Screen.js';
 import VideoSettingsScreen from './VideoSettingsScreen.js';
+import DebugSettingsScreen from './DebugSettings.js';
 
 export default class OptionsScreen extends Screen {
-  private SCREEN_OPTIONS: AbstractOption[] = [AbstractOption.TestOption, AbstractOption.ShowFPSOption];
+  private SCREEN_OPTIONS: GameOption[] = [
+    GameOption.FOV,
+    GameOption.REALMS_NOTIFICATIONS
+  ];
   public parentScreen;
   private settings: GameSettings;
 
@@ -39,6 +43,10 @@ export default class OptionsScreen extends Screen {
     const baseY = this.height / 6 - 6;
     const baseX0 = this.width / 2 - 155;
     const baseX1 = baseX0 + 160;
+
+    this.addButton(new Button(baseX0, baseY + 24, 150, 20, getKeyTranslation('Debug'), () => {
+      this.minecraft.displayGuiScreen(new DebugSettingsScreen(this, this.settings));
+    }));
 
     this.addButton(new Button(baseX0, baseY + 48, 150, 20, getKeyTranslation('options.skinCustomisation'), () => {
       this.minecraft.displayGuiScreen(new CustomizeSkinScreen(this, this.settings));

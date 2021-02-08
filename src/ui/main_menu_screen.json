@@ -13,7 +13,7 @@
           "type": "button",
           "text": "menu.playdemo",
           "size": [200, 20],
-          "offset": ["100% / 2 - 100px", "100% / 4 + 48px"],
+          "offset": ["50% - 100px", "100% / 4 + 48px"],
           "button_id": "button.menu_playdemo",
           "ignored": "(not $is_demo)"
         }
@@ -21,7 +21,7 @@
       {
         "reset_demo@main_menu_screen.button_base": {
           "text": "menu.resetdemo",
-          "offset": ["100% / 2 - 100px", "100% / 4 + 72px"],
+          "offset": ["50% - 100px", "100% / 4 + 48px + 24px"],
           "button_id": "button.menu_resetdemo",
           "ignored": "(not $is_demo)",
           "active": false
@@ -30,7 +30,7 @@
       {
         "singleplayer@test_screen.main_button": {
           "text": "menu.singleplayer",
-          "offset": ["100% / 2 - 100px", "100% / 4 + 48px"],
+          "offset": ["50% - 100px", "100% / 4 + 48px"],
           "button_id": "button.menu_singleplayer",
           "ignored": "$is_demo"
         }
@@ -38,7 +38,7 @@
       {
         "multiplayer@button_base": {
           "text": "menu.multiplayer",
-          "offset": ["100% / 2 - 100px", "100% / 4 + 72px"],
+          "offset": ["50% - 100px", "100% / 4 + 48px + 24px"],
           "button_id": "button.menu_multiplayer",
           "ignored": "$is_demo"
         }
@@ -46,7 +46,7 @@
       {
         "realms@button_base": {
           "text": "menu.online",
-          "offset": ["100% / 2 - 100px", "100% / 4 + 96px"],
+          "offset": ["50% - 100px", "100% / 4 + 96px"],
           "button_id": "button.menu_online",
           "ignored": "$is_demo"
         }
@@ -56,7 +56,7 @@
           "type": "button",
           "size": [98, 20],
           "text": "menu.options",
-          "offset": ["100% / 2 - 100px", "100% / 4 + 132px"],
+          "offset": ["50% - 100px", "100% / 4 + 132px"],
           "button_id": "button.menu_options"
         }
       },
@@ -65,7 +65,7 @@
           "type": "button",
           "size": [98, 20],
           "text": "menu.quit",
-          "offset": ["100% / 2 + 2px", "100% / 4 + 132px"],
+          "offset": ["50% + 2px", "100% / 4 + 132px"],
           "button_id": "button.menu_quit"
         }
       },
@@ -73,7 +73,7 @@
         "language": {
           "type": "button_image",
           "size": [20, 20],
-          "offset": ["100% / 2 - 124px", "100% / 4 + 132px"],
+          "offset": ["50% - 124px", "100% / 4 + 132px"],
           "button_id": "button.settings_language",
           "texture": { "image": "gui/widgets", "base_uv_size": [20, 20], "base_uv": [0, 106] }
         }
@@ -82,7 +82,7 @@
         "accessibility": {
           "type": "button_image",
           "size": [20, 20],
-          "offset": ["100% / 2 + 104px", "100% / 4 + 132px"],
+          "offset": ["50% + 104px", "100% / 4 + 132px"],
           "button_id": "button.settings_accessibility",
           "texture": { "image": "gui/accessibility", "base_uv_size": [20, 20], "base_uv": [0, 0] }
         }

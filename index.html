@@ -1,69 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="dist/styles/index.min.css">
-  <link rel="shortcut icon" href="resources/assets/icons/icon_32x32.png" type="image/x-icon">
-  <title>Minecraft JS</title>
-</head>
-<body>
-  <!-- <div class="window"> -->
-   <!--  <div class="window-top-bar"></div> -->
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="dist/styles/index.min.css">
+    <link rel="shortcut icon" href="resources/assets/icons/icon_32x32.png" type="image/x-icon">
+    <title>Minecraft JS</title>
+  </head>
+  <body>
     <canvas id="root"></canvas>
-<!--   </div> -->
-  <script type="module" src="dist/scripts/index.js"></script>
-  <script src="https://requirejs.org/docs/release/2.3.6/comments/require.js"></script>
-  <script src="dist/scripts/requires.js"></script>
-
-  <!-- <script>
-    const a = document.querySelector('.window-top-bar');
-    a.innerHTML = document.title;
-
-    let isD = false;
-    let isF = false;
-
-    a.addEventListener('dblclick', () => {
-      if(!isF) {
-        isF = true;
-        document.querySelector('.window').style.left = '0';
-        document.querySelector('.window').style.top = '0';
-        document.querySelector('.window').style.width = '100%';
-        document.querySelector('.window').style.height = '100%';
-      } else {
-        isF = false;
-        document.querySelector('.window').style.left = '20px';
-        document.querySelector('.window').style.width = '1280px';
-        document.querySelector('.window').style.height = '800px';
-      }
-      // let canvasWidth = document.querySelector('.window').clientWidth - 40 + 40;
-      // let canvasHeight = document.querySelector('.window').clientHeight - 40 +40;
-      // document.getElementById('root').width = canvasWidth;
-      // document.getElementById('root').height = canvasHeight;
-      // document.getElementById('root').getContext('2d').scale(3, 3);
-      // document.getElementById('root').getContext('2d').imageSmoothingEnabled = false;
-    })
-
-    document.querySelector('.window-top-bar').addEventListener('mousedown', (e) => {
-      if(e.button == 0) {
-        isD = true
-      }
-    })
-
-    a.addEventListener('mouseup', (e) => {
-      if(e.button == 0) {
-        isD = false
-      }
-    })
-
-  
-    window.addEventListener('mousemove', (e) => {
-      if(isD) {
-        document.querySelector('.window').style.top = e.clientY + 'px';
-        document.querySelector('.window').style.left = e.clientX + 'px';
-      }
-    });
-
-  </script> -->
-</body>
+    <script type="module" src="dist/scripts/index.js"></script>
+    <script src="dist/scripts/require.js"></script>
+    <script src="dist/scripts/requires.js"></script>
+  </body>
 </html>

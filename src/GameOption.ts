@@ -1,175 +1,418 @@
-import GameSettings from "./GameSettings.js";
-import AmbientOcclusionStatus from "./settings/AmbientOcclusionStatus.js";
-import AttackIndicatorStatus from "./settings/AttackIndicatorStatus.js";
-import BooleanOption from "./settings/BooleanOption.js";
-import ChatVisibility from "./settings/ChatVisibility.js";
-import CloudOption from "./settings/CloudOption.js";
-import GraphicsFanciness from "./settings/GraphicsFanciness.js";
-import HandSide from "./settings/HandSide.js";
-import IteratableOption from "./settings/IteratableOption.js";
-import NarratorStatus from "./settings/NarratorStatus.js";
-import ParticleStatus from "./settings/ParticleStatus.js";
-import PointOfView from "./settings/PointOfView.js";
-// import SliderPercentageOption from "./settings/SliderPercentageOption";
-import SneakOption from "./settings/SneakOption.js";
-import SprintOption from "./settings/SprintOption.js";
+import GameSettings from './GameSettings';
+import AmbientOcclusionStatus from './settings/AmbientOcclusionStatus';
+import AttackIndicatorStatus from './settings/AttackIndicatorStatus';
+import BooleanOption from './settings/BooleanOption';
+import ChatVisibility from './settings/ChatVisibility';
+import CloudOption from './settings/CloudOption';
+import GraphicsFanciness from './settings/GraphicsFanciness';
+import HandSide from './settings/HandSide';
+import NarratorStatus from './settings/NarratorStatus';
+import IteratableOption from './settings/IteratableOption.js';
+import ParticleStatus from './settings/ParticleStatus';
+import PointOfView from './settings/PointOfView';
+import TranslationTextComponent, { getKeyTranslation } from './utils/TranslationText'
+import SliderPercentageOption from './settings/SliderPercentageOption';
+import Minecraft from './Minecraft';
+import MathHelper from './utils/MathHelper';
+import { double, int } from './utils/MouseHelper';
+import SliderMultiplierOption from './settings/SliderMultiplierOption';
 
 export default abstract class GameOption {
-  public static ShowFPSOption: BooleanOption = new BooleanOption('Show FPS', (settings: GameSettings) => {
-    return settings.showFPS;
-  }, (settings: GameSettings, optionValues: any) => {
-    settings.showFPS = optionValues;
-  });
-
-  public static AdvancedItemTooltipsOption: BooleanOption = new BooleanOption('Advanced tooltips', (settings: GameSettings) => {
-    return settings.advancedItemTooltips;
-  }, (settings: GameSettings, optionValues: any) => {
-    settings.advancedItemTooltips = optionValues;
-  });
-
-  public static HeldItemTooltipsOption: BooleanOption = new BooleanOption('Held tooltips', (settings: GameSettings) => {
-    return settings.heldItemTooltips;
-  }, (settings: GameSettings, optionValues: any) => {
-    settings.heldItemTooltips = optionValues;
-  });
-
-  public static RawMouseInputOption: BooleanOption = new BooleanOption('options.rawMouseInput', (settings: GameSettings) => {
+  public static RAW_MOUSE_INPUT: BooleanOption = new BooleanOption('options.rawMouseInput', (settings: GameSettings) => {
     return settings.rawMouseInput;
   }, (settings: GameSettings, optionValues: any) => {
-    settings.rawMouseInput = optionValues;
+      settings.rawMouseInput = optionValues;
   });
 
-  public static SkipMultiplayerWarningOption: BooleanOption = new BooleanOption('Skip Multiplayer Warning', (settings: GameSettings) => {
-    return settings.skipMultiplayerWarning;
+  public static AUTO_SUGGEST_COMMANDS: BooleanOption = new BooleanOption('options.autoSuggestCommands', (settings: GameSettings) => {
+    return settings.autoSuggestCommands;
   }, (settings: GameSettings, optionValues: any) => {
-    settings.skipMultiplayerWarning = optionValues;
+    settings.autoSuggestCommands = optionValues;
   });
 
-  public static AutoJumpOption: BooleanOption = new BooleanOption('options.autoJump', (settings: GameSettings) => {
-    return settings.autoJump;
+  public static field_244786_G: BooleanOption = new BooleanOption('options.hideMatchedNames', (settings: GameSettings) => {
+    return settings.hideMatchedNames;
   }, (settings: GameSettings, optionValues: any) => {
-    settings.autoJump = optionValues;
+    settings.hideMatchedNames = optionValues;
   });
 
-  public static VsyncOption: BooleanOption = new BooleanOption('options.vsync', (settings: GameSettings) => {
+  public static CHAT_COLOR: BooleanOption = new BooleanOption('options.chat.color', (settings: GameSettings) => {
+    return settings.chatColor;
+  }, (settings: GameSettings, optionValues: any) => {
+    settings.chatColor = optionValues;
+  });
+
+  public static CHAT_LINKS: BooleanOption = new BooleanOption('options.chat.links', (settings: GameSettings) => {
+    return settings.chatLinks;
+  }, (settings: GameSettings, optionValues: any) => {
+    settings.chatLinks = optionValues;
+  });
+
+  public static CHAT_LINKS_PROMPT: BooleanOption = new BooleanOption('options.chat.links.prompt', (settings: GameSettings) => {
+    return settings.chatLinksPrompt;
+  }, (settings: GameSettings, optionValues: any) => {
+    settings.chatLinksPrompt = optionValues;
+  });
+
+  public static DISCRETE_MOUSE_SCROLL: BooleanOption = new BooleanOption('options.discrete_mouse_scroll', (settings: GameSettings) => {
+    return settings.discreteMouseScroll;
+  }, (settings: GameSettings, optionValues: any) => {
+    settings.discreteMouseScroll = optionValues;
+  });
+
+  public static VSYNC: BooleanOption = new BooleanOption('options.vsync', (settings: GameSettings) => {
     return settings.vsync;
   }, (settings: GameSettings, optionValues: any) => {
     settings.vsync = optionValues;
   });
 
-  public static ForceUnicodeFont: BooleanOption = new BooleanOption('options.forceUnicodeFont', (settings: GameSettings) => {
+  public static ENTITY_SHADOWS: BooleanOption = new BooleanOption('options.entityShadows', (settings: GameSettings) => {
+    return settings.entityShadows;
+  }, (settings: GameSettings, optionValues: any) => {
+    settings.entityShadows = optionValues;
+  });
+
+  public static FORCE_UNICODE_FONT: BooleanOption = new BooleanOption('options.forceUnicodeFont', (settings: GameSettings) => {
     return settings.forceUnicodeFont;
   }, (settings: GameSettings, optionValues: any) => {
     settings.forceUnicodeFont = optionValues;
   });
 
-  public static ShowSubtitlesOption: BooleanOption = new BooleanOption('options.showSubtitles', (settings: GameSettings) => {
+  public static INVERT_MOUSE: BooleanOption = new BooleanOption('options.invertMouse', (settings: GameSettings) => {
+    return settings.invertMouse;
+  }, (settings: GameSettings, optionValues: any) => {
+    settings.invertMouse = optionValues;
+  });
+
+  public static REALMS_NOTIFICATIONS: BooleanOption = new BooleanOption('options.realmsNotifications', (settings: GameSettings) => {
+    return settings.realmsNotifications;
+  }, (settings: GameSettings, optionValues: any) => {
+    settings.realmsNotifications = optionValues;
+  });
+
+  public static REDUCED_DEBUG_INFO: BooleanOption = new BooleanOption('options.reducedDebugInfo', (settings: GameSettings) => {
+    return settings.reducedDebugInfo;
+  }, (settings: GameSettings, optionValues: any) => {
+    settings.reducedDebugInfo = optionValues;
+  });
+
+  public static SHOW_SUBTITLES: BooleanOption = new BooleanOption('options.showSubtitles', (settings: GameSettings) => {
     return settings.showSubtitles;
   }, (settings: GameSettings, optionValues: any) => {
     settings.showSubtitles = optionValues;
   });
 
-  public static HideGUIOption: BooleanOption = new BooleanOption('Hide GUI', (settings: GameSettings) => {
+  public static SNOOPER: BooleanOption = new BooleanOption('options.snooper', (settings: GameSettings) => {
+    return false;
+  }, (settings: GameSettings, optionValues: any) => {
+    settings.snooper = optionValues;
+  });
+
+  public static TOUCHSCREEN: BooleanOption = new BooleanOption('options.touchscreen', (settings: GameSettings) => {
+    return settings.touchscreen;
+  }, (settings: GameSettings, optionValues: any) => {
+    settings.touchscreen = optionValues;
+  });
+
+  public static FULLSCREEN: BooleanOption = new BooleanOption('options.fullscreen', (settings: GameSettings) => {
+    return settings.fullscreen;
+  }, (settings: GameSettings, optionValues: any) => {
+    let elem = document.documentElement;
+  /*   if(optionValues) {
+      if(elem.requestFullscreen) elem.requestFullscreen();
+    } else {
+      if(document.exitFullscreen) document.exitFullscreen();
+    } */
+    
+    settings.fullscreen = optionValues;
+  });
+
+  public static VIEW_BOBBING: BooleanOption = new BooleanOption('options.viewBobbing', (settings: GameSettings) => {
+    return settings.viewBobbing;
+  }, (settings: GameSettings, optionValues: any) => {
+    settings.viewBobbing = optionValues;
+  });
+
+  public static AUTO_JUMP: BooleanOption = new BooleanOption('options.autoJump', (settings: GameSettings) => {
+    return settings.autoJump;
+  }, (settings: GameSettings, optionValues: any) => {
+    settings.autoJump = optionValues;
+  });
+
+  public static SHOW_FPS: BooleanOption = new BooleanOption('Show FPS', (settings: GameSettings) => {
+    return settings.showFPS;
+  }, (settings: GameSettings, optionValues: any) => {
+    settings.showFPS = optionValues;
+  });
+
+  public static HIDE_GUI: BooleanOption = new BooleanOption('Hide GUI', (settings: GameSettings) => {
     return settings.hideGUI;
   }, (settings: GameSettings, optionValues: any) => {
     settings.hideGUI = optionValues;
   });
+
+  public static SKIP_MULTIPLAYER_WARNING: BooleanOption = new BooleanOption('Skip Multiplayer Warning', (settings: GameSettings) => {
+    return settings.skipMultiplayerWarning;
+  }, (settings: GameSettings, optionValues: any) => {
+    settings.skipMultiplayerWarning = optionValues;
+  });
+
+  public static ADVANCED_TOOLTIPS: BooleanOption = new BooleanOption('Advanced tooltips', (settings: GameSettings) => {
+    return settings.advancedItemTooltips;
+  }, (settings: GameSettings, optionValues: any) => {
+    settings.advancedItemTooltips = optionValues;
+  });
+
+  public static HELD_TOOLTIPS: BooleanOption = new BooleanOption('Held tooltips', (settings: GameSettings) => {
+    return settings.heldItemTooltips;
+  }, (settings: GameSettings, optionValues: any) => {
+    settings.heldItemTooltips = optionValues;
+  });
+
+  public static HIDE_MATCHED_NAMES: BooleanOption = new BooleanOption('options.hideMatchedNames', (settings: GameSettings) => {
+    return settings.hideMatchedNames;
+  }, (settings: GameSettings, optionValues: boolean) => {
+    settings.hideMatchedNames = optionValues;
+  });
+
+  public static AO: IteratableOption = new IteratableOption('options.ao', (settings: GameSettings, optionValues: any) => {
+    settings.ambientOcclusionStatus = AmbientOcclusionStatus.byId(settings.ambientOcclusionStatus.getId() + optionValues);
+  }, (settings: GameSettings, optionValues: any) => {
+    return optionValues.getGenericValueComponent(getKeyTranslation(settings.ambientOcclusionStatus.getKey()));
+  });
+
+  public static ATTACK_INDICATOR = new IteratableOption('options.attackIndicator', (settings: GameSettings, optionValues: any) => {
+    settings.attackIndicator = AttackIndicatorStatus.byId(settings.attackIndicator.getId() + optionValues);
+  }, (settings: GameSettings, optionValues: any ) => {
+    return optionValues.getGenericValueComponent(getKeyTranslation(settings.attackIndicator.getKey()));
+  });
+    
+  public static CHAT_VISIBILITY: IteratableOption = new IteratableOption('options.chat.visibility', (settings: GameSettings, optionValues: any) => {
+    settings.chatVisibility = ChatVisibility.byId(settings.chatVisibility.getId() + optionValues);
+  }, (settings: GameSettings, optionValues: any) => {
+    return optionValues.getGenericValueComponent(settings.chatVisibility.getKey());
+  });
+
+  public static MAIN_HAND: IteratableOption = new IteratableOption('options.mainHand', (settings: GameSettings, optionValues: any) => {
+    settings.mainHand = HandSide.byId(settings.narrator.getId() + optionValues);
+  }, (settings: GameSettings, optionValues: any) => {
+    return optionValues.getGenericValueComponent(settings.mainHand.getKey());
+  });
+
+  public static NARRATOR: IteratableOption = new IteratableOption('options.narrator', (settings: GameSettings, optionValues: any) => {
+    settings.narrator = NarratorStatus.byId(settings.narrator.getId() + optionValues);
+  }, (settings: GameSettings, optionValues: any) => {
+    return optionValues.getGenericValueComponent(settings.narrator.getKey());
+  });
+
+  public static PARTICLES: IteratableOption = new IteratableOption('options.particles', (settings: GameSettings, optionValues: any) => {
+    settings.particles = ParticleStatus.byId(settings.particles.getId() + optionValues);
+  }, (settings: GameSettings, optionValues: any) => {
+    return optionValues.getGenericValueComponent(getKeyTranslation(settings.particles.getKey()));
+  });
+
+  public static RENDER_CLOUDS: IteratableOption = new IteratableOption('options.renderClouds', (settings: GameSettings, optionValues: any) => {
+    settings.cloudOption = CloudOption.byId(settings.cloudOption.getId() + optionValues);
+  }, (settings: GameSettings, optionValues: any) => {
+    return optionValues.getGenericValueComponent(getKeyTranslation(settings.cloudOption.getKey()));
+  });
+
+  public static ACCESSIBILITY_TEXT_BACKGROUND: IteratableOption = new IteratableOption('options.accessibility.text_background', (settings: GameSettings, optionValues: any) => {
+    settings.accessibilityTextBackground = !settings.accessibilityTextBackground;
+  }, (settings: GameSettings, optionValues: any) => {
+    return optionValues.getGenericValueComponent(getKeyTranslation(settings.accessibilityTextBackground ? 'options.accessibility.text_background.chat' : 'options.accessibility.text_background.everywhere'));
+  });
+
+  public static GUI_SCALE: IteratableOption = new IteratableOption('options.guiScale', (settings: GameSettings, optionValues: any) => {
+    settings.guiScale = 0;
+  }, (settings: GameSettings, optionValues: any) => {
+    return settings.guiScale == 0 ? optionValues.getGenericValueComponent(getKeyTranslation('options.guiScale.auto')) : optionValues.getMessageWithValue(settings.guiScale);
+  });
+
+  public static SNEAK: IteratableOption = new IteratableOption('key.sneak', (settings: GameSettings, optionValues: any) => {
+    settings.toggleCrouch = !settings.toggleCrouch;
+  }, (settings: GameSettings, optionValues: any) => {
+    return optionValues.getGenericValueComponent(getKeyTranslation(settings.toggleCrouch ? 'options.key.toggle' : 'options.key.hold'));
+  });
+
+  public static SPRINT: IteratableOption = new IteratableOption('key.sprint', (settings: GameSettings, optionValues: any) => {
+    settings.toggleSprint = !settings.toggleSprint;
+  }, (settings: GameSettings, optionValues: any) => {
+    return optionValues.getGenericValueComponent(getKeyTranslation(settings.toggleSprint ? 'options.key.toggle' : 'options.key.hold'));
+  });
+
+  public static GRAPHICS_FANCINESS: IteratableOption = new IteratableOption('options.graphics', (settings: GameSettings, optionValues: any) => {
+    settings.graphicFanciness = GraphicsFanciness.byId(settings.graphicFanciness.getId() + optionValues);
+  }, (settings: GameSettings, optionValues: any) => {
+    return optionValues.getGenericValueComponent(getKeyTranslation(settings.graphicFanciness.getKey()));
+  });
+
+  public static POINT_OF_VIEW: IteratableOption = new IteratableOption('POINT_OF_VIEW', (settings: GameSettings, optionValues: any) => {
+    settings.pointOfView = PointOfView.byId(settings.pointOfView.getId() + optionValues);
+  }, (settings: GameSettings, optionValues: any) => {
+    return optionValues.getGenericValueComponent(getKeyTranslation(settings.pointOfView.getKey()));
+  });
+
+  public static CHAT_SCALE: SliderPercentageOption = new SliderPercentageOption('options.chat.scale', 0, 1, 0, (settings: GameSettings) => {
+    return settings.chatScale;
+  }, (settings: GameSettings, optionValues: any) => {
+    settings.chatScale = optionValues;
+  }, (settings: GameSettings, optionValues: any) => {
+    let value = optionValues.normalizeValue(optionValues.get(settings));
+    return (value == 0 ? (getKeyTranslation(optionValues.getBaseMessageTranslation()) + ': ' + getKeyTranslation(optionValues.get(settings) === true ? 'options.on' : 'options.off')) : optionValues.getPercentValueComponent(value));
+  });
+
+  public static CHAT_OPACITY: SliderPercentageOption = new SliderPercentageOption('options.chat.opacity', 0, 1, 0, (settings: GameSettings) => {
+    return settings.chatOpacity;
+  }, (settings: GameSettings, optionValues: any) => {
+    settings.chatOpacity = optionValues;
+  }, (settings: GameSettings, optionValues: any) => {
+    let value = optionValues.normalizeValue(optionValues.get(settings));
+    return optionValues.getPercentValueComponent(value * 0.9 + 0.1);
+  });
   
-  public static TestOption: BooleanOption = new BooleanOption('Test', (settings: GameSettings) => {
-    return settings.testthing;
+  public static LINE_SPACING: SliderPercentageOption = new SliderPercentageOption('options.chat.line_spacing', 0, 1, 0, (settings: GameSettings) => {
+    return settings.chatLineSpacing;
   }, (settings: GameSettings, optionValues: any) => {
-    settings.testthing = optionValues;
-  });
-
-  public static CHAT_COLOR: BooleanOption = new BooleanOption("options.chat.color", (settings: GameSettings) => {
-    return settings.chatColor;
+    settings.chatLineSpacing = optionValues;
   }, (settings: GameSettings, optionValues: any) => {
-      settings.chatColor = optionValues;
+    return optionValues.getPercentValueComponent(optionValues.normalizeValue(optionValues.get(settings)));
   });
 
-  public static CHAT_LINKS: BooleanOption = new BooleanOption("options.chat.links", (settings: GameSettings) => {
-    return settings.chatLinks;
+  public static FOV_EFFECT_SCALE_SLIDER: SliderPercentageOption = new SliderPercentageOption('options.fovEffectScale', 0.0, 1.0, 0.0, (settings: GameSettings) => {
+    return Math.pow(settings.fovScaleEffect, 2.0);
   }, (settings: GameSettings, optionValues: any) => {
-      settings.chatLinks = optionValues;
-  });
-
-  public static CHAT_LINKS_PROMPT: BooleanOption = new BooleanOption("options.chat.links.prompt", (settings: GameSettings) => {
-    return settings.chatLinksPrompt;
+    settings.fovScaleEffect = MathHelper.sqrt(optionValues);
   }, (settings: GameSettings, optionValues: any) => {
-      settings.chatLinksPrompt = optionValues;
+    let value = optionValues.normalizeValue(optionValues.get(settings));
+    return value == 0.0 ? optionValues.getGenericValueComponent(getKeyTranslation('options.fovEffectScale.off')) : optionValues.getPercentValueComponent(value);
   });
 
-  public static SPRINT: IteratableOption = new IteratableOption('key.sprint', (settings: GameSettings) => {
-    return settings.toggleSprint;
-  }, (settings: GameSettings) => {
-    settings.toggleSprint = SprintOption.byId(settings.toggleSprint.id + 1);
+  public static SCREEN_EFFECT_SCALE_SLIDER: SliderPercentageOption = new SliderPercentageOption('options.screenEffectScale', 0.0, 1.0, 0.0, (settings: GameSettings) => {
+    return settings.screenEffectScale;
+  }, (settings: GameSettings, percentage: any) => {
+    settings.screenEffectScale = percentage;
+  }, (percentage: GameSettings, percentage2: any) => {
+    let value = percentage2.normalizeValue(percentage2.get(percentage));
+    return value == 0.0 ? percentage2.getGenericValueComponent(getKeyTranslation('options.screenEffectScale.off')) : percentage2.getPercentValueComponent(value);
+  }); 
+
+  public static DELAY_INSTANT: SliderPercentageOption = new SliderPercentageOption('options.chat.delay_instant', 0, 6, 0.1, (settings: GameSettings) => {
+    return settings.chatDelay;
+  }, (settings: GameSettings, optionValues: any) => {
+    settings.chatDelay = optionValues;
+  }, (settings: GameSettings, optionValues: any) => {
+    let value = optionValues.get(settings);
+    return value <= 0 ? getKeyTranslation('options.chat.delay_none') : getKeyTranslation('options.chat.delay').replace('%s', value.toFixed(1));
   });
 
-  public static SNEAK: IteratableOption = new IteratableOption('key.sneak', (settings: GameSettings) => {
-    return settings.toggleCrouch;
-  }, (settings: GameSettings) => {
-    settings.toggleCrouch = SneakOption.byId(settings.toggleCrouch.id + 1);
+  public static ACCESSIBILITY_TEXT_BACKGROUND_OPACITY: SliderPercentageOption = new SliderPercentageOption('options.accessibility.text_background_opacity', 0, 1, 0, (settings: GameSettings) => {
+    return settings.accessibilityTextBackgroundOpacity;
+  }, (settings: GameSettings, optionValues: number) => {
+    settings.accessibilityTextBackgroundOpacity = optionValues;
+  }, (settings: GameSettings, optionValues: any) => {
+    return optionValues.getPercentValueComponent(optionValues.normalizeValue(optionValues.get(settings)));
   });
 
-  public static GRAPHICS_FANCINESS: IteratableOption = new IteratableOption('options.graphics', (settings: GameSettings) => {
-    return settings.graphicFanciness;
-  }, (settings: GameSettings) => {
-    settings.graphicFanciness = GraphicsFanciness.byId(settings.graphicFanciness.id + 1);
+  public static CHAT_WIDTH: SliderPercentageOption = new SliderPercentageOption('options.chat.width', 0, 1, 0, (settings: GameSettings) => {
+    return settings.chatWidth;
+  }, (settings: GameSettings, optionValues: number) => {
+    settings.chatWidth = optionValues;
+  }, (settings: GameSettings, optionValues: any) => {
+    const value = optionValues.normalizeValue(optionValues.get(settings));
+    return optionValues.getPixelValueComponent(Math.floor(value * 280 + 40));
   });
 
-  public static CLOUDS_OPTION: IteratableOption = new IteratableOption('options.renderClouds', (settings: GameSettings) => {
-    return settings.cloudsOption;
-  }, (settings: GameSettings) => {
-    settings.cloudsOption = CloudOption.byId(settings.cloudsOption.id + 1);
+  public static CHAT_HEIGHT_FOCUSED: SliderPercentageOption = new SliderPercentageOption('options.chat.height.focused', 0, 1, 0, (settings: GameSettings) => {
+    return settings.chatHeightFocused;
+  }, (settings: GameSettings, optionValues: number) => {
+    settings.chatHeightFocused = optionValues;
+  }, (settings: GameSettings, optionValues: any) => {
+    const value = optionValues.normalizeValue(optionValues.get(settings));
+    return optionValues.getPixelValueComponent(Math.floor(value * 160 + 20));
   });
 
-  public static AMBIENT_OCCLUSION_STATUS: IteratableOption = new IteratableOption('options.ao', (settings: GameSettings) => {
-    return settings.ambientOcclusion;
-  }, (settings: GameSettings) => {
-    settings.ambientOcclusion = AmbientOcclusionStatus.byId(settings.ambientOcclusion.id + 1);
+  public static CHAT_HEIGHT_UNFOCUSED: SliderPercentageOption = new SliderPercentageOption('options.chat.height.unfocused', 0, 1, 0, (settings: GameSettings) => {
+    return settings.chatHeightUnfocused;
+  }, (settings: GameSettings, optionValues: number) => {
+    settings.chatHeightUnfocused = optionValues;
+  }, (settings: GameSettings, optionValues: any) => {
+    const value = optionValues.normalizeValue(optionValues.get(settings));
+    return optionValues.getPixelValueComponent(Math.floor(value * 160 + 20));
   });
 
-  public static ATTACK_INDICATOR_STATUS: IteratableOption = new IteratableOption('options.attackIndicator', (settings: GameSettings) => {
-    return settings.attackIndicator;
-  }, (settings: GameSettings) => {
-    settings.attackIndicator = AttackIndicatorStatus.byId(settings.attackIndicator.id + 1);
+  public static RENDER_DISTANCE: SliderPercentageOption = new SliderPercentageOption('options.renderDistance', 2, 64, 1, (settings: GameSettings) => {
+    return settings.renderDistanceChunks;
+  }, (settings: GameSettings, optionValues: any) => {
+    settings.renderDistanceChunks = optionValues;
+  }, (settings: GameSettings, optionValues: any) => {
+    const value = optionValues.get(settings);
+    return optionValues.getGenericValueComponent(getKeyTranslation('options.chunks').replace('%s', value));
   });
 
-  public static CHAT_VISIBILITY: IteratableOption = new IteratableOption('options.attackIndicator', (settings: GameSettings) => {
-    return settings.chatVisibility;
-  }, (settings: GameSettings) => {
-    settings.chatVisibility = ChatVisibility.byId(settings.chatVisibility.id + 1);
+  public static ENTITY_DISTANCE_SCALING: SliderPercentageOption = new SliderPercentageOption('options.entityDistanceScaling', 0.5, 5, 0.25, (settings: GameSettings) => {
+    return settings.entityDistanceScaling;
+  }, (settings: GameSettings, optionValues: any) => {
+    settings.entityDistanceScaling = optionValues;
+  }, (settings: GameSettings, optionValues: any) => {
+    const value = optionValues.get(settings);
+    return optionValues.getPercentValueComponent(value);
   });
 
-  public static HAND_SIDE: IteratableOption = new IteratableOption('options.mainHand', (settings: GameSettings) => {
-    return settings.handSide;
-  }, (settings: GameSettings) => {
-    settings.handSide = HandSide.byId(settings.handSide.id + 1);
+  public static GAMMA: SliderPercentageOption = new SliderPercentageOption('options.gamma', 0, 1, 0, (settings: GameSettings) => {
+    return settings.gamma;
+  }, (settings: GameSettings, optionValues: any) => {
+    settings.gamma = optionValues;
+  }, (settings: GameSettings, optionValues: any) => {
+    const value = optionValues.normalizeValue(optionValues.get(settings));
+    if(value == 0.0) return optionValues.getGenericValueComponent(getKeyTranslation('options.gamma.min'));
+    else return value == 1.0 ? optionValues.getGenericValueComponent(getKeyTranslation('options.gamma.max')) : optionValues.getPercentageAddMessage((value * 100));
   });
 
-  public static PARTICLE_STATUS: IteratableOption = new IteratableOption('options.particles', (settings: GameSettings) => {
-    return settings.particleStatus;
-  }, (settings: GameSettings) => {
-    settings.particleStatus = ParticleStatus.byId(settings.particleStatus.id + 1);
+  public static MIPMAP_LEVELS: SliderPercentageOption = new SliderPercentageOption('options.mipmapLevels', 0, 4, 1, (settings: GameSettings) => {
+    return settings.mipmapLevels;
+  }, (settings: GameSettings, optionValues: any) => {
+    settings.mipmapLevels = optionValues;
+  }, (settings: GameSettings, optionValues: any) => {
+    const value = optionValues.get(settings);
+    return (value == 0.0 ? `${optionValues.getBaseMessageTranslation()}: ${getKeyTranslation('options.off')}` : optionValues.getMessageWithValue(value));
   });
 
-  public static NARRATOR_STATUS: IteratableOption = new IteratableOption('options.particles', (settings: GameSettings) => {
-    return settings.narratorStatus;
-  }, (settings: GameSettings) => {
-    settings.narratorStatus = NarratorStatus.byId(settings.narratorStatus.id + 1);
+  public static FRAMERATE_LIMIT: SliderPercentageOption = new SliderPercentageOption('options.framerateLimit', 10, 260, 10, (settings: GameSettings) => {
+    return settings.framerateLimit;
+  }, (settings: GameSettings, percentage: any) => {
+    settings.framerateLimit = percentage;
+  }, (settings: GameSettings, percentage: any) => {
+    const value = percentage.get(settings);
+    return value == percentage.getMaxValue() ? percentage.getGenericValueComponent(getKeyTranslation('options.framerateLimit.max')) : percentage.getGenericValueComponent(getKeyTranslation('options.framerate').replace('%s', value));
   });
 
-  public static POINT_OF_VIEW: IteratableOption = new IteratableOption('POINT_OF_VIEW', (settings: GameSettings) => {
-    return settings.pointOfView;
-  }, (settings: GameSettings) => {
-    settings.pointOfView = PointOfView.byId(settings.pointOfView.id + 1);
+  public static FOV: SliderPercentageOption = new SliderPercentageOption('options.fov', 30, 110, 1, (settings: GameSettings) => {
+    return settings.fov;
+  }, (settings: GameSettings, optionValues: any) => {
+      settings.fov = optionValues;
+  }, (settings: GameSettings, optionValues: any) => {
+    const value = optionValues.get(settings);
+    if(value == 70.0) return optionValues.getGenericValueComponent(getKeyTranslation('options.fov.min'));
+    else return value == optionValues.getMaxValue() ? optionValues.getGenericValueComponent(getKeyTranslation('options.fov.max')) : optionValues.getMessageWithValue(int(value));
   });
 
-  // public static ACCESSIBILITY_TEXT_BACKGROUND_OPACITY: SliderPercentageOption = new SliderPercentageOption(/* "options.accessibility.text_background_opacity", 0.0, 1.0, 0.0, (settings: GameSettings) => {
-  //   return settings.accessibilityTextBackgroundOpacity;
-  // }, (settings: GameSettings, optionValues: any) => {
-  //     settings.accessibilityTextBackgroundOpacity = optionValues;
-  // }, (settings: GameSettings, optionValues: any) => {
-  //     return optionValues.getPercentValueComponent(optionValues.normalizeValue(optionValues.get(settings)));
-  // } */);
+  public static SENSITIVITY: SliderPercentageOption = new SliderPercentageOption('options.sensitivity', 0, 1, 0, (settings: GameSettings) => {
+    return settings.mouseSensitivity;
+  }, (settings: GameSettings, optionValues: any) => {
+    settings.mouseSensitivity = optionValues;
+  }, (settings: GameSettings, optionValues: any) => {
+    const value = optionValues.normalizeValue(optionValues.get(settings));
+    if(value == 0) return optionValues.getGenericValueComponent(getKeyTranslation('options.sensitivity.min'));
+    else return value == 1 ? optionValues.getGenericValueComponent(getKeyTranslation('options.sensitivity.max')) : optionValues.getPercentValueComponent(2 * value);
+  });
+
+  public static MOUSE_WHEEL_SENSITIVITY: SliderPercentageOption = new SliderMultiplierOption('options.mouseWheelSensitivity', 0.01, 10, 0.01, (settings: GameSettings) => {
+    return settings.mouseWheelSensitivity;
+  }, (settings: GameSettings, optionValues: any) => {
+    settings.mouseWheelSensitivity = optionValues;
+  }, (settings: GameSettings, optionValues: any) => {
+    const value = optionValues.normalizeValue(optionValues.get(settings));
+    return optionValues.getGenericValueComponent(optionValues.denormalizeValue(value).toFixed(2));
+  });
 }

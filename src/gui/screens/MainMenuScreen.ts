@@ -1,8 +1,10 @@
+import JSONUI, { Type } from "../../utils/JSONUI.js";
 import { int } from "../../utils/MouseHelper.js";
 import { playSound } from "../../utils/PlaySound.js";
 import { getResourceLocation, MCUI } from "../../utils/Resources.js";
 import { consoleOutput, isInside } from "../../utils/Test.js";
 import { getKeyTranslation } from "../../utils/TranslationText.js";
+import Utils from "../../utils/Utils.js";
 import FontRenderer from "../FontRenderer.js";
 import Button from "../widgets/button/Button.js";
 import ImageButton from "../widgets/button/ImageButton.js";
@@ -42,139 +44,15 @@ export default class MainMenuScreen extends Screen {
     this.widthCopyright = FontRenderer.getTextWidth("Not affiliated with Mojang Studios!");
     this.widthCopyrightRest = this.width - this.widthCopyright - 2;
 
-   /*  this.addButton(new OptionSlider(this.minecraft.gameSettings, 1, 1, 200, 20, this.minecraft.gameSettings.chatScale)); */
-
+    // console.log(JSONUI.getObject(null, { type: 'panel', size: ["100%", 3], offset: [13, "76% - 12px"]}, this.width, this.height));
+    
+    // this.addButton(new OptionSlider(this.minecraft.gameSettings, 0, 0, 200, 20, 1))
+    // console.log(JSONUI.sizeConversion(["12px", '33px + 12px + 50%'], this.width, this.height));
     this.genInit();
   }
 
   public genInit() {
     let screen: any = MCUI['main_menu_screen'];
-
-    const getType = (superObj: any, obj: any) => {
-      if(superObj === null) {
-        if(obj.type) {
-          return obj.type;
-        } else {
-          return new Error('Type not specified');
-        }
-      } else {
-        if((obj.type && superObj.type) || (obj.type && !superObj.type)) {
-          return obj.type;
-        } else if(!obj.type && superObj.type) {
-          return superObj.type;
-        } else {
-          throw new Error('Type not specified')
-        } 
-      }
-    }
-
-    const getOffsetX = (superObj: any, obj: any) => {
-      if(superObj === null) {
-        if(obj.offset) {
-          return obj.offset[0].replace('px', '').replace('100%', 'this.width');
-        } else {
-          return new Error('Offset not specified');
-        }
-      } else {
-        if((obj.offset && superObj.offset) || (obj.offset && !superObj.offset)) {
-          return obj.offset[0].replace('px', '').replace('100%', 'this.width');
-        } else if(!obj.offset && superObj.offset) {
-          return superObj.offset[0].replace('px', '').replace('100%', 'this.width');
-        } else {
-          throw new Error('Offset not specified')
-        } 
-      }
-    }
-
-    const getOffsetY = (superObj: any, obj: any) => {
-      if(superObj === null) {
-        if(obj.offset) {
-          return obj.offset[1].replace('px', '').replace('100%', 'this.height');
-        } else {
-          return new Error('Offset not specified');
-        }
-      } else {
-        if((obj.offset && superObj.offset) || (obj.offset && !superObj.offset)) {
-          return obj.offset[1].replace('px', '').replace('100%', 'this.height');
-        } else if(!obj.offset && superObj.offset) {
-          return superObj.offset[1].replace('px', '').replace('100%', 'this.height');
-        } else {
-          throw new Error('Offset not specified')
-        } 
-      }
-    }
-
-    const getWidth = (superObj: any, obj: any) => {
-      if(superObj === null) {
-        if(obj.size) {
-          return obj.size[0];
-        } else {
-          return new Error('Size not specified');
-        }
-      } else {
-        if((obj.size && superObj.size) || (obj.size && !superObj.size)) {
-          return obj.size[0];
-        } else if(!obj.size && superObj.size) {
-          return superObj.size[0];
-        } else {
-          throw new Error('Size not specified')
-        } 
-      }
-    }
-
-    const getHeight = (superObj: any, obj: any) => {
-      if(superObj === null) {
-        if(obj.size) {
-          return obj.size[1];
-        } else {
-          return new Error('Size not specified');
-        }
-      } else {
-        if((obj.size && superObj.size) || (obj.size && !superObj.size)) {
-          return obj.size[1];
-        } else if(!obj.size && superObj.size) {
-          return superObj.size[1];
-        } else {
-          throw new Error('Size not specified')
-        } 
-      }
-    }
-
-    const getText = (superObj: any, obj: any) => {
-      if(superObj === null) {
-        if(obj.text) {
-          return obj.text;
-        } else {
-          return new Error('Text not specified');
-        }
-      } else {
-        if((obj.text && superObj.text) || (obj.text && !superObj.text)) {
-          return obj.text;
-        } else if(!obj.text && superObj.text) {
-          return superObj.text;
-        } else {
-          throw new Error('Text not specified')
-        } 
-      }
-    }
-
-    const getTexture = (superObj: any, obj: any) => {
-      if(superObj === null) {
-        if(obj.texture) {
-          return obj.texture;
-        } else {
-          return new Error('Texture not specified');
-        }
-      } else {
-        if((obj.texture && superObj.texture) || (obj.texture && !superObj.texture)) {
-          return obj.texture;
-        } else if(!obj.texture && superObj.texture) {
-          return superObj.texture;
-        } else {
-          throw new Error('Texture not specified')
-        } 
-      }
-    }
 
     const getPressFunc = (superObj: any, obj: any): Function => {
       let id: string = obj.button_id || superObj.button_id || '';
@@ -205,7 +83,10 @@ export default class MainMenuScreen extends Screen {
           }
         case 'button.menu_quit':
           return () => {
-            window.close()
+            // window.close()
+            console.log(this.minecraft.outputLog);
+            this.minecraft.outputLog = ''
+            
           }
         default:
           return function() {}
@@ -253,6 +134,7 @@ export default class MainMenuScreen extends Screen {
         let type: string;
         let x: number;
         let y: number;
+        let offset: { x: number, y: number };
         let width: number;
         let height: number;
         let text: string;
@@ -261,25 +143,29 @@ export default class MainMenuScreen extends Screen {
         let pressFunc: Function;
   
         if(!(c.includes('@'))) {
-          type = getType(null, d);
-          x = eval(getOffsetX(null, d)), y = eval(getOffsetY(null, d));
-          width = getWidth(null, d), height = getHeight(null, d);
-          text = getText(null, d), pressFunc = getPressFunc(null, d);
-          active = getActive(null, d);
-          ignored = getIgnored(null, d);
+          let obj = JSONUI.getObject(null, d, this.width, this.height, {});
+          pressFunc = getPressFunc(null, d);
+          let btn!: Widgets;
 
-          if(type === 'button') {
-            let btn = new Button(x, y, width, height, getKeyTranslation(text), pressFunc);
-            btn.active = active;
-            btn.visible = !ignored;
-            this.addButton(btn);
-          } else if(type === 'button_image') {
-            let texture = getTexture(null, d);
-            let btn = new ImageButton(x, y, width, height, texture.base_uv[0], texture.base_uv[1], texture.base_uv_size[1], getResourceLocation('textures', texture.image), 256, 256, pressFunc, '');
-            btn.active = active;
-            btn.visible = !ignored;
-            this.addButton(btn);
+          switch(obj.type) {
+            case Type.BUTTON:
+              btn = new Button(
+                obj.offset.x, obj.offset.y,
+                obj.size.w, obj.size.h,
+                getKeyTranslation(obj.text), pressFunc);
+              break;
+            case Type.BUTTON_IMAGE:
+              btn = new ImageButton(
+                obj.offset.x, obj.offset.y,
+                obj.size.w, obj.size.h,
+                obj.texture.base_uv[0], obj.texture.base_uv[1],
+                obj.texture.base_uv_size[1], getResourceLocation('textures', obj.texture.image), 256, 256, pressFunc, '');
+              break;
           }
+
+          btn.active = obj.active;
+          btn.visible = !obj.ignored;
+          this.addButton(btn);
         } else {
           let superName: any = c.substr(c.indexOf('@') + 1);
           let namespace: any = superName.substr(0, superName.indexOf("."));
@@ -290,26 +176,30 @@ export default class MainMenuScreen extends Screen {
           } else {
             superObj = screen[superName]
           }
-          
-          type = getType(superObj, d);
-          x = eval(getOffsetX(superObj, d)), y = eval(getOffsetY(superObj, d));
-          width = getWidth(superObj, d), height = getHeight(superObj, d);
-          text = getText(superObj, d), pressFunc = getPressFunc(superObj, d);
-          active = getActive(superObj, d);
-          ignored = getIgnored(superObj, d);
+        
+          let obj = JSONUI.getObject(superObj, d, this.width, this.height, { '$is_demo': this.minecraft.isDemo() });
+          pressFunc = getPressFunc(null, d);
+          let btn!: Widgets;
 
-          if(type === 'button') {
-            let btn = new Button(x, y, width, height, getKeyTranslation(text), pressFunc);
-            btn.active = active;
-            btn.visible = !ignored;
-            this.addButton(btn);
-          } else if(type === 'button_image') {
-            let texture = getTexture(superObj, d);
-            let btn = new ImageButton(x, y, width, height, texture.base_uv[0], texture.base_uv[1], texture.base_uv_size[1], getResourceLocation('textures', texture.image), 256, 256, pressFunc, '');
-            btn.active = active;
-            btn.visible = !ignored;
-            this.addButton(btn);
+          switch(obj.type) {
+            case Type.BUTTON:
+              btn = new Button(
+                obj.offset.x, obj.offset.y,
+                obj.size.w, obj.size.h,
+                getKeyTranslation(obj.text), pressFunc);
+              break;
+            case Type.BUTTON_IMAGE:
+              btn = new ImageButton(
+                obj.offset.x, obj.offset.y,
+                obj.size.w, obj.size.h,
+                obj.texture.base_uv[0], obj.texture.base_uv[1],
+                obj.texture.base_uv_size[1], getResourceLocation('textures', obj.texture.image), 256, 256, pressFunc, '');
+              break;
           }
+
+          btn.active = obj.active;
+          btn.visible = !obj.ignored;
+          this.addButton(btn);
         }
       })
     })
@@ -344,8 +234,8 @@ export default class MainMenuScreen extends Screen {
     for(var i = 0; i < data.length; i++) {
       const obj = data[i];
 
-      let offsetX = eval(obj.offset[0].replace('px', '').replace('100%', 'this.width'));
-      let offsetY = eval(obj.offset[1].replace('px', '').replace('100%c', 'FontRenderer.getTextWidth(' + obj.text + ')').replace('100%', 'this.height'));
+      let offsetX = eval(obj.offset[0].replace(/px/g, '').replace(/100%/g, 'this.width'));
+      let offsetY = eval(obj.offset[1].replace(/px/g, '').replace(/100%c/g, 'FontRenderer.getTextWidth(' + obj.text + ')').replace(/100%/g, 'this.height'));
 
       if(obj.type === 'label' && obj.text) {
         let text = obj.text;
@@ -388,22 +278,35 @@ export default class MainMenuScreen extends Screen {
           } else if(obj.renderer === 'splash_renderer') {
             context.save();
             let j = this.width / 2 - 137;
-            const miliT = new Date().getMilliseconds();
-            let f2 = 1.8 - Math.abs(Math.sin((miliT % 1000) / 1000.0 * (Math.PI * 2)) * 0.1);
-            try {
-              f2 = f2 * 100.0 / (FontRenderer.getTextWidth('ddddddddddddddddddddddd') + 32);
-            } catch {
-              f2 = f2 * 100.0 / (context.measureText('Error').width + 32);
-            }
-            
-            context.scale(f2, f2);
-            context.rotate(-20 * Math.PI / 180);
-            context.translate(180, 90)
+
+          
 
             try {
-              this.drawCenteredString(context, this.splashText, j + 88 + 70 - (140 * f2), 67 + (this.height / (3)) - 20 - (70 * f2), 16776960);
+              let splash = { x: j + 240, y: 59, width: FontRenderer.getTextWidth(this.splashText), height: 9}
+
+              const miliT = new Date().getMilliseconds();
+              let f2 = 1.5 - Math.abs(Math.sin((miliT % 1000) / 1000.0 * (Math.PI * 2)) * 0.1);
+              f2 = f2 * 100.0 / (FontRenderer.getTextWidth(this.splashText) + 32);
+  
+              context.translate( splash.x, splash.y);
+              context.scale(f2, f2);
+              context.rotate(-20 * Math.PI / 180);
+              context.translate( -splash.x, -splash.y );
+
+              this.drawCenteredString(context, this.splashText, splash.x, splash.y, 16776960);
             } catch {
-              this.drawCenteredString(context, 'Error', j + 88 + 70, 67 + 100, 16776960);
+              let splash = { x: j + 240, y: 59, width: FontRenderer.getTextWidth('Error'), height: 9}
+  
+              const miliT = new Date().getMilliseconds();
+              let f2 = 1.8 - Math.abs(Math.sin((miliT % 1000) / 1000.0 * (Math.PI * 2)) * 0.1);
+              f2 = f2 * 100.0 / (context.measureText('Error').width + 32);
+  
+              context.translate( splash.x, splash.y);
+              context.scale(f2, f2);
+              context.rotate(-20 * Math.PI / 180);
+              context.translate( -splash.x, -splash.y );
+
+              this.drawCenteredString(context, 'Error', splash.x, splash.y, 16776960);
             }
             context.restore();
           }
@@ -415,7 +318,7 @@ export default class MainMenuScreen extends Screen {
   public mouseClicked(mouseX: number, mouseY: number, button: number) {
     super.mouseClicked(mouseX, mouseY, button);
 
-    isInside(mouseX, mouseY, this.widthCopyrightRest, this.widthCopyright, (this.height - 10), 10, () => {
+    Utils.isInside(mouseX, mouseY, this.widthCopyrightRest, this.widthCopyright, (this.height - 10), 10, () => {
       playSound('click_stereo', 0.2);
       console.log('No credits sry :(');
     })
@@ -425,7 +328,7 @@ export default class MainMenuScreen extends Screen {
     this.fill(context, 0, 0, this.width, this.height, 3355443)
 
     isInside(mouseX, mouseY, this.widthCopyrightRest, this.widthCopyright, (this.height - 10), 10, () => {
-      this.fill(context, (this.widthCopyrightRest - 1), this.height - 2, this.widthCopyright + 1, 1, 16777215)
+      this.fill(context, this.widthCopyrightRest, this.height - 2, this.widthCopyright + 1, 1, 16777215)
     })
 
     this.genRender(context, mouseX, mouseY)

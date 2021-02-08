@@ -80,8 +80,10 @@ export async function getAllResources() {
 
   await JSONUtils.getJSONFile('./src/ui/_ui_defs.json', ((data: any) => {
     data.ui_defs.forEach(async (file: any) => {
-      await JSONUtils.getJSONFile('./src/' + file, ((data: any) => {
-        MCUI[data.namespace] = data;
+      await JSONUtils.getJSONFile('./src/' + file, ((dataa: any) => {
+        if(!MCUI[dataa.namespace]) {
+          MCUI[dataa.namespace] = dataa;
+        }
       }));
     });
   }));

@@ -1,5 +1,6 @@
 import { getResourceLocation } from "../utils/Resources.js";
 import ColorHelper from "../utils/ColorHelper.js";
+import Minecraft from "../Minecraft.js";
 
 export let characterRenderers: any = {};
 export let addCharacterRenderer = (color: number, char: string) => {
@@ -54,7 +55,7 @@ export class CharacterRenderer {
     ctxfont.save();
     let myImg = ctxfont.getImageData(0, 0, this.charWidth * 3, this.charHeight * 3);
     ctxfont.clearRect(0, 0, this.charWidth, this.charHeight);
-    for(var p = 0; p < myImg.data.length; p += 4) myImg.data[p] = this.r * 0.18, myImg.data[p + 1] = this.g * 0.18, myImg.data[p + 2] = this.b * 0.18;
+    for(var p = 0; p < myImg.data.length; p += 4) myImg.data[p] = this.r * 0.13, myImg.data[p + 1] = this.g * 0.13, myImg.data[p + 2] = this.b * 0.13;
     ctxfont.restore();
 
     ctxfont.putImageData(myImg, 0, 0);
@@ -64,20 +65,36 @@ export class CharacterRenderer {
 
 export default class FontRenderer {
   public static getTextWidth(text: string) {
-    let width = 0;
-    text.split('').forEach((char, idx) => width += getResourceLocation('fonts', 'font')[text[idx]].w - 1)
-    return width;
+    const flag = localStorage.getItem('Options') ? 'true'.equals(localStorage.getItem('Options')!.split('\n').filter(x => x.includes('forceUnicodeFont:'))[0].split(':')[1]) : false;
+    if(flag) {
+      return (<HTMLCanvasElement>document.getElementById('root')).getContext('2d')!.measureText(text).width;
+    } else {
+      let width = 0;
+      text.split('').forEach((char, idx) => width += getResourceLocation('fonts', 'font')[text[idx]].w - 1)
+      return width;
+    }
   }
 
   public static drawStringWithShadow(context: CanvasRenderingContext2D, text: string, posX: number, posY: number, color: number, _formatting: []) {
-    for(var j = 0, k = posX; j < text.length; j++) {
-      const char: any = text[j];
-      if(!(characterRenderers[color] && characterRenderers[color][char])) addCharacterRenderer(color, char);
-      
-      context.drawImage(characterRenderers[color][char]['textShadow'], k - 1 + 1, posY + 1);
-      context.drawImage(characterRenderers[color][char]['text'], k - 1, posY);
-
-      k += getResourceLocation('fonts', 'font')[char].w - 1;
+    const flag = localStorage.getItem('Options') ? 'true'.equals(localStorage.getItem('Options')!.split('\n').filter(x => x.includes('forceUnicodeFont:'))[0].split(':')[1]) : false;
+    if(flag) {
+      context.save();
+      context.font = 'lighter 10px Arial';
+      context.fillStyle = ColorHelper.getDarkerColor(color);
+      context.fillText(text, posX + 1, posY + 14 / 2 + 1);
+      context.fillStyle = ColorHelper.getColor(color);
+      context.fillText(text, posX, posY + 14 / 2);
+      context.restore();
+    } else {
+      for(var j = 0, k = posX; j < text.length; j++) {
+        const char: any = text[j];
+        if(!(characterRenderers[color] && characterRenderers[color][char])) addCharacterRenderer(color, char);
+        
+        context.drawImage(characterRenderers[color][char]['textShadow'], k - 1 + 1, posY + 1);
+        context.drawImage(characterRenderers[color][char]['text'], k - 1, posY);
+  
+        k += getResourceLocation('fonts', 'font')[char].w - 1;
+      }
     }
   }
 
