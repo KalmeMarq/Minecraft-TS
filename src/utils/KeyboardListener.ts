@@ -35,7 +35,7 @@ export default class KeyboardListener {
     window.addEventListener('keypress', (e: KeyboardEvent) => call_imit(e, 1));
     window.addEventListener('keyup', (e: KeyboardEvent) => call_imit(e, 0));
     window.addEventListener('keydown', (e: KeyboardEvent) => {
-      if(!(e.key == 'F11' || e.key == 'F12')) e.preventDefault();
+      if(!(e.key == 'F11' || e.key == 'F5' || e.key == 'F12')) e.preventDefault();
       call_imit(e, 2)
     });
   }

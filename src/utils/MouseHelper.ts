@@ -103,6 +103,7 @@ export default class MouseHelper {
     })
 
     this.context.canvas.addEventListener('wheel', (e: WheelEvent) => {
+      if(e.getModifierState('Control')) e.preventDefault();
       this.scrollCallback(e.deltaX, e.deltaY);
     })
   }

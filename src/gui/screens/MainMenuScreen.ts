@@ -262,10 +262,17 @@ export default class MainMenuScreen extends Screen {
               this.drawImg(context, this.MINECRAFT_TITLE_IMG, j + 99 + 26 + 3, 30, 99, 0, 26, 44);
               this.drawImg(context, this.MINECRAFT_TITLE_IMG, j + 155, 30, 0, 45, 155, 44);
             } else {
-              this.drawImg(context, this.MINECRAFT_TITLE_IMG, j + 1, 30, 0, 0, 155, 44);
-              this.drawImg(context, this.MINECRAFT_TITLE_IMG, j - 1, 30, 0, 0, 155, 44);
-              this.drawImg(context, this.MINECRAFT_TITLE_IMG, j + 0, 31, 0, 0, 155, 44);
-              this.drawImg(context, this.MINECRAFT_TITLE_IMG, j + 0, 29, 0, 0, 155, 44);
+              const cv = document.createElement('canvas');
+              const ctx = cv.getContext('2d')!;
+              const a = ctx.createImageData(274 * 3, 44 * 3)
+              ctx.globalCompositeOperation = 'source-in';
+              this.drawImg(ctx, this.MINECRAFT_TITLE_IMG, j + 0, 29, 0, 0, 155, 44);
+              this.drawImg(ctx, this.MINECRAFT_TITLE_IMG, j + 1, 30, 0, 0, 155, 44);
+              this.drawImg(ctx, this.MINECRAFT_TITLE_IMG, j - 1, 30, 0, 0, 155, 44);
+              this.drawImg(ctx, this.MINECRAFT_TITLE_IMG, j + 0, 31, 0, 0, 155, 44);
+              this.fill(ctx, j, 30, 274, 44, 0);
+              context.putImageData(a, 0, 0);
+              
               this.drawImg(context, this.MINECRAFT_TITLE_IMG, j + 0, 30, 0, 0, 155, 44);
               this.drawImg(context, this.MINECRAFT_TITLE_IMG, j + 155 + 1, 30, 0, 45, 155, 44);
               this.drawImg(context, this.MINECRAFT_TITLE_IMG, j + 155 - 1, 30, 0, 45, 155, 44);
