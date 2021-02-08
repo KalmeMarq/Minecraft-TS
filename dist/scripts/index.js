@@ -208,15 +208,29 @@ define("utils/Resources", ["require", "exports", "utils/JSONUtils"], function (r
                 });
             }
         });
-        await JSONUtils_js_2.default.getJSONFile('src/ui/_ui_defs.json', ((data) => {
-            data.ui_defs.forEach(async (file) => {
-                await JSONUtils_js_2.default.getJSONFile('src/' + file, ((dataa) => {
-                    if (!exports.MCUI[dataa.namespace]) {
-                        exports.MCUI[dataa.namespace] = dataa;
-                    }
-                }));
-            });
-        }));
+        try {
+            await JSONUtils_js_2.default.getJSONFile('src/ui/_ui_defs.json', ((data) => {
+                data.ui_defs.forEach(async (file) => {
+                    await JSONUtils_js_2.default.getJSONFile('src/' + file, ((dataa) => {
+                        if (!exports.MCUI[dataa.namespace]) {
+                            exports.MCUI[dataa.namespace] = dataa;
+                        }
+                    }));
+                });
+            }));
+        }
+        catch {
+            await JSONUtils_js_2.default.getJSONFile('./src/ui/main_menu_screen.json', ((dataa) => {
+                if (!exports.MCUI[dataa.namespace]) {
+                    exports.MCUI[dataa.namespace] = dataa;
+                }
+            }));
+            await JSONUtils_js_2.default.getJSONFile('./src/ui/test_screen.json', ((dataa) => {
+                if (!exports.MCUI[dataa.namespace]) {
+                    exports.MCUI[dataa.namespace] = dataa;
+                }
+            }));
+        }
         console.log(exports.MCUI);
         [
             'en_us'
@@ -2204,6 +2218,67 @@ define("gui/screens/OptionsScreen", ["require", "exports", "GameOption", "utils/
     }
     exports.default = OptionsScreen;
 });
+define("gui/screens/WinGameScreen", ["require", "exports", "utils/GetResources", "gui/screens/Screen"], function (require, exports, GetResources_1, Screen_1) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    Screen_1 = __importDefault(Screen_1);
+    class WinGameScreen extends Screen_1.default {
+        constructor(poemIn) {
+            super();
+            this.time = 0;
+            this.lines = null;
+            this.field_238664_v_ = null;
+            this.totalScrollLength = 0;
+            this.scrollSpeed = 0.5;
+            this.MINECRAFT_TITLE_IMG = GetResources_1.getResourceLocation('textures', 'gui/title/minecraft');
+            this.poem = poemIn;
+            if (!poemIn)
+                this.scrollSpeed = 0.75;
+        }
+        tick() {
+            if (this.totalScrollLength !== 0) {
+                const f = (this.totalScrollLength + this.height + this.height + 24) / this.scrollSpeed;
+                if (this.time > f) {
+                    this.sendRespawnPacket();
+                }
+            }
+        }
+        closeScreen() {
+            this.sendRespawnPacket();
+        }
+        sendRespawnPacket() {
+            this.minecraft.displayGuiScreen(null);
+        }
+        drawWinGameScreen(context, mouseX, mouseY) {
+            let i = this.width;
+            let f = -this.time * 0.5 * this.scrollSpeed;
+            let f1 = this.height - this.time * 0.5 * this.scrollSpeed;
+            let f2 = 0.015625;
+            let f3 = this.time * 0.02;
+            let f4 = (this.totalScrollLength + this.height + this.height + 24) / this.scrollSpeed;
+            let f5 = (f4 - 20.0 - this.time) * 0.005;
+            if (f5 < f3) {
+                f3 = f5;
+            }
+            if (f3 > 1.0) {
+                f3 = 1.0;
+            }
+            f3 = f3 * f3;
+            f3 = f3 * 96 / 255;
+            context.save();
+            context.scale(this.minecraft.getScaleFactor() * 0.9, this.minecraft.getScaleFactor() * 0.9);
+            context.fillStyle = context.createPattern(this.OPTIONS_BACKGROUND, 'repeat');
+            context.fillRect(0, f * 2, this.width, this.height);
+            context.fillStyle = 'rgba(0, 0, 0, 0.7)';
+            context.fillRect(0, f * 2, this.width, this.height);
+            context.restore();
+        }
+        render(context, mouseX, mouseY) {
+            this.drawWinGameScreen(context, mouseX, mouseY);
+        }
+    }
+    exports.default = WinGameScreen;
+});
 define("gui/widgets/TextFieldWidget", ["require", "exports", "utils/ColorHelper", "utils/MathHelper", "gui/FontRenderer", "gui/widgets/Widget"], function (require, exports, ColorHelper_js_3, MathHelper_js_2, FontRenderer_js_3, Widget_js_3) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
@@ -2639,7 +2714,7 @@ define("gui/screens/WorldSelectionScreen", ["require", "exports", "utils/Transla
     }
     exports.default = WorldSelectionScreen;
 });
-define("gui/screens/MainMenuScreen", ["require", "exports", "utils/JSONUI", "utils/PlaySound", "utils/Resources", "utils/Test", "utils/TranslationText", "utils/Utils", "gui/FontRenderer", "gui/widgets/button/Button", "gui/widgets/button/ImageButton", "gui/screens/AccessibilityScreen", "gui/screens/LanguageScreen", "gui/screens/MultiplayerScreen", "gui/screens/MultiplayerWarningScreen", "gui/screens/OptionsScreen", "gui/screens/Screen", "gui/screens/WorldSelectionScreen"], function (require, exports, JSONUI_js_1, PlaySound_js_4, Resources_js_7, Test_js_1, TranslationText_js_14, Utils_js_1, FontRenderer_js_4, Button_js_16, ImageButton_js_1, AccessibilityScreen_js_2, LanguageScreen_js_2, MultiplayerScreen_js_2, MultiplayerWarningScreen_js_1, OptionsScreen_js_1, Screen_js_7, WorldSelectionScreen_js_1) {
+define("gui/screens/MainMenuScreen", ["require", "exports", "utils/JSONUI", "utils/PlaySound", "utils/Resources", "utils/Test", "utils/TranslationText", "utils/Utils", "gui/FontRenderer", "gui/widgets/button/Button", "gui/widgets/button/ImageButton", "gui/screens/AccessibilityScreen", "gui/screens/LanguageScreen", "gui/screens/MultiplayerScreen", "gui/screens/MultiplayerWarningScreen", "gui/screens/OptionsScreen", "gui/screens/Screen", "gui/screens/WinGameScreen", "gui/screens/WorldSelectionScreen"], function (require, exports, JSONUI_js_1, PlaySound_js_4, Resources_js_7, Test_js_1, TranslationText_js_14, Utils_js_1, FontRenderer_js_4, Button_js_16, ImageButton_js_1, AccessibilityScreen_js_2, LanguageScreen_js_2, MultiplayerScreen_js_2, MultiplayerWarningScreen_js_1, OptionsScreen_js_1, Screen_js_7, WinGameScreen_js_1, WorldSelectionScreen_js_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     JSONUI_js_1 = __importStar(JSONUI_js_1);
@@ -2653,6 +2728,7 @@ define("gui/screens/MainMenuScreen", ["require", "exports", "utils/JSONUI", "uti
     MultiplayerWarningScreen_js_1 = __importDefault(MultiplayerWarningScreen_js_1);
     OptionsScreen_js_1 = __importDefault(OptionsScreen_js_1);
     Screen_js_7 = __importDefault(Screen_js_7);
+    WinGameScreen_js_1 = __importDefault(WinGameScreen_js_1);
     WorldSelectionScreen_js_1 = __importDefault(WorldSelectionScreen_js_1);
     class MainMenuScreen extends Screen_js_7.default {
         constructor() {
@@ -2921,7 +2997,7 @@ define("gui/screens/MainMenuScreen", ["require", "exports", "utils/JSONUI", "uti
             super.mouseClicked(mouseX, mouseY, button);
             Utils_js_1.default.isInside(mouseX, mouseY, this.widthCopyrightRest, this.widthCopyright, (this.height - 10), 10, () => {
                 PlaySound_js_4.playSound('click_stereo', 0.2);
-                console.log('No credits sry :(');
+                this.minecraft.displayGuiScreen(new WinGameScreen_js_1.default(false));
             });
         }
         render(context, mouseX, mouseY) {

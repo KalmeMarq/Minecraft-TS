@@ -17,6 +17,7 @@ import MultiplayerScreen from "./MultiplayerScreen.js";
 import MultiplayerWarningScreen from "./MultiplayerWarningScreen.js";
 import OptionsScreen from "./OptionsScreen.js";
 import Screen from "./Screen.js";
+import WinGameScreen from "./WinGameScreen.js";
 import WorldSelectionScreen from "./WorldSelectionScreen.js";
 
 export default class MainMenuScreen extends Screen {
@@ -320,7 +321,7 @@ export default class MainMenuScreen extends Screen {
 
     Utils.isInside(mouseX, mouseY, this.widthCopyrightRest, this.widthCopyright, (this.height - 10), 10, () => {
       playSound('click_stereo', 0.2);
-      console.log('No credits sry :(');
+      this.minecraft.displayGuiScreen(new WinGameScreen(false));
     })
   }
 

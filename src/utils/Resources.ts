@@ -78,18 +78,32 @@ export async function getAllResources() {
     }
   });
 
-  await JSONUtils.getJSONFile('src/ui/_ui_defs.json', ((data: any) => {
-    data.ui_defs.forEach(async (file: any) => {
-      await JSONUtils.getJSONFile('src/' + file, ((dataa: any) => {
-        if(!MCUI[dataa.namespace]) {
-          MCUI[dataa.namespace] = dataa;
-        }
-      }));
-    });
-  }));
+  try {
+    await JSONUtils.getJSONFile('src/ui/_ui_defs.json', ((data: any) => {
+      data.ui_defs.forEach(async (file: any) => {
+        await JSONUtils.getJSONFile('src/' + file, ((dataa: any) => {
+          if(!MCUI[dataa.namespace]) {
+            MCUI[dataa.namespace] = dataa;
+          }
+        }));
+      });
+    }));
+  } catch {
+    await JSONUtils.getJSONFile('./src/ui/main_menu_screen.json', ((dataa: any) => {
+      if(!MCUI[dataa.namespace]) {
+        MCUI[dataa.namespace] = dataa;
+      }
+    }));
+
+    await JSONUtils.getJSONFile('./src/ui/test_screen.json', ((dataa: any) => {
+      if(!MCUI[dataa.namespace]) {
+        MCUI[dataa.namespace] = dataa;
+      }
+    }));
+  }
 
   console.log(MCUI);
-
+   
   [/* 'af_za', 'ar_sa', 'ast_es', 'az_az', 'ba_ru', 'bar', 'be_by', 'bg_bg', 'br_fr', 'brb', 'bs_ba', 'ca_es', 'cs_cz', 'cy_gb',
    'da_dk', 'de_at', 'de_ch', 'de_de', 'el_gr', 'en_au', 'en_ca', 'en_gb', 'en_nz', 'en_pt', 'en_ud',  */'en_us'/* , 'enp', 'enws',
    'eo_uy', 'es_ar', 'es_cl', 'es_ec', 'es_ec', 'es_es', 'es_mx', 'es_uy', 'es_ve', 'esan', 'et_ee', 'eu_es', 'fa_ir', 'fi_fi',
