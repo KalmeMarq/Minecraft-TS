@@ -1,18 +1,18 @@
-import GameOption from "./GameOption.js";
-import Minecraft from "./Minecraft.js";
-import AmbientOcclusionStatus from "./settings/AmbientOcclusionStatus.js";
-import AttackIndicatorStatus from "./settings/AttackIndicatorStatus.js";
-import ChatVisibility from "./settings/ChatVisibility.js";
-import CloudOption from "./settings/CloudOption.js";
-import GraphicsFanciness from "./settings/GraphicsFanciness.js";
-import HandSide from "./settings/HandSide.js";
-import KeyBinding from "./settings/KeyBinding.js";
-import NarratorStatus from "./settings/NarratorStatus.js";
-import ParticleStatus from "./settings/ParticleStatus.js";
-import PlayerModelPart from "./settings/PlayerModelPart.js";
-import PointOfView from "./settings/PointOfView.js";
-import LSStore from "./utils/LSStore.js";
-import SoundCategory from "./utils/SoundCategory.js";
+import GameOption from '@km.mcts/GameOption';
+import Minecraft from '@km.mcts/Minecraft';
+import AmbientOcclusionStatus from '@km.mcts/settings/AmbientOcclusionStatus';
+import AttackIndicatorStatus from '@km.mcts/settings/AttackIndicatorStatus';
+import ChatVisibility from '@km.mcts/settings/ChatVisibility';
+import CloudOption from '@km.mcts/settings/CloudOption';
+import GraphicsFanciness from '@km.mcts/settings/GraphicsFanciness';
+import HandSide from '@km.mcts/settings/HandSide';
+import KeyBinding from '@km.mcts/settings/KeyBinding';
+import NarratorStatus from '@km.mcts/settings/NarratorStatus';
+import ParticleStatus from '@km.mcts/settings/ParticleStatus';
+import PlayerModelPart from '@km.mcts/settings/PlayerModelPart';
+import PointOfView from '@km.mcts/settings/PointOfView';
+import LSStore from '@km.mcts/util/LSStore';
+import SoundCategory from '@km.mcts/util/SoundCategory';
 
 export default class GameSettings {
   protected mc;
@@ -76,35 +76,34 @@ export default class GameSettings {
   public fovScaleEffect: number = 1.0;
   public gamma: number = 1.0;
   public guiScale: number = 3.0;
-  public keyBindForward: KeyBinding = new KeyBinding("key.forward", 'w', "key.categories.movement");
-  public keyBindLeft: KeyBinding = new KeyBinding("key.left", 'a', "key.categories.movement");
-  public keyBindBack: KeyBinding = new KeyBinding("key.back", 's', "key.categories.movement");
-  public keyBindRight: KeyBinding = new KeyBinding("key.right", 'd', "key.categories.movement");
-  public keyBindJump: KeyBinding = new KeyBinding("key.jump", ' ', "key.categories.movement");
-  public keyBindInventory: KeyBinding = new KeyBinding("key.inventory", 'e', "key.categories.inventory");
-  public keyBindSwapHands: KeyBinding = new KeyBinding("key.swapOffhand", 'f', "key.categories.inventory");
-  public keyBindDrop: KeyBinding = new KeyBinding("key.drop", 'q', "key.categories.inventory");
-  public keyBindUseItem: KeyBinding = new KeyBinding("key.use", 'button1', "key.categories.gameplay");
-  public keyBindAttack: KeyBinding = new KeyBinding("key.attack", 'button0', "key.categories.gameplay");
-  public keyBindPickBlock: KeyBinding = new KeyBinding("key.pickItem", 'button2', "key.categories.gameplay");
-  public keyBindChat: KeyBinding = new KeyBinding("key.chat", 't', "key.categories.multiplayer");
-  public keyBindPlayerList: KeyBinding = new KeyBinding("key.playerlist", 'tab', "key.categories.multiplayer");
-  public keyBindCommand: KeyBinding = new KeyBinding("key.command", ' ', "key.categories.multiplayer");
-  public field_244602_au: KeyBinding = new KeyBinding("key.socialInteractions", 'p', "key.categories.multiplayer");
-  public keyBindScreenshot: KeyBinding = new KeyBinding("key.screenshot", 'F2', "key.categories.misc");
-  public keyBindTogglePerspective: KeyBinding = new KeyBinding("key.togglePerspective", 'F5', "key.categories.misc");
-  public keyBindSmoothCamera: KeyBinding = new KeyBinding("key.smoothCamera", '', "key.categories.misc");
-  public keyBindFullscreen: KeyBinding = new KeyBinding("key.fullscreen", 'F11', "key.categories.misc");
-  public keyBindSpectatorOutlines: KeyBinding = new KeyBinding("key.spectatorOutlines", '', "key.categories.misc");
-  public keyBindAdvancements: KeyBinding = new KeyBinding("key.advancements", 'l', "key.categories.misc");
-  public keyBindSaveToolbar: KeyBinding = new KeyBinding("key.saveToolbarActivator", 'x', "key.categories.creative");
-  public keyBindLoadToolbar: KeyBinding = new KeyBinding("key.loadToolbarActivator", 'c', "key.categories.creative");
+  public keyBindForward: KeyBinding = new KeyBinding('key.forward', 'w', 'key.categories.movement');
+  public keyBindLeft: KeyBinding = new KeyBinding('key.left', 'a', 'key.categories.movement');
+  public keyBindBack: KeyBinding = new KeyBinding('key.back', 's', 'key.categories.movement');
+  public keyBindRight: KeyBinding = new KeyBinding('key.right', 'd', 'key.categories.movement');
+  public keyBindJump: KeyBinding = new KeyBinding('key.jump', ' ', 'key.categories.movement');
+  public keyBindInventory: KeyBinding = new KeyBinding('key.inventory', 'e', 'key.categories.inventory');
+  public keyBindSwapHands: KeyBinding = new KeyBinding('key.swapOffhand', 'f', 'key.categories.inventory');
+  public keyBindDrop: KeyBinding = new KeyBinding('key.drop', 'q', 'key.categories.inventory');
+  public keyBindUseItem: KeyBinding = new KeyBinding('key.use', 'button1', 'key.categories.gameplay');
+  public keyBindAttack: KeyBinding = new KeyBinding('key.attack', 'button0', 'key.categories.gameplay');
+  public keyBindPickBlock: KeyBinding = new KeyBinding('key.pickItem', 'button2', 'key.categories.gameplay');
+  public keyBindChat: KeyBinding = new KeyBinding('key.chat', 't', 'key.categories.multiplayer');
+  public keyBindPlayerList: KeyBinding = new KeyBinding('key.playerlist', 'tab', 'key.categories.multiplayer');
+  public keyBindCommand: KeyBinding = new KeyBinding('key.command', ' ', 'key.categories.multiplayer');
+  public field_244602_au: KeyBinding = new KeyBinding('key.socialInteractions', 'p', 'key.categories.multiplayer');
+  public keyBindScreenshot: KeyBinding = new KeyBinding('key.screenshot', 'F2', 'key.categories.misc');
+  public keyBindTogglePerspective: KeyBinding = new KeyBinding('key.togglePerspective', 'F5', 'key.categories.misc');
+  public keyBindSmoothCamera: KeyBinding = new KeyBinding('key.smoothCamera', '', 'key.categories.misc');
+  public keyBindFullscreen: KeyBinding = new KeyBinding('key.fullscreen', 'F11', 'key.categories.misc');
+  public keyBindSpectatorOutlines: KeyBinding = new KeyBinding('key.spectatorOutlines', '', 'key.categories.misc');
+  public keyBindAdvancements: KeyBinding = new KeyBinding('key.advancements', 'l', 'key.categories.misc');
+  public keyBindSaveToolbar: KeyBinding = new KeyBinding('key.saveToolbarActivator', 'x', 'key.categories.creative');
+  public keyBindLoadToolbar: KeyBinding = new KeyBinding('key.loadToolbarActivator', 'c', 'key.categories.creative');
 
   constructor(mcIn: Minecraft) {
     this.mc = mcIn;
     this.loadOptions();
     console.log('Game settings loaded!')
-    this.mc.outputLog += 'Game settings loaded!\n';
   }
 
   public loadOptions(): void {
@@ -249,16 +248,16 @@ export default class GameSettings {
       lsoptions.addLine('fovScaleEffect:' + this.fovScaleEffect);
       lsoptions.addLine('gamma:' + this.gamma);
       lsoptions.addLine('guiScale:' + this.guiScale);
-      lsoptions.addLine("graphicsMode:" + this.graphicFanciness.getId());
+      lsoptions.addLine('graphicsMode:' + this.graphicFanciness.getId());
       switch(this.cloudOption) {
         case CloudOption.FANCY:
-          lsoptions.addLine("renderClouds:true");
+          lsoptions.addLine('renderClouds:true');
           break;
         case CloudOption.FAST:
-          lsoptions.addLine("renderClouds:fast");
+          lsoptions.addLine('renderClouds:fast');
           break;
         case CloudOption.OFF:
-          lsoptions.addLine("renderClouds:false");
+          lsoptions.addLine('renderClouds:false');
           break;
       }
       for(const soundcategory of Object.values(SoundCategory).slice(0, -1)) {
@@ -276,6 +275,10 @@ export default class GameSettings {
 
   public setSoundLevel(category: SoundCategory, volume: number) {
     this.soundLevels.set(category, volume);
+  }
+
+  public changeGuiScale(value: number) {
+    this.guiScale = value;
   }
 
   public getModelParts(): Set<PlayerModelPart> {

@@ -1,7 +1,6 @@
-import GameSettings from "../GameSettings";
-import Widget from "../gui/widgets/Widget";
-import { int } from "../utils/MouseHelper";
-import { getKeyTranslation } from "../utils/TranslationText";
+import Util from '@km.mcts/util/Util';
+import GameSettings from '../GameSettings';
+import Widget from '../gui/widgets/Widget';
 
 export default abstract class NewAbstractOption {
   private translatedBaseMessage: string;
@@ -17,19 +16,19 @@ export default abstract class NewAbstractOption {
   public abstract createWidget(options: GameSettings, xIn: number, yIn: number, widthIn: number): Widget;
 
   protected getGenericValueComponent(valueMessage: string) {
-    return getKeyTranslation(this.getBaseMessageTranslation()) + ': ' + getKeyTranslation(valueMessage);
+    return Util.getTranslation(this.getBaseMessageTranslation()) + ': ' + Util.getTranslation(valueMessage);
   } 
 
   protected getPercentValueComponent(percentage: number) {
-    return getKeyTranslation(this.getBaseMessageTranslation()) + `: ${int(percentage * 100)}%`;
+    return Util.getTranslation(this.getBaseMessageTranslation()) + `: ${~~(percentage * 100)}%`;
   }
 
   protected getPixelValueComponent(value: number) {
-    return `${getKeyTranslation(this.getBaseMessageTranslation())}: ${value}px`;
+    return `${Util.getTranslation(this.getBaseMessageTranslation())}: ${value}px`;
   }
 
   protected getPercentageAddMessage(doubleIn: number) {
-    return `${getKeyTranslation(this.getBaseMessageTranslation())}: ${int(doubleIn)}`;
+    return `${Util.getTranslation(this.getBaseMessageTranslation())}: ${~~(doubleIn)}`;
   }
 
   protected getMessageWithValue(value: number) {

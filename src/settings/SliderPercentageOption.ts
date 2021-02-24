@@ -1,7 +1,7 @@
+import MathHelper from "@km.mcts/util/MathHelper";
 import GameSettings from "../GameSettings";
 import OptionSlider from "../gui/widgets/OptionSlider";
 import Widget from "../gui/widgets/Widget";
-import MathHelper from "../utils/MathHelper";
 import AbstractOption from "./AbstractOption";
 
 export default class SliderPercentageOption extends AbstractOption {

@@ -1,11 +1,11 @@
-import MathHelper from "../utils/MathHelper";
-import Utils from "../utils/Utils";
+import MathHelper from '@km.mcts/util/MathHelper';
+import Util from '@km.mcts/util/Util';
 
 export default class HandSide {
   static readonly LEFT = new HandSide(0, 'options.mainHand.left');
   static readonly RIGHT = new HandSide(1, 'options.mainHand.right');
 
-  private static BY_ID: HandSide[] = Object.values(HandSide).sort(Utils.sortIteratable);
+  private static BY_ID: HandSide[] = Object.values(HandSide).sort(Util.sortIteratable);
 
   public id: number;
   public key: string;

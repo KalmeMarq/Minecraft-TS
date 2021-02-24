@@ -1,4 +1,4 @@
-import Button from "./Button.js";
+import Button from "./Button";
 
 export default class ImageButton extends Button {
    private resourceLocation: any;
@@ -8,8 +8,8 @@ export default class ImageButton extends Button {
    private textureWidth: number;
    private textureHeight: number;
 
-  constructor(x: number, y: number, width: number, height: number, xUV: number, yUV: number, yUVSize: number, img: any, txrWidth: number, txrHeight: number, onPress: Function, title: string) {
-    super(x, y, width, height, title, onPress);
+  constructor(x: number, y: number, width: number, height: number, xUV: number, yUV: number, yUVSize: number, img: any, txrWidth: number, txrHeight: number, onPressFunc: (button: Button) => void, title: string) {
+    super(x, y, width, height, title, onPressFunc);
     this.textureWidth = txrWidth;
     this.textureHeight = txrHeight;
     this.xTexStart = xUV;
@@ -25,10 +25,9 @@ export default class ImageButton extends Button {
 
   public renderButton(context: CanvasRenderingContext2D, mouseX: number, mouseY: number) {
     let y = this.yTexStart;
-    if (this.getHovered()) y += this.yDiffText;
-    context.save();
+    if (this.getIsHovered()) y += this.yDiffText;
     context.globalAlpha = this.alpha;
     this.blit(context, this.resourceLocation, this.x, this.y, this.xTexStart, y, this.width, this.height);
-    context.restore();
+    context.globalAlpha = 1;
   }
 }

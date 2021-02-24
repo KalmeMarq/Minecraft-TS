@@ -1,16 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <link rel="stylesheet" href="dist/styles/index.min.css">
-    <link rel="shortcut icon" href="resources/assets/icons/icon_32x32.png" type="image/x-icon">
-    <title>Minecraft sJS</title>
-  </head>
-  <body>
-    <canvas id="root"></canvas>
-    <script type="module" src="dist/scripts/index.js"></script>
-    <script src="dist/scripts/require.js"></script>
-    <script src="dist/scripts/requires.js"></script>
-  </body>
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="shortcut icon" href="resources/assets/icons/icon_32x32.png" type="image/x-icon">
+  <title>MCTS</title>
+  <script defer type="module" src="dist/bundle.js"></script>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background: rgb(50, 50, 50);
+      height: 100vh;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="root"></canvas>
+</body>
 </html>

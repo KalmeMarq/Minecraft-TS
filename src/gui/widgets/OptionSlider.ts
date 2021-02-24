@@ -1,10 +1,8 @@
-import GameSettings from "../../GameSettings.js";
-import Minecraft from "../../Minecraft.js";
-import SliderPercentageOption from "../../settings/SliderPercentageOption.js";
-import MathHelper from "../../utils/MathHelper.js";
-import { double, float, int } from "../../utils/MouseHelper.js";
-import { GameSettingsSlider } from "./GameSettingsSlider.js";
-import Widgets from "./Widget.js";
+import SliderPercentageOption from "@km.mcts/settings/SliderPercentageOption";
+import GameSettings from "../../GameSettings";
+import Minecraft from "../../Minecraft";
+import { GameSettingsSlider } from "./GameSettingsSlider";
+import Widgets from "./Widget";
 
 /* export default class OptionSlider extends Widgets {
   protected settings: GameSettings;
@@ -77,7 +75,7 @@ export default class OptionSlider extends GameSettingsSlider {
   constructor(settings: GameSettings, xIn: number, yIn: number, widthIn: number, heightIn: number, optionIn: SliderPercentageOption) {
     super(settings, xIn, yIn, widthIn, heightIn, (optionIn.normalizeValue(optionIn.get(settings))));
     this.option = optionIn;
-    this.func_230979_b_();
+    this.setName();
   }
 
   protected setSaveOptionValue() {
@@ -85,7 +83,7 @@ export default class OptionSlider extends GameSettingsSlider {
     this.settings.saveOptions();
   }
 
-  protected func_230979_b_() {
+  protected setName() {
     this.setMessage(this.option.getName(this.settings));
   }
 }

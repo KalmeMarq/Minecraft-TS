@@ -1,34 +1,53 @@
-import ColorHelper from "../utils/ColorHelper.js";
-import FontRenderer from "./FontRenderer.js";
+import { getResourceLocation } from "@km.mcts/util/Resources";
+import FontRenderer from "./FontRenderer";
 
-abstract class AbstractGui {
-  public testConsole(text: string) {
-    console.log(text)
+export default abstract class AbstractGui {
+  public static BACKGROUND_LOCATION = getResourceLocation('textures', 'gui/options_background');
+
+  protected hLine(context: CanvasRenderingContext2D, minX: number, maxX: number, y: number, color: string | number): void {
+    if(maxX < minX) {
+      let i = minX;
+      minX = maxX;
+      maxX = i;
+
+      context.fillStyle = typeof color === 'number' ? 'white' : color;
+      context.fillRect(minX, y, maxX + 1, y + 1);
+    }
   }
 
-  public drawString(context: CanvasRenderingContext2D, text: string, posX: number, posY: number, color: number, ..._formatting: []) {
-    FontRenderer.drawStringWithShadow(context, text, posX, posY, color, _formatting);
+  protected vLine(context: CanvasRenderingContext2D, x: number, minY: number, maxY: number, color: number | string): void {
+    if(maxY < minY) {
+       let i = minY;
+       minY = maxY;
+       maxY = i;
+    }
+
+    context.fillStyle = typeof color === 'number' ? 'white' : color;
+    context.fillRect(x, minY + 1, x + 1, maxY);
   }
 
-  public drawCenteredString(context: CanvasRenderingContext2D, text: string, posX: number, posY: number, color: number, ..._formatting: []) {
-    FontRenderer.drawStringWithShadow(context, text, posX - (FontRenderer.getTextWidth(text) / 2), posY, color, _formatting);
-  }
-
-  public drawImg(context: CanvasRenderingContext2D, img: any, offsetX: number, offsetY: number, uvX: number, uvY: number, width: number, height: number) {
-    context.drawImage(img, uvX, uvY, width, height, offsetX, offsetY, width, height);
-  }
-
-  public fill(context: CanvasRenderingContext2D, minX: number, minY: number, maxX: number, maxY: number, color: number) {
-    context.save();
-    context.beginPath();
-    context.fillStyle = ColorHelper.getColor(color);
-    context.fillRect(minX, minY, maxX, maxY);
-    context.stroke();
-  }
-  
-  public blit(context: CanvasRenderingContext2D, img: HTMLImageElement, x: number, y: number, uvX: number, uvY: number, width: number, height: number) {
+  protected blit(context: CanvasRenderingContext2D, img: HTMLImageElement | HTMLCanvasElement, x: number, y: number, uvX: number, uvY: number, width: number, height: number) {
     context.drawImage(img, uvX, uvY, width, height, x, y, width, height);
   }
-}
 
-export default AbstractGui;
+  public drawCenteredString(context: CanvasRenderingContext2D, fontRenderer: FontRenderer, text: string, x: number, y: number, color: number | string) {
+    fontRenderer.drawStringWithShadow(context, text, x - fontRenderer.getTextWidth(text) / 2, y, color);
+  }
+
+  public drawString(context: CanvasRenderingContext2D, fontRenderer: FontRenderer, text: string, x: number, y: number, color: number | string) {
+    fontRenderer.drawStringWithShadow(context, text, x, y, color);
+  }
+
+  public createBuffer(bufferWidth: number, bufferHeight: number, draw: (ctx: CanvasRenderingContext2D) => void) {
+    const ctx = <CanvasRenderingContext2D>(<HTMLCanvasElement>document.createElement('canvas')).getContext('2d');
+
+    ctx.canvas.width = bufferWidth;
+    ctx.canvas.height = bufferHeight;
+
+    ctx.save();
+    draw(ctx);
+    ctx.restore()
+
+    return ctx.canvas;
+  }
+}

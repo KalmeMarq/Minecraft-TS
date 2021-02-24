@@ -1,158 +1,113 @@
-import GameConfiguration from "./GameConfiguration.js";
-import GameSettings from "./GameSettings.js";
-import FontRenderer from "./gui/FontRenderer.js";
-import MainMenuScreen from "./gui/screens/MainMenuScreen.js";
-import Screen from "./gui/screens/Screen.js";
-import { shutdown } from "./index.js";
-import { getResourceLocation} from "./utils/Resources.js";
-import KeyboardListener from "./utils/KeyboardListener.js";
-import MouseHelper from "./utils/MouseHelper.js";
-import IMCResources from "./interfaces/IResources.js";
-import IngameGui from "./gui/IngameGui.js";
+import GameConfiguration from './GameConfiguration'
+import GameRenderer from './GameRenderer';
+import GameSettings from './GameSettings'
+import GuiScreen from './gui/screen/GuiScreen';
+import IngameGui from './gui/IngameGui';
+import IngameMenuScreen from './gui/screen/IngameMenuScreen';
+import MainMenuScreen from './gui/screen/MainMenuScreen';
+import MultiplayerScreen from './gui/screen/MultiplayerScreen';
+import Timer from './util/Timer';
+import Util from './util/Util';
+import MouseHelper from './util/MouseHelper';
+import IWindowEventListener from './interface/IWindowEventListener';
+import MainCanvas from './MainCanvas';
+import FontRenderer from './gui/FontRenderer';
+import KeyboardListener from './util/KeyboardListener';
+import { getResourceLocation } from './util/Resources';
+import Splashes from './util/Splashes';
+import TextureBuffer from './util/TextureBuffer';
+import LoadingGui from './gui/LoadingGui';
+import LanguageManager from './resources/LanguageManager';
 
-class Timer {
-  public renderPartialTicks = 0;
-  public elapsedPartialTicks = 0;
-  private lastSyncSysClock = 0;
-  private tickLength = 0;
-
-  constructor(ticks: number, lastSyncSysClock: number) {
-     this.tickLength = 1000.0 / ticks;
-     this.lastSyncSysClock = lastSyncSysClock;
-  }
-
-  public getPartialTicks(gameTime: number) {
-     this.elapsedPartialTicks = (gameTime - this.lastSyncSysClock) / this.tickLength;
-     this.lastSyncSysClock = gameTime;
-     this.renderPartialTicks += this.elapsedPartialTicks;
-     let i = Math.ceil(this.renderPartialTicks);
-     this.renderPartialTicks -= i;
-     return i;
-  }
-}
-
-
-export default class Minecraft {
-  protected gameconfiguration: GameConfiguration;
-  public context: CanvasRenderingContext2D = (<HTMLCanvasElement>document.getElementById('root')).getContext('2d')!;
+export default class Minecraft implements IWindowEventListener {
+  private static instance: Minecraft;
+  private mainCanvas: MainCanvas;
+  private timer: Timer = new Timer(20, 0);
+  public fontRenderer: FontRenderer;
+  public gameRenderer: GameRenderer;
+  public gameSettings: GameSettings;
+  private splashes: Splashes;
+  public loadingGui: LoadingGui | null = null;
+  public ingameGUI: IngameGui;
+  private isDemo: boolean;
+  private launchedVersion: string;
+  private versionType: string;
+  private enableMultiplayer: boolean;
+  private enableChat: boolean;
+  private languageManager: LanguageManager;
   public mouseHelper: MouseHelper;
   public keyboardListener: KeyboardListener;
-  public canvasX = 0;
-  public canvasY = 0;
-  public gameSettings: GameSettings;
-  // public ResourcesData: IMCResources = MCResources;
-  public canvasWidth = window.innerWidth;
-  public canvasHeight = window.innerHeight;
-  public scaleFactor = 3;
-  private fps: number = 0;
-  private timer: Timer = new Timer(20.0, 0);
-  private times: Array<number> = [];
   public running: boolean = true;
-  public ingameGUI: IngameGui;
-  public currentScreen: Screen | null = null;
-  public outputLog = ''
-  static instance: Minecraft;
-  public instanceNew: Minecraft = this;
-  static Minecraft: Minecraft;
+  public currentScreen: GuiScreen | null = null;
+  private isGamePaused!: boolean;
+  public skipRenderWorld!: boolean;
+  private renderPartialTicksPaused!: number;
+  public world: any = null;
+  public context = <CanvasRenderingContext2D>(<HTMLCanvasElement>document.getElementById('root')).getContext('2d');
+  private fps: number = 0;
+  private times: Array<number> = [];
+  public textureBuffer: TextureBuffer;
+
+  private testPlayerName: string = 'Steve';
 
   constructor(gameConfig: GameConfiguration) {
     Minecraft.instance = this;
-    this.gameconfiguration = gameConfig;
+    this.textureBuffer = new TextureBuffer();
+    this.launchedVersion = gameConfig.gameInfo.version;
+    this.versionType = gameConfig.gameInfo.versionType;
+    this.isDemo = gameConfig.gameInfo.isDemo;
+    this.enableMultiplayer = !gameConfig.gameInfo.disableMultiplayer;
+    this.enableChat = !gameConfig.gameInfo.disableChat;
+    this.testPlayerName = gameConfig.userInfo.userName;
+    this.splashes = new Splashes();
     this.gameSettings = new GameSettings(this);
-    this.mouseHelper = new MouseHelper(this, this.context);
-    this.keyboardListener = new KeyboardListener(this);
+    this.languageManager = new LanguageManager(this.gameSettings.language);
+    this.mainCanvas = new MainCanvas(this);
+    this.mouseHelper = new MouseHelper(this);
     this.mouseHelper.registerCallbacks();
+    this.keyboardListener = new KeyboardListener(this);
     this.keyboardListener.setupCallbacks();
-    this.updateCanvasSize();
-    this.run();
+    this.fontRenderer = new FontRenderer();
+    this.gameRenderer = new GameRenderer(this);
     this.ingameGUI = new IngameGui(this);
-    this.outputLog = ''
+    this.displayGuiScreen(new MainMenuScreen(true));
+    this.updateWindowSize();
   }
 
-  public static getInstance(): Minecraft {
-    return this.instance;
-  }
-
-  public getInstanceNew(): Minecraft {
-    return this.instanceNew;
-  }
-
-  public openFullscreen() {
-    let elem = document.documentElement;
-    if(elem.requestFullscreen) elem.requestFullscreen();
-  }
-  
-  public closeFullscreen() {
-    if(document.exitFullscreen) document.exitFullscreen();
-  }
-
-  public shutdown() {
-    this.running = false;
-    console.log(this.outputLog);
-    shutdown()
-  }
-
- /*  public setFpsVisibility(state: boolean) {
-    this.gameSettings.showFPS = state;
-  } */
-
-  public isFpsVisible() {
-    return this.gameSettings.showFPS;
-  }
-
-  public getSplashText(): string {
-    function getRandSplash() {
-
-      const splashes = getResourceLocation('texts', 'splashes'),
-            date = new Date(),
-            month = date.getMonth(),
-            day = date.getDate();
-
-      const getRandomSplashText = () => {
-        return splashes[~~(Math.random() * (splashes.length - 1))]
-      }
-  
-      let randSplash = String(getRandomSplashText());
-  
-      if(month + 1 === 12 && day === 24) randSplash = 'Merry X-mas!';
-      else if (month + 1 === 1 && day === 1) randSplash = 'Happy new year!';
-      else if(month + 1 === 10 && day === 31) randSplash = 'OOoooOOOoooo! Spooky!';
-  
-      return randSplash;
-    }
-    return getRandSplash();
-  }
-
-  public run() {
-    this.context.canvas.width = this.canvasWidth;
-    this.context.canvas.height = this.canvasHeight;
-    this.context.scale(this.scaleFactor, this.scaleFactor);
-    this.context.imageSmoothingEnabled = false;
-    const runLoop = () => {
-      requestAnimationFrame(runLoop);
-
-      if(this.running) {
-        this.displayGuiScreen(this.currentScreen);
-
-        if (true) {
-          let j = this.timer.getPartialTicks(new Date().getMilliseconds());
-
-          for(var k = 0; k < Math.min(10, j); ++k) {
-              this.runTick();
+  public run(): void {
+    try {
+      let flag: boolean = false;
+      let loopFunc;
+      
+      const loop = () => {
+        (<any>window)['setRunning'] = (flag: boolean) => {
+          if(flag) {
+            this.running = true;
+            loopFunc = requestAnimationFrame(loop);
+            return true;
           }
+
+          this.running = false;
+          return false;
         }
 
-        if(this.gameSettings.showFPS) {
-          this.context.save();
-          this.context.scale(0.666, 0.666);
-          let fps = this.gameSettings.vsync ? (this.getFPS() > this.gameSettings.framerateLimit ? this.gameSettings.framerateLimit : this.getFPS()) : this.getFPS()
-          FontRenderer.drawStringWithShadow(this.context, `${String(fps)}/${this.gameSettings.framerateLimit}`, 2, 2, 16777215, []);
-          this.context.restore();
+        loopFunc = requestAnimationFrame(loop);
+        
+        if(this.running) {
+          this.runGameLoop(!flag);
+        } else {
+          cancelAnimationFrame(loopFunc);
         }
       }
-    }
+      loop()
 
-    requestAnimationFrame(runLoop);
+    } catch(e) {
+      Util.createLog(
+        'Couldn\'t run Minecraft!',
+        '\n\nMore Details:',
+        `\n\t${e}`
+      )
+    }
   }
 
   public getFPS(): number {
@@ -163,67 +118,149 @@ export default class Minecraft {
     return this.fps;
   }
 
-  public runTick(): void {
-    if(this.currentScreen != null) {
-      this.currentScreen.tick();
+  private runGameLoop(renderWorldIn: boolean): void {
+    let i = Util.nanoTime();
+
+    if(renderWorldIn) {
+      let j = this.timer.getPartialTicks(Util.milliTime());
+
+      for(let k = 0; k < Math.min(10, j); ++k) this.runTick();
+    }
+
+    if(!this.skipRenderWorld) this.gameRenderer.updateCameraAndRender(this.isGamePaused ? this.renderPartialTicksPaused : this.timer.renderPartialTicks, i, renderWorldIn);
+
+    let flag = (this.currentScreen != null && this.currentScreen.isPauseScreen()) && !false;
+    if(this.isGamePaused != flag) {
+      if (this.isGamePaused) this.renderPartialTicksPaused = this.timer.renderPartialTicks;
+      else this.timer.renderPartialTicks = this.renderPartialTicksPaused;
+       
+      this.isGamePaused = flag;
     }
   }
 
-  public displayGuiScreen(guiScreenIn: Screen | null): void {
-    // if (this.currentScreen != null) this.currentScreen.onClose();
+  public updateWindowSize(): void {
+    this.mainCanvas.setGuiScale(this.mainCanvas.getGuiScaleFactor());
+    this.context.canvas.width = window.innerWidth;
+    this.context.canvas.height = window.innerHeight;
+    this.context.scale(this.mainCanvas.getGuiScaleFactor(), this.mainCanvas.getGuiScaleFactor());
+    this.context.imageSmoothingEnabled = false;
 
-    if(guiScreenIn === null) guiScreenIn = new MainMenuScreen();
+    if(this.currentScreen != null) {
+      this.currentScreen.resize(this, this.mainCanvas.getScaledWidth(), this.mainCanvas.getScaledHeight());
+    }
+  }
+
+  public shutdown(): void {
+    this.running = false;
+  }
+
+  public isRunning(): boolean {
+    return this.running;
+  }
+
+  public displayInGameMenu(pauseOnly: boolean): void {
+    if(this.currentScreen == null) {
+       const flag = true;
+       if(flag) this.displayGuiScreen(new IngameMenuScreen(!pauseOnly));
+       else this.displayGuiScreen(new IngameMenuScreen(true));
+    }
+  }
+
+  public runTick(): void {
+    if(!this.isGamePaused) this.ingameGUI.tick();
+
+    if(this.currentScreen !== null) {
+      GuiScreen.wrapScreenError(() => {
+         this.currentScreen!.tick();
+      }, 'Ticking screen', this.currentScreen.getClassName());
+    }
+
+    if(!this.gameSettings.showDebugInfo) this.ingameGUI.reset();
+
+    if(this.currentScreen == null || this.currentScreen.passEvents) this.processKeyBinds();
+
+    if (this.world != null && !this.isGamePaused) this.gameRenderer.tick();
+  }
+
+  private processKeyBinds(): void {}
+
+  public displayGuiScreen(guiScreenIn: GuiScreen | null): void {
+    if(this.currentScreen != null) this.currentScreen.onClose();
+
+    if(guiScreenIn == null && this.world == null) guiScreenIn = new MainMenuScreen();
+
+    if(guiScreenIn instanceof MainMenuScreen || guiScreenIn instanceof MultiplayerScreen) {
+       this.gameSettings.showDebugInfo = false;
+    }
 
     this.currentScreen = guiScreenIn;
-    if(guiScreenIn !== null) {
-      try {
-        const i = this.mouseHelper.getMouseX(),
-              j = this.mouseHelper.getMouseY();
     
-        guiScreenIn.initScreen(this, this.canvasWidth / this.scaleFactor, this.canvasHeight / this.scaleFactor);
-        guiScreenIn.renderObject(this.context, i / this.scaleFactor, j / this.scaleFactor);
-      } catch(e) {
-        console.log(e);
-      }
+    if(guiScreenIn != null) {
+      guiScreenIn.initScreen(this, this.mainCanvas.getScaledWidth(), this.mainCanvas.getScaledHeight());
     }
   }
 
-  public updateCanvasSize(): void {
-    window.addEventListener('resize', () => {
-      this.canvasWidth = window.innerWidth;
-      this.canvasHeight = window.innerHeight;
-      this.context.canvas.width = this.canvasWidth;
-      this.context.canvas.height = this.canvasHeight;
-      this.context.scale(this.scaleFactor, this.scaleFactor);
-      this.context.imageSmoothingEnabled = false;
-    });
+  public static getInstance(): Minecraft {
+    return Minecraft.instance;
   }
 
-  public getScaleFactor(): number {
-    return this.scaleFactor;
+  public static isGuiEnabled(): boolean {
+    return !this.instance.gameSettings.hideGUI;
   }
 
-  public isDemo(): boolean {
-    return this.gameconfiguration.gameInfo.isDemo;
-  }
-
-  public isModdedClient(): boolean {
-    return this.gameconfiguration.gameInfo.clientName !== 'vanilla';
-  }
-
-  public getVersionType(): string {
-    return this.gameconfiguration.gameInfo.versionType;
+  public getIsDemo(): boolean {
+    return this.isDemo;
   }
 
   public getVersion(): string {
-    return this.gameconfiguration.gameInfo.version;
+    return this.launchedVersion;
   }
 
-  public getUsername(): string {
-    return this.gameconfiguration.userInfo.userName;
+  public getVersionType(): string {
+    return this.versionType;
   }
 
   public getForceUnicodeFont(): boolean {
     return this.gameSettings.forceUnicodeFont;
+  } 
+
+  public getPlayerName(): string {
+    return this.testPlayerName;
+  }
+
+  public isMultiplayerEnabled(): boolean {
+    return this.enableMultiplayer;
+  }
+
+  public isChatEnabled(): boolean {
+    return this.enableChat;
+  }
+
+  public isModdedClient(): boolean {
+    return false;
+  }
+
+  public getIsGamePaused(): boolean {
+    return this.isGamePaused;
+  }
+
+  public getRenderPartialTicks(): number {
+    return this.timer.renderPartialTicks;
+  }
+
+  public getTickLength(): number {
+    return this.timer.elapsedPartialTicks;
+  }
+
+  public getMainCanvas(): MainCanvas {
+    return this.mainCanvas;
+  }
+
+  public getSplashes(): Splashes {
+    return this.splashes;
+  }
+
+  public getLanguageManager(): LanguageManager {
+    return this.languageManager;
   }
 }

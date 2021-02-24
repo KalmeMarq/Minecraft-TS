@@ -1,107 +1,212 @@
-import { getResourceLocation } from "../utils/Resources.js";
-import ColorHelper from "../utils/ColorHelper.js";
-import Minecraft from "../Minecraft.js";
-
-export let characterRenderers: any = {};
-export let addCharacterRenderer = (color: number, char: string) => {
-  if(!characterRenderers[color]) {
-    characterRenderers[color] = {}
-  }
-  characterRenderers[color][char] = {
-    text: new CharacterRenderer(char, color).create(),
-    textShadow: new CharacterRenderer(char, color).createShadow()
-  };
-}
-
-export class CharacterRenderer {
-  private r;
-  private g;
-  private b;
-  private char;
-  private charWidth;
-  private charHeight;
-
-  constructor(char: string, color: number) {
-    this.char =  char;
-    this.charWidth =  getResourceLocation('fonts', 'font')[this.char].w;
-    this.charHeight =  getResourceLocation('fonts', 'font')[this.char].h;
-    this.r = ColorHelper.getRed(color);
-    this.g = ColorHelper.getGreen(color);
-    this.b = ColorHelper.getBlue(color);
-  }
-
-  public create(): HTMLCanvasElement {
-    const ctxfont = document.createElement('canvas')!.getContext('2d')!;
-    ctxfont.canvas.width = this.charWidth;
-    ctxfont.canvas.height = this.charHeight;
-    ctxfont.drawImage(getResourceLocation('textures', 'font/ascii'), getResourceLocation('fonts', 'font')[this.char].x, getResourceLocation('fonts', 'font')[this.char].y, this.charWidth, this.charHeight, 0, 0, this.charWidth, this.charHeight);
-        
-    ctxfont.save();
-    let myImg = ctxfont.getImageData(0, 0, this.charWidth * 3, this.charHeight * 3);
-    ctxfont.clearRect(0, 0, this.charWidth, this.charHeight);
-    for(var p = 0; p < myImg.data.length; p+=4) myImg.data[p] = this.r, myImg.data[p + 1] = this.g, myImg.data[p + 2] = this.b;
-    ctxfont.restore();
-
-    ctxfont.putImageData(myImg, 0, 0);
-    return ctxfont.canvas;
-  }
-
-  public createShadow(): HTMLCanvasElement {
-    const ctxfont = document.createElement('canvas')!.getContext('2d')!;
-    ctxfont.canvas.width = this.charWidth;
-    ctxfont.canvas.height = this.charHeight;
-    ctxfont.drawImage(getResourceLocation('textures', 'font/ascii'), getResourceLocation('fonts', 'font')[this.char].x, getResourceLocation('fonts', 'font')[this.char].y, this.charWidth, this.charHeight, 0, 0, this.charWidth, this.charHeight);
-
-    ctxfont.save();
-    let myImg = ctxfont.getImageData(0, 0, this.charWidth * 3, this.charHeight * 3);
-    ctxfont.clearRect(0, 0, this.charWidth, this.charHeight);
-    for(var p = 0; p < myImg.data.length; p += 4) myImg.data[p] = this.r * 0.13, myImg.data[p + 1] = this.g * 0.13, myImg.data[p + 2] = this.b * 0.13;
-    ctxfont.restore();
-
-    ctxfont.putImageData(myImg, 0, 0);
-    return ctxfont.canvas;
-  }
-} 
+import ColorHelper from "@km.mcts/util/ColorHelper";
+import { getResourceLocation } from "@km.mcts/util/Resources";
+import Util from "@km.mcts/util/Util";
+import { type } from "os";
+import { stringify } from "querystring";
 
 export default class FontRenderer {
-  public static getTextWidth(text: string) {
-    const flag = localStorage.getItem('Options') ? 'true'.equals(localStorage.getItem('Options')!.split('\n').filter(x => x.includes('forceUnicodeFont:'))[0].split(':')[1]) : false;
-    if(flag) {
-      return (<HTMLCanvasElement>document.getElementById('root')).getContext('2d')!.measureText(text).width;
-    } else {
-      let width = 0;
-      text.split('').forEach((char, idx) => width += getResourceLocation('fonts', 'font')[text[idx]].w - 1)
-      return width;
-    }
+  public static hasCatchedError = false; 
+  public ref = getResourceLocation('fonts', 'default');
+  public fonts = { ascii: getResourceLocation('textures', 'font/ascii'), accented: getResourceLocation('textures', 'font/accented')};
+  public asciiChars: any[] = [];
+  public accentedChars: any[] = [];
+  public asciiCharsStore: { [key: string]: CharacterInfo } = {};
+  public accentedCharsStore: { [key: string]: CharacterInfo } = {};
+  public allCharsStore: { [key: string]: CharacterInfo } = {};
+  public characterBuffer: CharacterBuffer = new CharacterBuffer();
+
+  constructor() {
+    this.ref.providers[2].chars.forEach((line: any) => {
+      line.split('').forEach((char: any) => {
+        this.asciiChars.push(char)
+      })
+    })
+
+    this.asciiChars.forEach(char => {
+      this.asciiCharsStore[char] = new CharacterInfo('ascii', this.fonts, this.asciiChars, char);
+    })
+
+    this.ref.providers[1].chars.forEach((line: any) => {
+      line.split('').forEach((char: any) => {
+        this.accentedChars.push(char)
+      })
+    })
+
+    this.accentedChars.forEach(char => {
+      this.accentedCharsStore[char] = new CharacterInfo('accented', this.fonts, this.accentedChars, char);
+    })
+
+    Object.entries(this.asciiCharsStore).forEach(([key, value]) => {
+      if(!this.allCharsStore[key]) {
+        this.allCharsStore[key] = value;
+      }
+    })
+
+    
+    Object.entries(this.accentedCharsStore).forEach(([key, value]) => {
+      if(!this.allCharsStore[key]) {
+        this.allCharsStore[key] = value;
+      }
+    })
   }
 
-  public static drawStringWithShadow(context: CanvasRenderingContext2D, text: string, posX: number, posY: number, color: number, _formatting: []) {
-    const flag = localStorage.getItem('Options') ? 'true'.equals(localStorage.getItem('Options')!.split('\n').filter(x => x.includes('forceUnicodeFont:'))[0].split(':')[1]) : false;
-    if(flag) {
-      context.save();
-      context.font = 'lighter 10px Arial';
-      context.fillStyle = ColorHelper.getDarkerColor(color);
-      context.fillText(text, posX + 1, posY + 14 / 2 + 1);
-      context.fillStyle = ColorHelper.getColor(color);
-      context.fillText(text, posX, posY + 14 / 2);
-      context.restore();
-    } else {
-      for(var j = 0, k = posX; j < text.length; j++) {
-        const char: any = text[j];
-        if(!(characterRenderers[color] && characterRenderers[color][char])) addCharacterRenderer(color, char);
-        
-        context.drawImage(characterRenderers[color][char]['textShadow'], k - 1 + 1, posY + 1);
-        context.drawImage(characterRenderers[color][char]['text'], k - 1, posY);
+  public drawStringWithShadow(context: CanvasRenderingContext2D, text: string, x: number, y: number, color: number | string) {
+    const c = typeof color === 'number' ? ColorHelper.getColor(color) : color;
+    const cS = typeof color === 'number' ? ColorHelper.getDarkerColor(color) : 'black';
+
+    for(let i = 0, k = x; i < text.length; i++) {
+      let char = text[i];
+      let charInfo = this.allCharsStore[char];
+
+      if(this.characterBuffer.get(char, c).src === null) {
+        this.characterBuffer.add(this.allCharsStore[char], c)
   
-        k += getResourceLocation('fonts', 'font')[char].w - 1;
+        if(this.characterBuffer.get(char, cS).src === null) {
+          this.characterBuffer.add(this.allCharsStore[char], cS)
+        }
+      } else {
+        let o = charInfo.type == 'ascii' ? 0 : 3;
+        context.drawImage(this.characterBuffer.get(char, cS).src!, k + 1, y + 1 - o)
+        context.drawImage(this.characterBuffer.get(char, c).src!, k, y - o)
+  
+  
+        k += charInfo.width;
+        if(char !== ' ') k--;
       }
     }
   }
 
-  public static filll(context: CanvasRenderingContext2D, minX: number, minY: number, maxX: number, maxY: number, color: number) {
-    context.save();
-    context.fillStyle = ColorHelper.getColor(color);
-    context.fillRect(minX, minY, maxX, maxY);
-    context.stroke();
+  public getTextWidth(text: string): number {
+    let j = 0;
+    for(let i = 0; i < text.length; i++) {
+      try {
+        let charInfo = this.allCharsStore[text[i]];
+        j += charInfo.width - 1;
+      } catch(e) {
+        if(!FontRenderer.hasCatchedError) {
+          FontRenderer.hasCatchedError = true;
+          Util.createLog(`Char not found!`)
+        }
+      }
+    }
+    
+
+    return j;
+  }
+}
+
+interface ICharacterBuffer {
+  [key: string]: {
+    [colorKey: string]: HTMLCanvasElement;
+  }
+}
+
+export class CharacterBuffer {
+  public static hasCatchedError = false;
+  private buffer: ICharacterBuffer = {};
+
+  constructor() {
+  }
+
+  public add(charInfo: CharacterInfo, color: string): void {
+ /*    try { */
+      if(!this.buffer[charInfo.char]) this.buffer[charInfo.char] = {};
+    
+      if(!this.buffer[charInfo.char][color]) {
+        const c = <HTMLCanvasElement>document.createElement('canvas');
+        const ctx = <CanvasRenderingContext2D>(c.getContext('2d'));
+        c.width = charInfo.width;
+        c.height = charInfo.height;
+        
+        ctx.save();
+        ctx.globalAlpha = 1
+        ctx.drawImage(charInfo.fontImg, charInfo.xUV, charInfo.yUV, charInfo.width, charInfo.height, 0, 0, charInfo.width, charInfo.height);
+        ctx.globalCompositeOperation = 'source-in';
+        ctx.fillStyle = color;
+        ctx.fillRect(0, 0, charInfo.width, charInfo.height);
+        ctx.restore()
+
+        this.buffer[charInfo.char][color] = ctx.canvas;
+      }
+/*     } catch(e) {
+      if(!CharacterBuffer.hasCatchedError) {
+        CharacterBuffer.hasCatchedError = true;
+        Util.createLog(`Char not found!`)
+      }
+    } */
+  }
+
+  public get(char: string, color: string): { char: string, color: string, src: HTMLCanvasElement | null } {
+    let c: HTMLCanvasElement | null = null;
+    if(this.buffer[char] && this.buffer[char][color]) {
+      c = this.buffer[char][color]
+    }
+
+    return {
+      char: char,
+      color: color,
+      src: c
+    }
+  }
+}
+
+export class CharacterInfo {
+  public char;
+  public width;
+  public height;
+  public baseWidth;
+  public baseHeight;
+  public xIndex;
+  public yIndex;
+  public xUV;
+  public yUV;
+  public fontImg;
+  public type;
+
+  constructor(type: string, font: { [key: string]: HTMLImageElement }, chars: any, char: string) {
+    this.type = type;
+    this.fontImg = font[type];
+    this.char = char;
+    this.baseWidth = type == 'ascii' ? 7 : 10;
+    this.baseHeight = type == 'ascii' ? 8 : 12;
+
+    this.width = type == 'ascii' ? 7 : 7;
+
+    const specialChars = {
+      'i': 3,
+      'ì': 3,
+      '.': 3,
+      '\'': 3,
+      ':': 3,
+      ',': 2,
+      'f': 6,
+      'k': 6,
+      '(': 6,
+      ' ': 4,
+      'l': 4,
+      '`': 5,
+      't': 5,
+      'I': 5,
+      '"': 5
+    }
+
+    Object.entries(specialChars).forEach(([key, value]) => key == char ? this.width = value : null);
+   
+    this.height = type == 'ascii' ? 8 : 12;
+
+    let charIdx = chars.findIndex((i: any) => i == char);
+    this.yIndex = Number(~~(charIdx / 16));
+    this.xIndex = Number((charIdx % 16));
+
+    this.xUV = this.xIndex + (this.xIndex * this.baseWidth);
+    this.yUV = (this.yIndex * this.baseHeight);
+
+    if(this.type == 'accented') {
+      this.yIndex = Number(~~(charIdx / 16));
+      this.xIndex = Number((charIdx % 16));
+
+      this.xUV = this.xIndex + (this.xIndex * (this.baseWidth - 2));
+      this.yUV = (this.yIndex * this.baseHeight);
+    }
   }
 }

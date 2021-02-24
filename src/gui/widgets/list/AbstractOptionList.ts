@@ -1,43 +1,28 @@
-// import Minecraft from "../../../Minecraft";
+// import IGuiEventListener from "@km.mcts/interface/IGuiEventListener";
+// import INestedGuiEventHandler from "@km.mcts/interface/INestedGuiEventHandler";
+// import AbstractList from "./AbstractList";
 
-// export default abstract class AbstractOptionList extends AbstractList {
-//   constructor(p_i51139_1_: Minecraft, p_i51139_2_: number, p_i51139_3_: number, p_i51139_4_: number, p_i51139_5_: number, p_i51139_6_: number) {
-//     super(p_i51139_1_, p_i51139_2_, p_i51139_3_, p_i51139_4_, p_i51139_5_, p_i51139_6_);
+// export default class AbstractOptionList<E extends Entry<E>> extends AbstractList<E> {
+//   constructor() {
+//     super();
 //   }
+// }
 
-//   public changeFocus(focus: boolean) {
-//     let flag = super.changeFocus(focus);
-//     if (flag) {
-//         this.ensureVisible(this.getListener());
-//     }
+// export abstract class Entry<E extends Entry<E>> extends AbstractList.AbstractListEntry<E> implements INestedGuiEventHandler {
+//   private field_214380_a: IGuiEventListener | null = null;
+//   private field_214381_b: boolean = false;
 
-//     return flag;
+//   getEventListeners() {
 //   }
-
-//   protected isSelectedItem(index: number) {
-//     return false;
+//   setDragging(dragging: boolean): void {
 //   }
-
-//  /*  public abstract static class Entry<E extends AbstractOptionList.Entry<E>> extends AbstractList.AbstractListEntry<E> implements INestedGuiEventHandler {
-//     @Nullable
-//     private IGuiEventListener field_214380_a;
-//     private boolean field_214381_b;
-
-//     public boolean isDragging() {
-//         return this.field_214381_b;
-//     }
-
-//     public void setDragging(boolean dragging) {
-//         this.field_214381_b = dragging;
-//     }
-
-//     public void setListener(@Nullable IGuiEventListener listener) {
-//         this.field_214380_a = listener;
-//     }
-
-//     @Nullable
-//     public IGuiEventListener getListener() {
-//         return this.field_214380_a;
-//     }
-//   } */
+//   getListener(): IGuiEventListener {
+//     return 
+//   }
+//   setListener(listener: IGuiEventListener | null): void {
+//   }
+//   setFocusedDefault(eventListener: IGuiEventListener | null): void {
+//   }
+//   setListenerDefault(listener: IGuiEventListener | null): void {
+//   }
 // }

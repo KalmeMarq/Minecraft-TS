@@ -1,12 +1,12 @@
-import MathHelper from "../utils/MathHelper";
-import Utils from "../utils/Utils";
+import MathHelper from '@km.mcts/util/MathHelper';
+import Util from '@km.mcts/util/Util';
 
 export default class CloudOption {
   static readonly OFF = new CloudOption(0, 'options.off');
   static readonly FAST = new CloudOption(1, 'options.clouds.fast');
   static readonly FANCY = new CloudOption(2, 'options.clouds.fancy');
 
-  private static BY_ID: CloudOption[] = Object.values(CloudOption).sort(Utils.sortIteratable);
+  private static BY_ID: CloudOption[] = Object.values(CloudOption).sort(Util.sortIteratable);
 
   public id: number;
   public key: string;

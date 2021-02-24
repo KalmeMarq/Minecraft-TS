@@ -1,24 +1,24 @@
-import { playSound } from "../../../utils/PlaySound.js";
-import Widget from "../Widget.js";
+import playSound from "../../../util/PlaySound";
+import Widget from "../Widget";
 
 export default abstract class AbstractButton extends Widget {
-  public PressFunc: any;
-
   constructor(x: number, y: number, width: number, height: number, title: string) {
     super(x, y, width, height, title);
   }
 
+  public abstract onPress(): void;
+
   public onClick(mouseX: number, mouseY: number): void {
-    this.PressFunc();
+    this.onPress();
   }
 
-  public keyDown(keyName: string, modifiers: any) {
-    if(this.active && this.visible && (this.isHovered || this.focused)) {
+  public keyPressed(keyName: string, modifiers: any) {
+    if(this.active && this.visible && this.getIsHovered()) {
       if(keyName != 'Enter' && keyName != ' ') {
         return false;
       } else {
         playSound('sounds/click_stereo', 0.2);
-        this.PressFunc();
+        this.onPress();
         return true;
       }
     } else return false;

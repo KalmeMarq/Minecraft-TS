@@ -1,12 +1,12 @@
-import MathHelper from "../utils/MathHelper";
-import Utils from "../utils/Utils";
+import MathHelper from '@km.mcts/util/MathHelper';
+import Util from '@km.mcts/util/Util';
 
 export default class ParticleStatus {
   static readonly ALL = new ParticleStatus(0, 'options.particles.all');
   static readonly DESCREASED = new ParticleStatus(1, 'options.particles.decreased');
   static readonly MINIMAL = new ParticleStatus(2, 'options.particles.minimal');
 
-  private static BY_ID: ParticleStatus[] = Object.values(ParticleStatus).sort(Utils.sortIteratable);
+  private static BY_ID: ParticleStatus[] = Object.values(ParticleStatus).sort(Util.sortIteratable);
 
   public id: number;
   public key: string;

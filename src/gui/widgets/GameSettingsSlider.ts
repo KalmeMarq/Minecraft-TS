@@ -1,5 +1,5 @@
-import GameSettings from "../../GameSettings.js";
-import AbstractSlider from "./AbstractSlider.js";
+import GameSettings from "../../GameSettings";
+import AbstractSlider from "./AbstractSlider";
 
 export abstract class GameSettingsSlider extends AbstractSlider {
    protected settings: GameSettings;

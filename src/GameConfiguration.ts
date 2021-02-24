@@ -1,6 +1,6 @@
 export default class GameConfiguration {
-  public userInfo: GameConfiguration.UserInformation;
-  public gameInfo: GameConfiguration.GameInformation;
+  public readonly userInfo: GameConfiguration.UserInformation;
+  public readonly gameInfo: GameConfiguration.GameInformation;
 
   constructor(userInfo: GameConfiguration.UserInformation, gameInfo: GameConfiguration.GameInformation) {
     this.userInfo = userInfo;
@@ -9,16 +9,18 @@ export default class GameConfiguration {
 
   public static GameInformation = (() => {
     class GameInformation {
-      public isDemo: boolean;
-      public version: string;
-      public versionType: string;
-      public clientName: string;
+      public readonly isDemo: boolean;
+      public readonly version: string;
+      public readonly versionType: string;
+      public readonly disableMultiplayer: boolean;
+      public readonly disableChat: boolean;
 
-      constructor(isDemo: boolean, version: string, versionType: string, clientName: string) {
+      constructor(isDemo: boolean, version: string, versionType: string, disableMultiplayer: boolean, disableChat: boolean) {
         this.isDemo = isDemo;
         this.version = version;
         this.versionType = versionType;
-        this.clientName = clientName;
+        this.disableMultiplayer = disableMultiplayer;
+        this.disableChat = disableChat;
       }
     }
     return GameInformation;

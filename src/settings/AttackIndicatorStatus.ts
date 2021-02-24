@@ -1,12 +1,12 @@
-import MathHelper from "../utils/MathHelper";
-import Utils from "../utils/Utils";
+import MathHelper from '@km.mcts/util/MathHelper';
+import Util from '@km.mcts/util/Util';
 
 export default class AttackIndicatorStatus {
   static readonly OFF = new AttackIndicatorStatus(0, 'options.off');
   static readonly CROSSHAIR = new AttackIndicatorStatus(1, 'options.attack.crosshair');
   static readonly HOTBAR = new AttackIndicatorStatus(2, 'options.attack.hotbar');
 
-  private static BY_ID: AttackIndicatorStatus[] = Object.values(AttackIndicatorStatus).sort(Utils.sortIteratable);
+  private static BY_ID: AttackIndicatorStatus[] = Object.values(AttackIndicatorStatus).sort(Util.sortIteratable);
 
   public id: number;
   public key: string;

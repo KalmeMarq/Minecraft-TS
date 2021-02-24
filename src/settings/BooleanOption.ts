@@ -1,14 +1,14 @@
-import GameSettings from "../GameSettings.js";
-import OptionButton from "../gui/widgets/button/OptionButton.js";
-import Widget from "../gui/widgets/Widget.js";
-import { getKeyTranslation } from "../utils/TranslationText.js";
-import AbstractOption from "./AbstractOption.js";
+import Util from '@km.mcts/util/Util';
+import GameSettings from '../GameSettings';
+import OptionButton from '../gui/widgets/button/OptionButton';
+import Widget from '../gui/widgets/Widget';
+import AbstractOption from './AbstractOption';
 
 export default class BooleanOption extends AbstractOption {
   private getter: Function;
   private setter: Function;
 
-  constructor(translationKeyIn: string, getter: Function, setter: Function) {
+  constructor(translationKeyIn: string, getter: (settings: GameSettings) => boolean, setter: (settings: GameSettings, optionValues: boolean) => void) {
     super(translationKeyIn);
     this.getter = getter;
     this.setter = setter;
@@ -32,12 +32,14 @@ export default class BooleanOption extends AbstractOption {
   }
 
   public createWidget(options: GameSettings, xIn: number, yIn: number, widthIn: number): Widget {
-    return new OptionButton(xIn, yIn, widthIn, 20, this, this.getName(options), ()=> {
+    return new OptionButton(xIn, yIn, widthIn, 20, this, this.getName(options), (button) => {
       this.nextValue(options);
+      console.log(this.getName(options));
+      button.setMessage(this.getName(options));
     });
   }
 
   public getName(options: GameSettings) {
-    return getKeyTranslation(this.getBaseMessageTranslation()) + ': ' + getKeyTranslation(this.get(options) === true ? 'options.on' : 'options.off');
+    return Util.getTranslation(this.getBaseMessageTranslation()) + ': ' + Util.getTranslation(this.get(options) === true ? 'options.on' : 'options.off');
   }
 }

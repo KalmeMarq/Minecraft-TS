@@ -1,12 +1,12 @@
-import MathHelper from "../utils/MathHelper";
-import Utils from "../utils/Utils";
+import MathHelper from '@km.mcts/util/MathHelper';
+import Util from '@km.mcts/util/Util';
 
 export default class AmbientOcclusionStatus {
   static readonly OFF = new AmbientOcclusionStatus(0, 'options.ao.off');
   static readonly MIN = new AmbientOcclusionStatus(1, 'options.ao.min');
   static readonly MAX = new AmbientOcclusionStatus(2, 'options.ao.max');
 
-  private static BY_ID: AmbientOcclusionStatus[] = Object.values(AmbientOcclusionStatus).sort(Utils.sortIteratable);
+  private static BY_ID: AmbientOcclusionStatus[] = Object.values(AmbientOcclusionStatus).sort(Util.sortIteratable);
 
   public id: number;
   public key: string;

@@ -1,12 +1,12 @@
-import MathHelper from "../utils/MathHelper";
-import Utils from "../utils/Utils";
+import MathHelper from '@km.mcts/util/MathHelper';
+import Util from '@km.mcts/util/Util';
 
 export default class ChatVisibility {
   static readonly FULL = new ChatVisibility(0, 'options.chat.visibility.full');
   static readonly HIDDEN = new ChatVisibility(2, 'options.chat.visibility.hidden');
   static readonly SYSTEM = new ChatVisibility(1, 'options.chat.visibility.system');
 
-  private static BY_ID: ChatVisibility[] = Object.values(ChatVisibility).sort(Utils.sortIteratable);
+  private static BY_ID: ChatVisibility[] = Object.values(ChatVisibility).sort(Util.sortIteratable);
 
   public id: number;
   public key: string;

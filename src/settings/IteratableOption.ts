@@ -1,7 +1,7 @@
-import GameSettings from '../GameSettings.js';
-import OptionButton from '../gui/widgets/button/OptionButton.js';
-import Widgets from '../gui/widgets/Widget.js';
-import AbstractOption from './AbstractOption.js';
+import GameSettings from '../GameSettings';
+import OptionButton from '../gui/widgets/button/OptionButton';
+import Widgets from '../gui/widgets/Widget';
+import AbstractOption from './AbstractOption';
 
 export default class NewIteratableOption extends AbstractOption {
   private setter: Function;
@@ -19,8 +19,9 @@ export default class NewIteratableOption extends AbstractOption {
   }
 
   public createWidget(options: GameSettings, xIn: number, yIn: number, widthIn: number): Widgets {
-    return new OptionButton(xIn, yIn, widthIn, 20, this, this.getName(options), () => {
+    return new OptionButton(xIn, yIn, widthIn, 20, this, this.getName(options), (button) => {
       this.setValueIndex(options, 1);
+      button.setMessage(this.getName(options));
     });
   }
 

@@ -1,77 +1,66 @@
-import { getResourceLocation } from "../../utils/Resources.js";
-import IGuiEventListener from "../../interfaces/IGuiEventListener.js";
-import IRenderable from "../../interfaces/IRenderable.js";
-import { playSound } from "../../utils/PlaySound.js";
-import AbstractGui from "../AbstractGui.js";
-import { int, isInt } from "../../utils/MouseHelper.js";
-import Minecraft from "../../Minecraft.js";
+import IGuiEventListener from '../../interface/IGuiEventListener'
+import IRenderable from '../../interface/IRenderable'
+import Minecraft from '../../Minecraft'
+import playSound from '../../util/PlaySound'
+import { getResourceLocation, MCResources } from '../../util/Resources'
+import AbstractGui from '../AbstractGui'
+import FontRenderer from '../FontRenderer'
 
-export default abstract class Widgets extends AbstractGui implements IRenderable, IGuiEventListener {
-  protected WIDGETS = getResourceLocation('textures', 'gui/widgets');
-  protected width: number;
-  protected height: number;
-  public x: number;
-  public y: number;
-  private message: string;
-  private wasHovered: boolean = false;
-  protected isHovered: boolean = false;
-  public active: boolean = true;
-  public visible: boolean = true;
-  protected alpha: number = 1.0;
-  protected focused: boolean = false;
+export default class Widget extends AbstractGui implements IRenderable, IGuiEventListener {
+  protected WIDGETS = getResourceLocation('textures', 'gui/widgets')
+  protected width: number
+  protected height: number
+  public x: number
+  public y: number
+  private message: string
+  private wasHovered: boolean = false
+  protected isHovered: boolean = false
+  public active: boolean = true
+  public visible: boolean = true
+  protected alpha: number = 1.0
+  private focused: boolean = false
 
   constructor(x: number, y: number, width: number, height: number, title: string) {
-    super();
-    this.x = int(x);
-    this.y = int(y);
-    this.width = int(width);
-    this.height = int(height);
-    this.message = title;
+    super()
+    this.x = ~~x
+    this.y = ~~y
+    this.width = width
+    this.height = height
+    this.message = title
   }
 
-  protected getYImage(isHovered: boolean) {
-    let y = 1;
-    if (!this.active) y = 0;
-    else if (isHovered) y = 2;
-    return y;
-  }
-
-  renderObject(context: CanvasRenderingContext2D, mouseX: number, mouseY: number) {
+  public render(context: CanvasRenderingContext2D, mouseX: number, mouseY: number, partialTicks: number): void {
     if(this.visible) {
-      this.isHovered = mouseX >= this.x && mouseY >= this.y && mouseX < this.x + this.width && mouseY < this.y + this.height;
-      if(this.visible) this.renderButton(context, mouseX, mouseY);
-      this.wasHovered = this.isHovered;
+      this.isHovered = mouseX >= this.x && mouseY >= this.y && mouseX < this.x + this.width && mouseY < this.y + this.height
+
+      if(this.visible) {
+        this.renderButton(context, mouseX, mouseY, partialTicks);
+      }
+
+      this.wasHovered = this.getIsHovered();
     }
   }
 
-  public changeFocus(focus: boolean): boolean {
-    if (this.active && this.visible) {
-      this.focused = true;
-      return this.focused;
-    } else {
-      return false;
-    }
-  }
-
-  public renderButton(context: CanvasRenderingContext2D, mouseX: number, mouseY: number) {
-    // @ts-ignore: Unreachable code error
-    let minecraft: Minecraft = Minecraft.getInstance;
-    let yUV = this.getYImage(this.getHovered());
-    context.save();
+  public renderButton(context: CanvasRenderingContext2D, mouseX: number, mouseY: number, partialTicks: number): void {
+    const minecraft: Minecraft = Minecraft.getInstance();
+    const fontrenderer: FontRenderer  = minecraft.fontRenderer;
+    let yUV = this.getYImage(this.getIsHovered());
     context.globalAlpha = this.alpha;
     this.blit(context, this.WIDGETS, this.x, this.y, 0, 46 + yUV * 20, this.width / 2, this.height);
     this.blit(context, this.WIDGETS, this.x + this.width / 2, this.y, 200 - this.width / 2, 46 + yUV * 20, this.width / 2, this.height);
     this.renderBg(context, minecraft, mouseX, mouseY);
-    let color = this.active ? 16777215 : 10526880;
-    this.drawCenteredString(context, this.message, this.x + this.width / 2, this.y + (this.height - 8) / 2, color);
-    context.restore();
+    let textColor = this.active ? 16777215 : 10526880;
+    this.drawCenteredString(context, fontrenderer, this.getMessage(), this.x + this.width / 2, this.y + (this.height - 8) / 2, textColor);
+    context.globalAlpha = 1;
   }
 
-  protected renderBg(context: CanvasRenderingContext2D, minecraft: Minecraft, mouseX: number, mouseY: number) {
+  protected getYImage(isHovered: boolean): number {
+    if(!this.active) return 0;
+    else if(isHovered) return 2;
+    return 1;
   }
 
-  public getHovered() {
-    return this.isHovered || this.focused;
+  protected renderBg(context: CanvasRenderingContext2D, minecraft: Minecraft, mouseX: number, mouseY: number): void {
   }
 
   public onClick(mouseX: number, mouseY: number): void {
@@ -80,97 +69,98 @@ export default abstract class Widgets extends AbstractGui implements IRenderable
   public onRelease(mouseX: number, mouseY: number): void {
   }
 
-  public onDrag(mouseX: number, mouseY: number, dragX: number, dragY: number): void {
+  protected onDrag(mouseX: number, mouseY: number, dragX: number, dragY: number): void {
   }
 
-  public mouseClicked(mouseX: number, mouseY: number, button: number) {
+  public mouseMoved(xPos: number, mouseY: number): boolean {
+    return false
+  }
+
+  public mouseClicked(mouseX: number, mouseY: number, button: number): boolean {
     if(this.active && this.visible) {
       if(this.isValidClickButton(button)) {
-        let flag = this.clicked(mouseX, mouseY);
+        const flag = this.clicked(mouseX, mouseY)
         if(flag) {
-          this.focused = true
           this.playClickSound();
-          this.onClick(mouseX, mouseY);
+          this.onClick(mouseX, mouseY)
+          return true
         }
       }
-    }
+      return false
+    } else return false
   }
 
   public playClickSound() {
-    playSound('click_stereo', 0.2);
+    playSound('click_stereo', 0.5);
   }
 
   public mouseReleased(mouseX: number, mouseY: number, button: number): boolean {
-    if(this.clicked(mouseX, mouseY) && this.isValidClickButton(button)) {
-      this.onRelease(mouseX, mouseY);
-      return true;
-    } else return false;
-  }
-
-  protected clicked(mouseX: number, mouseY: number): boolean {
-    return this.clicked && this.active && this.visible && mouseX >= this.x && mouseY >= this.y && mouseX < (this.x + this.width) && mouseY < (this.y + this.height);
-  }
-
-  public isMouseOver(mouseX: number, mouseY: number): boolean {
-    return this.active && this.visible && mouseX >= this.x && mouseY >= this.y && mouseX <= (this.x + this.width) && mouseY <= (this.y + this.height);
-  }
-
-  public mouseMoved(xPos: number, mouseY: number): void {
+    if(this.isValidClickButton(button)) {
+      this.onRelease(mouseX, mouseY)
+      return true
+    } else return false
   }
 
   public mouseDragged(mouseX: number, mouseY: number, button: number, dragX: number, dragY: number): boolean {
-  /*   if(this.isValidClickButton(button)) {
-      this.onDrag(mouseX, mouseY, dragX, dragY);
-      return true;
-   } else {
-      return false;
-   } */
-   return true
+    if(this.isValidClickButton(button)) {
+      this.onDrag(mouseX, mouseY, dragX, dragY)
+      return true
+    } else return false
   }
 
-  public mouseScrolled(mouseX: number, mouseY: number, delta: number): void {
+  public mouseScrolled(mouseX: number, mouseY: number, delta: number): boolean {
+    return false
   }
 
-  public keyPressed(key: string, modifiers: {}): void {
+  public keyPressed(key: string, modifiers: any): boolean {
+    return false
   }
 
-  public keyReleased(key: string, modifiers: {}): void {
+  public keyReleased(key: string, modifiers: any): boolean {
+    return false
   }
 
-  public keyDown(key: string, modifiers: any) {
+  public changeFocus(focus: boolean): boolean {
+    if(this.active && this.visible) {
+      this.focused = !this.focused
+      this.onFocusedChanged(this.focused)
+      return this.focused
+    } else return false
   }
 
-  public charTyped() {}
+  protected onFocusedChanged(focused: boolean): void {}
 
-  protected isValidClickButton(button: number): boolean {
-    return button == 0;
-  }
+  public isMouseOver = (mouseX: number, mouseY: number): boolean =>
+    this.active && this.visible && mouseX >= this.x && mouseY >= this.y && mouseX < (this.x + this.width) && mouseY < (this.y + this.height)
 
-  public getWidth(): number {
-    return this.width;
- }
+  public getWidth = (): number => this.width
 
   public setWidth(width: number): void {
-    this.width = width;
+    this.width = width
   }
 
   public setAlpha(alpha: number): void {
-    this.alpha = alpha;
+    this.alpha = alpha
   }
 
   public setMessage(message: string): void {
     this.message = message;
   }
 
-  public getMessage(): string {
-    return this.message;
-  }
+  public getMessage = (): string => this.message
 
-  public isFocused(): boolean {
-    return this.focused;
-  }
+  public isFocused = (): boolean => this.focused
 
-  protected setFocused(focused: boolean): void {
+  protected setFocused(focused: boolean) {
     this.focused = focused;
   }
+  
+  public getIsHovered(): boolean {
+    return this.isHovered || this.focused
+  }
+
+  protected isValidClickButton = (button: number): boolean => button === 0
+
+  protected clicked = (mouseX: number, mouseY: number): boolean =>
+    this.active && this.visible && mouseX >= this.x && mouseY >= this.y && mouseX < (this.x + this.width) && mouseY < (this.y + this.height);
 }

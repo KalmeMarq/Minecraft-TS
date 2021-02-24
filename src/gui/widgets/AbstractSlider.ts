@@ -1,8 +1,7 @@
-import Minecraft from "../../Minecraft.js";
-import MathHelper from "../../utils/MathHelper.js";
-import { int } from "../../utils/MouseHelper.js";
-import { playSound } from "../../utils/PlaySound.js";
-import Widget from "./Widget.js";
+import MathHelper from "@km.mcts/util/MathHelper";
+import playSound from "@km.mcts/util/PlaySound";
+import Minecraft from "../../Minecraft";
+import Widget from "./Widget";
 
 export default abstract class AbstractSlider extends Widget {
    protected sliderValue: number;
@@ -17,7 +16,7 @@ export default abstract class AbstractSlider extends Widget {
    }
 
   protected renderBg(context: CanvasRenderingContext2D, minecraft: Minecraft, mouseX: number, mouseY: number) {
-    let i = (this.getHovered() ? 2 : 1) * 20;
+    let i = (this.getIsHovered() ? 2 : 1) * 20;
     this.blit(context, this.WIDGETS,this.x + (this.sliderValue * (this.width - 8)), this.y, 0, 46 + i, 4, 20);
     this.blit(context, this.WIDGETS,this.x + (this.sliderValue * (this.width - 8)) + 4, this.y, 196, 46 + i, 4, 20);
   }
@@ -27,7 +26,7 @@ export default abstract class AbstractSlider extends Widget {
   }
 
   public keyDown(keyName: string, modifiers: any): boolean {
-    if(this.focused) {
+    if(this.isFocused()) {
       let flag = keyName == 'ArrowLeft';
       if (flag || keyName == 'ArrowRight') {
         let f = flag ? -1.0 : 1.0;
@@ -41,7 +40,6 @@ export default abstract class AbstractSlider extends Widget {
     this.setSliderValue((mouseX - (this.x + 4)) / (this.width - 8));
   }
 
-
   protected setSliderValue(value: number) {
     let d0 = this.sliderValue;
     this.sliderValue = MathHelper.clamp(value, 0.0, 1.0);
@@ -49,25 +47,24 @@ export default abstract class AbstractSlider extends Widget {
       this.setSaveOptionValue();
     }
 
+    this.setName();
   }
 
-  public mouseDragged(mouseX: number, mouseY: number, dragX: number, dragY: number): boolean {
-    if(this.focused || this.clicked(mouseX, mouseY)) {
-      this.changeSliderValue(mouseX);
-    }
-    return true
+  public onDrag(mouseX: number, mouseY: number, dragX: number, dragY: number): void {
+    this.changeSliderValue(mouseX);
+    super.onDrag(mouseX, mouseY, dragX, dragY);
   }
 
   public playClickSound() {
     return false
   }
 
-
   public onRelease(mouseX: number, mouseY: number) {
     if(this.clicked(mouseX, mouseY)) {
-      playSound('click_stereo', 0.2);
+      playSound('click_stereo', 0.5);
     }
   }
 
+  protected abstract setName(): void;
   protected abstract setSaveOptionValue(): void;
 }

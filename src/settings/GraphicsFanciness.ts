@@ -1,12 +1,12 @@
-import MathHelper from "../utils/MathHelper";
-import Utils from "../utils/Utils";
+import MathHelper from '@km.mcts/util/MathHelper';
+import Util from '@km.mcts/util/Util';
 
 export default class GraphicsFanciness {
   static readonly FAST = new GraphicsFanciness(0, 'options.graphics.fast');
   static readonly FANCY = new GraphicsFanciness(1, 'options.graphics.fancy');
   static readonly FABULOUS = new GraphicsFanciness(2, 'options.graphics.fabulous');
 
-  private static BY_ID: GraphicsFanciness[] = Object.values(GraphicsFanciness).sort(Utils.sortIteratable);
+  private static BY_ID: GraphicsFanciness[] = Object.values(GraphicsFanciness).sort(Util.sortIteratable);
 
   public id: number;
   public key: string;

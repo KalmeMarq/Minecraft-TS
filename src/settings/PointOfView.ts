@@ -1,12 +1,12 @@
-import MathHelper from "../utils/MathHelper";
-import Utils from "../utils/Utils";
+import MathHelper from '@km.mcts/util/MathHelper';
+import Util from '@km.mcts/util/Util';
 
 export default class PointOfView {
   static readonly FIRST_PERSON = new PointOfView(0, 'FIRST_PERSON');
   static readonly THIRD_PERSON_BACK = new PointOfView(1, 'THIRD_PERSON_BACK');
   static readonly THIRD_PERSON_FRONT = new PointOfView(2, 'THIRD_PERSON_FRONT');
 
-  private static BY_ID: PointOfView[] = Object.values(PointOfView).sort(Utils.sortIteratable);
+  private static BY_ID: PointOfView[] = Object.values(PointOfView).sort(Util.sortIteratable);
 
   public id: number;
   public key: string;
