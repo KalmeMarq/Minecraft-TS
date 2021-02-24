@@ -1,2 +1,2 @@
-# Minecraft-JS
-Just recreating Minecraft in JS for fun.
+# Minecraft-TS
+Just recreating Minecraft in TS for fun.
