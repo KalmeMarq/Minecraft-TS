@@ -1,4 +1,5 @@
 import ColorHelper from "@km.mcts/util/ColorHelper";
+import ContextUtils from "@km.mcts/util/ContextUtils";
 import MathHelper from "@km.mcts/util/MathHelper";
 import playSound from "@km.mcts/util/PlaySound";
 import { getResourceLocation } from "@km.mcts/util/Resources";
@@ -16,6 +17,7 @@ export default class MainMenuScreen extends GuiScreen {
   protected MINECRAFT_EDITION_IMG = getResourceLocation('textures', 'gui/title/edition');
   protected WIDGETS_LOCATION = getResourceLocation('textures', 'gui/widgets');
   protected ACCESSIBILITY_TEXTURES = getResourceLocation('textures', 'gui/accessibility');
+  private showTitleWronglySpelled: boolean = true;
   private splashText: string = '';
   private buttonResetDemo!: Button;
   private showFadeInAnimation: boolean = false;
@@ -26,6 +28,8 @@ export default class MainMenuScreen extends GuiScreen {
   constructor(fadeIn?: boolean) {
     super('')
     if(fadeIn) this.showFadeInAnimation = fadeIn;
+    // this.showTitleWronglySpelled = /* Number(Math.random().toFixed(1)) < 1.0E-1 */ true;
+    console.log('s')
   }
 
   public isPauseScreen(): boolean {
@@ -112,39 +116,47 @@ export default class MainMenuScreen extends GuiScreen {
     let j = this.width / 2 - 137;
 
     try {
-      if(!this.minecraft.textureBuffer.has('mctitle_0')) {
-        this.minecraft.textureBuffer.add('mctitle_0', this.createBuffer(155, 44, (ctx) => {
-          this.blit(ctx, this.MINECRAFT_TITLE_IMG, 0, 0, 0, 0, 155, 44);
-          ctx.globalCompositeOperation = 'source-in';
-          ctx.fillStyle = 'black';
-          ctx.fillRect(0, 0, 155, 44);
-        }));
-  
-        this.minecraft.textureBuffer.add('mctitle_1', this.createBuffer(155, 44, (ctx) => {
-          this.blit(ctx, this.MINECRAFT_TITLE_IMG, 0, 0, 0, 45, 155, 44);
-          ctx.globalCompositeOperation = 'source-in';
-          ctx.fillStyle = 'black';
-          ctx.fillRect(0, 0, 155, 44);
-        }));
-  
-      } else {
-        let mctitle_0 = this.minecraft.textureBuffer.get('mctitle_0');
-        let mctitle_1 = this.minecraft.textureBuffer.get('mctitle_1');
-  
-        this.blit(context, mctitle_0, j, 30, 0, 0, 155, 44);
-        this.blit(context, mctitle_0, j, 29, 0, 0, 155, 44);
-        this.blit(context, mctitle_0, j, 31, 0, 0, 155, 44);
-        this.blit(context, mctitle_0, j + 1, 29, 0, 0, 155, 44);
-        this.blit(context, mctitle_0, j + 1, 31, 0, 0, 155, 44);
-        this.blit(context, this.MINECRAFT_TITLE_IMG, j + 1, 30, 0, 0, 155, 44);
-        this.blit(context, mctitle_1, j + 155 + 1, 30, 0, 0, 155, 44);
-        this.blit(context, mctitle_1, j + 155, 29, 0, 0, 155, 44);
-        this.blit(context, mctitle_1, j + 155, 31, 0, 0, 155, 44);
-        this.blit(context, mctitle_1, j + 155 + 1, 29, 0, 0, 155, 44);
-        this.blit(context, mctitle_1, j + 155 + 1, 31, 0, 0, 155, 44);
+      if(this.showTitleWronglySpelled) {
+        this.blit(context, this.MINECRAFT_TITLE_IMG, j + 1, 30, 0, 0, 99, 44);
+        this.blit(context, this.MINECRAFT_TITLE_IMG, j + 99 + 1, 30, 129, 0, 27, 44);
+        this.blit(context, this.MINECRAFT_TITLE_IMG, j + 99 + 26 + 1, 30, 126, 0, 3, 44);
+        this.blit(context, this.MINECRAFT_TITLE_IMG, j + 99 + 26 + 3 + 1, 30, 99, 0, 26, 44);
         this.blit(context, this.MINECRAFT_TITLE_IMG, j + 155, 30, 0, 45, 155, 44);
-        this.blit(context, this.MINECRAFT_EDITION_IMG, j + 88, 67, 0, 0, 98, 14);
+      } else {
+        if(!(this.minecraft.textureBuffer.has('mctitle_0') || this.minecraft.textureBuffer.has('mctitle_1'))) {
+          this.minecraft.textureBuffer.add('mctitle_0', this.createBuffer(155, 44, (ctx) => {
+            this.blit(ctx, this.MINECRAFT_TITLE_IMG, 0, 0, 0, 0, 155, 44);
+            ctx.globalCompositeOperation = 'source-in';
+            ctx.fillStyle = 'black';
+            ctx.fillRect(0, 0, 155, 44);
+          }));
+
+          this.minecraft.textureBuffer.add('mctitle_1', this.createBuffer(155, 44, (ctx) => {
+            this.blit(ctx, this.MINECRAFT_TITLE_IMG, 0, 0, 0, 45, 155, 44);
+            ctx.globalCompositeOperation = 'source-in';
+            ctx.fillStyle = 'black';
+            ctx.fillRect(0, 0, 155, 44);
+          }));
+        } else {
+          let mctitle_0 = this.minecraft.textureBuffer.get('mctitle_0');
+          let mctitle_1 = this.minecraft.textureBuffer.get('mctitle_1');
+
+          this.blit(context, mctitle_0, j, 30, 0, 0, 155, 44);
+          this.blit(context, mctitle_0, j, 29, 0, 0, 155, 44);
+          this.blit(context, mctitle_0, j, 31, 0, 0, 155, 44);
+          this.blit(context, mctitle_0, j + 1, 29, 0, 0, 155, 44);
+          this.blit(context, mctitle_0, j + 1, 31, 0, 0, 155, 44);
+          this.blit(context, this.MINECRAFT_TITLE_IMG, j + 1, 30, 0, 0, 155, 44);
+          this.blit(context, mctitle_1, j + 155 + 1, 30, 0, 0, 155, 44);
+          this.blit(context, mctitle_1, j + 155, 29, 0, 0, 155, 44);
+          this.blit(context, mctitle_1, j + 155, 31, 0, 0, 155, 44);
+          this.blit(context, mctitle_1, j + 155 + 1, 29, 0, 0, 155, 44);
+          this.blit(context, mctitle_1, j + 155 + 1, 31, 0, 0, 155, 44);
+          this.blit(context, this.MINECRAFT_TITLE_IMG, j + 155, 30, 0, 45, 155, 44);
+        }
       }
+
+      this.blit(context, this.MINECRAFT_EDITION_IMG, j + 88, 67, 0, 0, 98, 14);
     } catch(e) {
       console.log('Failed to render buffer');
     }
@@ -156,10 +168,7 @@ export default class MainMenuScreen extends GuiScreen {
     let f2 = 1.5 - Math.abs(Math.sin((miliT % 1000) / 1000.0 * (Math.PI * 2)) * 0.1);
     f2 = f2 * 100.0 / (this.font.getTextWidth(this.splashText) + 32);
 
-    context.translate( splash.x, splash.y);
-    context.scale(f2, f2);
-    context.rotate(-20 * Math.PI / 180);
-    context.translate( -splash.x, -splash.y );
+    ContextUtils.rotateScale(context, -20 * Math.PI / 180, splash.x, splash.y, f2);
 
     this.drawCenteredString(context, this.font, this.splashText, splash.x, splash.y, 16776960);
     context.restore();
@@ -174,16 +183,14 @@ export default class MainMenuScreen extends GuiScreen {
     this.drawString(context, this.font, "Copyright Mojang AB. Do not distribute!", this.widthCopyrightRest, this.height - 10, 16777215);
 
     if(mouseX > this.widthCopyrightRest && mouseX < this.widthCopyrightRest + this.widthCopyright && mouseY > this.height - 10 && mouseY < this.height) {
-      context.fillStyle = 'white';
-      context.fillRect(this.widthCopyrightRest, this.height - 1, this.widthCopyrightRest + this.widthCopyright, 1);
-     
+      ContextUtils.fill(context, this.widthCopyrightRest, this.widthCopyrightRest + this.widthCopyright, this.height - 1, 1, 16777215);
     }
 
     for(const widget of this.buttons) {
       widget.setAlpha(f1);
     }
 
-    super.render(context, mouseX, mouseY, partialTicks)
+    super.render(context, mouseX, mouseY, partialTicks);
   }
 
   public mouseClicked(mouseX: number, mouseY: number, button: number): boolean {
