@@ -1,19 +1,20 @@
-import GameSettings from '@km.mcts/GameSettings';
-import AmbientOcclusionStatus from '@km.mcts/settings/AmbientOcclusionStatus';
-import AttackIndicatorStatus from '@km.mcts/settings/AttackIndicatorStatus';
-import BooleanOption from '@km.mcts/settings/BooleanOption';
-import ChatVisibility from '@km.mcts/settings/ChatVisibility';
-import CloudOption from '@km.mcts/settings/CloudOption';
-import GraphicsFanciness from '@km.mcts/settings/GraphicsFanciness';
-import HandSide from '@km.mcts/settings/HandSide';
-import NarratorStatus from '@km.mcts/settings/NarratorStatus';
-import IteratableOption from '@km.mcts/settings/IteratableOption';
-import ParticleStatus from '@km.mcts/settings/ParticleStatus';
-import PointOfView from '@km.mcts/settings/PointOfView';
-import Util from '@km.mcts/util/Util';
+import GameSettings from '@mcsrc/GameSettings';
+import AmbientOcclusionStatus from '@mcsrc/settings/AmbientOcclusionStatus';
+import AttackIndicatorStatus from '@mcsrc/settings/AttackIndicatorStatus';
+import BooleanOption from '@mcsrc/settings/BooleanOption';
+import ChatVisibility from '@mcsrc/settings/ChatVisibility';
+import CloudOption from '@mcsrc/settings/CloudOption';
+import GraphicsFanciness from '@mcsrc/settings/GraphicsFanciness';
+import HandSide from '@mcsrc/settings/HandSide';
+import NarratorStatus from '@mcsrc/settings/NarratorStatus';
+import IteratableOption from '@mcsrc/settings/IteratableOption';
+import ParticleStatus from '@mcsrc/settings/ParticleStatus';
+import PointOfView from '@mcsrc/settings/PointOfView';
+import Util from '@mcsrc/util/Util';
 import SliderMultiplierOption from './settings/SliderMultiplierOption';
 import SliderPercentageOption from './settings/SliderPercentageOption';
 import MathHelper from './util/MathHelper';
+import Minecraft from './Minecraft';
 
 export default abstract class GameOption {
   public static RAW_MOUSE_INPUT: BooleanOption = new BooleanOption('options.rawMouseInput', (settings: GameSettings) => {
@@ -62,6 +63,7 @@ export default abstract class GameOption {
     return settings.vsync;
   }, (settings: GameSettings, optionValues: boolean) => {
     settings.vsync = optionValues;
+    Minecraft.getInstance().setFramerateLimit(settings.framerateLimit);
   });
 
   public static ENTITY_SHADOWS: BooleanOption = new BooleanOption('options.entityShadows', (settings: GameSettings) => {
@@ -74,6 +76,8 @@ export default abstract class GameOption {
     return settings.forceUnicodeFont;
   }, (settings: GameSettings, optionValues: boolean) => {
     settings.forceUnicodeFont = optionValues;
+    let minecraft: Minecraft = Minecraft.getInstance();
+    minecraft.forceUnicodeFont(optionValues);
   });
 
   public static INVERT_MOUSE: BooleanOption = new BooleanOption('options.invertMouse', (settings: GameSettings) => {
@@ -116,11 +120,11 @@ export default abstract class GameOption {
     return settings.fullscreen;
   }, (settings: GameSettings, optionValues: boolean) => {
     let elem = document.documentElement;
-  /*   if(optionValues) {
-      if(elem.requestFullscreen) elem.requestFullscreen();
+    if(optionValues) {
+      if(!document.fullscreenElement) elem.requestFullscreen();
     } else {
-      if(document.exitFullscreen) document.exitFullscreen();
-    } */
+      if(document.fullscreenElement) document.exitFullscreen();
+    }
     
     settings.fullscreen = optionValues;
   });
@@ -222,7 +226,7 @@ export default abstract class GameOption {
   });
 
   public static GUI_SCALE: IteratableOption = new IteratableOption('options.guiScale', (settings: GameSettings, optionValues: any) => {
-    settings.guiScale = 0;
+    settings.guiScale = (settings.guiScale + optionValues) % Minecraft.getInstance().getMainCanvas().calcGuiScale(0, Minecraft.getInstance().getForceUnicodeFont());
   }, (settings: GameSettings, optionValues: any) => {
     return settings.guiScale == 0 ? optionValues.getGenericValueComponent(Util.getTranslation('options.guiScale.auto')) : optionValues.getMessageWithValue(settings.guiScale);
   });
@@ -376,10 +380,11 @@ export default abstract class GameOption {
     return (value == 0.0 ? `${optionValues.getBaseMessageTranslation()}: ${Util.getTranslation('options.off')}` : optionValues.getMessageWithValue(value));
   });
 
-  public static FRAMERATE_LIMIT: SliderPercentageOption = new SliderPercentageOption('options.framerateLimit', 10, 260, 10, (settings: GameSettings) => {
+  public static FRAMERATE_LIMIT: SliderPercentageOption = new SliderPercentageOption('options.framerateLimit', 5, 260, 5, (settings: GameSettings) => {
     return settings.framerateLimit;
   }, (settings: GameSettings, percentage: any) => {
     settings.framerateLimit = percentage;
+    Minecraft.getInstance().setFramerateLimit(settings.framerateLimit);
   }, (settings: GameSettings, percentage: any) => {
     const value = percentage.get(settings);
     return value == percentage.getMaxValue() ? percentage.getGenericValueComponent(Util.getTranslation('options.framerateLimit.max')) : percentage.getGenericValueComponent(Util.getTranslation('options.framerate').replace('%s', value));

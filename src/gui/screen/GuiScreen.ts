@@ -1,10 +1,12 @@
-import IGuiEventListener from '@km.mcts/interface/IGuiEventListener'
-import IGuiScreen from '@km.mcts/interface/IGuiScreen'
-import Minecraft from '@km.mcts/Minecraft'
-import FocusableGui from '@km.mcts/gui/FocusableGui'
-import Widget from '@km.mcts/gui/widgets/Widget'
-import { getResourceLocation } from '@km.mcts/util/Resources'
-import FontRenderer from '@km.mcts/gui/FontRenderer'
+import IGuiEventListener from '@mcsrc/interface/IGuiEventListener'
+import IGuiScreen from '@mcsrc/interface/IGuiScreen'
+import Minecraft from '@mcsrc/Minecraft'
+import FocusableGui from '@mcsrc/gui/FocusableGui'
+import Widget from '@mcsrc/gui/widgets/Widget'
+import FontRenderer from '@mcsrc/gui/FontRenderer'
+import ContextUtils from '@mcsrc/util/ContextUtils'
+import AbstractOption from '@mcsrc/settings/AbstractOption'
+import AbstractGui from '../AbstractGui'
 
 export default class GuiScreen extends FocusableGui implements IGuiScreen, IGuiEventListener {
   protected readonly title: string = '';
@@ -28,9 +30,11 @@ export default class GuiScreen extends FocusableGui implements IGuiScreen, IGuiE
   public render(context: CanvasRenderingContext2D, mouseX: number, mouseY: number, partialTicks: number): void {
     for(let i = 0; i < this.buttons.length; ++i) this.buttons[i].render(context, mouseX, mouseY, partialTicks);
 
-    context.setTransform(2, 0, 0, 2, 0, 0);
-    this.drawString(context, this.font, this.minecraft.getFPS().toString() + ' FPS', 1, 1, 16777215);
-    context.setTransform(this.minecraft.getMainCanvas().getGuiScaleFactor(), 0, 0, this.minecraft.getMainCanvas().getGuiScaleFactor(), 0, 0);
+    if(this.minecraft.gameSettings.showFPS) {
+      context.setTransform(2, 0, 0, 2, 0, 0);
+      this.drawString(context, this.font, this.minecraft.getFPS().toString() + ' FPS', 1, 1, 16777215);
+      context.setTransform(this.minecraft.getMainCanvas().getGuiScaleFactor(), 0, 0, this.minecraft.getMainCanvas().getGuiScaleFactor(), 0, 0);
+    }
   }
 
   public shouldCloseOnEsc (): boolean {
@@ -100,6 +104,9 @@ export default class GuiScreen extends FocusableGui implements IGuiScreen, IGuiE
         Failed to run action
         Screen name: ${screenName}
         ${errorDesc}
+
+        More Details:
+          ${e}
       `;
       throw error;
     }
@@ -122,22 +129,29 @@ export default class GuiScreen extends FocusableGui implements IGuiScreen, IGuiE
   }
 
   public renderDirtBackground(context: CanvasRenderingContext2D,vOffset: number): void {
+    const optionsBgTexture = this.minecraft.getTextureManager().getTexture(AbstractGui.BACKGROUND_LOCATION);
+
     if(!this.minecraft.textureBuffer.has('options_bg_0')) {
-      this.minecraft.textureBuffer.add('options_bg_0', this.createBuffer(16, 16, (ctx) => {
+      this.minecraft.textureBuffer.add('options_bg_0', AbstractGui.createBuffer(16, 16, (ctx) => {
         ctx.filter = 'brightness(25%)';
-        this.blit(ctx, getResourceLocation('textures', 'gui/options_background'), 0, 0, 0, 0, 16, 16);
+        AbstractGui.blit(ctx, optionsBgTexture, 0, 0, 0, 0, 16, 16);
       }))
     } else {
       const src = this.minecraft.textureBuffer.get('options_bg_0');
 
       context.setTransform(this.minecraft.getMainCanvas().getGuiScaleFactor() + 3 - (3 - this.minecraft.getMainCanvas().getGuiScaleFactor()), 0, 0, this.minecraft.getMainCanvas().getGuiScaleFactor() + 3 - (3 - this.minecraft.getMainCanvas().getGuiScaleFactor()), 0, 0);
-      for(let i = 0; i < this.width / 32; i++) {
-        for(let j = 0; j < this.height / 32; j++) {
-          this.blit(context, src, 0 + i * 16, vOffset + j * 16, 0, 0, 16, 16);
-        }
-      }
-
+      ContextUtils.createTilePattern(context, src, this.width / 32, this.height / 32, 0, 0, 16, 16, 0, vOffset)
       context.setTransform(this.minecraft.getMainCanvas().getGuiScaleFactor(), 0, 0, this.minecraft.getMainCanvas().getGuiScaleFactor(), 0, 0);
+    }
+  }
+
+  public tempAddOptions(options: AbstractOption[]) {
+    let index = 0;
+    for (const iterator of options) {
+      let x = this.width / 2 - 155 + (index % 2) * 160;
+      let y = this.height / 6 - 12 + 24 * (index >> 1);
+      this.addButton((iterator as AbstractOption).createWidget(this.minecraft.gameSettings, x, y, 150));
+      index++;
     }
   }
 

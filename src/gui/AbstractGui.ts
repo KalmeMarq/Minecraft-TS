@@ -1,8 +1,9 @@
-import { getResourceLocation } from "@km.mcts/util/Resources";
+import ResourceLocation from "@mcsrc/new/ResourceLocation";
+import TranslationTextComponent from "@mcsrc/util/text/TranslationTextComponent";
 import FontRenderer from "./FontRenderer";
 
 export default abstract class AbstractGui {
-  public static BACKGROUND_LOCATION = getResourceLocation('textures', 'gui/options_background');
+  public static BACKGROUND_LOCATION = new ResourceLocation('textures/gui/options_background.png');
 
   protected hLine(context: CanvasRenderingContext2D, minX: number, maxX: number, y: number, color: string | number): void {
     if(maxX < minX) {
@@ -26,19 +27,19 @@ export default abstract class AbstractGui {
     context.fillRect(x, minY + 1, x + 1, maxY);
   }
 
-  protected blit(context: CanvasRenderingContext2D, img: HTMLImageElement | HTMLCanvasElement, x: number, y: number, uvX: number, uvY: number, width: number, height: number) {
+  public static blit(context: CanvasRenderingContext2D, img: HTMLImageElement | HTMLCanvasElement, x: number, y: number, uvX: number, uvY: number, width: number, height: number) {
     context.drawImage(img, uvX, uvY, width, height, x, y, width, height);
   }
 
-  public drawCenteredString(context: CanvasRenderingContext2D, fontRenderer: FontRenderer, text: string, x: number, y: number, color: number | string) {
+  public drawCenteredString(context: CanvasRenderingContext2D, fontRenderer: FontRenderer, text: string | TranslationTextComponent, x: number, y: number, color: number | string) {
     fontRenderer.drawStringWithShadow(context, text, x - fontRenderer.getTextWidth(text) / 2, y, color);
   }
 
-  public drawString(context: CanvasRenderingContext2D, fontRenderer: FontRenderer, text: string, x: number, y: number, color: number | string) {
+  public drawString(context: CanvasRenderingContext2D, fontRenderer: FontRenderer, text: string | TranslationTextComponent, x: number, y: number, color: number | string) {
     fontRenderer.drawStringWithShadow(context, text, x, y, color);
   }
 
-  public createBuffer(bufferWidth: number, bufferHeight: number, draw: (ctx: CanvasRenderingContext2D) => void) {
+  public static createBuffer(bufferWidth: number, bufferHeight: number, draw: (ctx: CanvasRenderingContext2D) => void) {
     const ctx = <CanvasRenderingContext2D>(<HTMLCanvasElement>document.createElement('canvas')).getContext('2d');
 
     ctx.canvas.width = bufferWidth;
@@ -46,7 +47,7 @@ export default abstract class AbstractGui {
 
     ctx.save();
     draw(ctx);
-    ctx.restore()
+    ctx.restore();
 
     return ctx.canvas;
   }

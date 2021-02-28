@@ -1,12 +1,22 @@
-import IKeyCallback from '@km.mcts/interface/IKeyCallback'
-import IMouseButtonCallback from '@km.mcts/interface/IMouseButtonCallback'
-import IMouseMoveCallback from '@km.mcts/interface/IMouseMoveCallback'
-import IScrollCallback from '@km.mcts/interface/IScrollCallback'
+import IKeyCallback from '@mcsrc/interface/IKeyCallback'
+import IMouseButtonCallback from '@mcsrc/interface/IMouseButtonCallback'
+import IMouseMoveCallback from '@mcsrc/interface/IMouseMoveCallback'
+import IScrollCallback from '@mcsrc/interface/IScrollCallback'
 
 export default class InputMappings {
+  public static resetKeyBehavior(e: KeyboardEvent, key: string) {
+    if(e.key == key) e.preventDefault();
+  }
+
   public static setKeyCallbacks(keyCallback: IKeyCallback): void {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if(e.key === 'F5' || e.key === 'Tab') e.preventDefault();
+      InputMappings.resetKeyBehavior(e, 'F3');
+      InputMappings.resetKeyBehavior(e, 'F5');
+      InputMappings.resetKeyBehavior(e, 'F7');
+      InputMappings.resetKeyBehavior(e, 'F8');
+      InputMappings.resetKeyBehavior(e, 'F11');
+      InputMappings.resetKeyBehavior(e, 'Escape');
+      InputMappings.resetKeyBehavior(e, 'Tab');
 
       keyCallback(e.key, 1, {
         altKeyDown: e.getModifierState('Alt'),
@@ -65,6 +75,7 @@ export default class InputMappings {
     }
 
     const handleScroll = (e: WheelEvent) => {
+      if(e.getModifierState('Control')) e.preventDefault();
       scrollCallback(e.deltaX, e.deltaY);
     }
 
@@ -72,6 +83,6 @@ export default class InputMappings {
     window.addEventListener('mouseup', handleMouseUp);
     window.addEventListener('mousedown', handleMouseDown);
     window.addEventListener('contextmenu', handleContextMenu);
-    window.addEventListener('wheel', handleScroll);
+    window.addEventListener('wheel', handleScroll, { passive: false });
   }
 } 

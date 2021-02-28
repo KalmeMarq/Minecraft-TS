@@ -1,3 +1,6 @@
+import AbstractGui from "@mcsrc/gui/AbstractGui";
+import Minecraft from "@mcsrc/Minecraft";
+import TranslationTextComponent from "@mcsrc/util/text/TranslationTextComponent";
 import Button from "./Button";
 
 export default class ImageButton extends Button {
@@ -8,7 +11,7 @@ export default class ImageButton extends Button {
    private textureWidth: number;
    private textureHeight: number;
 
-  constructor(x: number, y: number, width: number, height: number, xUV: number, yUV: number, yUVSize: number, img: any, txrWidth: number, txrHeight: number, onPressFunc: (button: Button) => void, title: string) {
+  constructor(x: number, y: number, width: number, height: number, xUV: number, yUV: number, yUVSize: number, img: any, txrWidth: number, txrHeight: number, onPressFunc: (button: Button) => void, title: string | TranslationTextComponent) {
     super(x, y, width, height, title, onPressFunc);
     this.textureWidth = txrWidth;
     this.textureHeight = txrHeight;
@@ -24,10 +27,12 @@ export default class ImageButton extends Button {
   }
 
   public renderButton(context: CanvasRenderingContext2D, mouseX: number, mouseY: number) {
+    const minecraft: Minecraft = Minecraft.getInstance();
+    const buttonTexture = minecraft.getTextureManager().getTexture(this.resourceLocation);
     let y = this.yTexStart;
     if (this.getIsHovered()) y += this.yDiffText;
     context.globalAlpha = this.alpha;
-    this.blit(context, this.resourceLocation, this.x, this.y, this.xTexStart, y, this.width, this.height);
+    AbstractGui.blit(context, buttonTexture, this.x, this.y, this.xTexStart, y, this.width, this.height);
     context.globalAlpha = 1;
   }
 }

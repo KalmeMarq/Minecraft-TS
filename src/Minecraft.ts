@@ -1,23 +1,31 @@
+import SoundHandler from './audio/SoundHandler';
 import GameConfiguration from './GameConfiguration'
 import GameRenderer from './GameRenderer';
 import GameSettings from './GameSettings'
-import GuiScreen from './gui/screen/GuiScreen';
+import FontRenderer from './gui/FontRenderer';
 import IngameGui from './gui/IngameGui';
+import LoadingGui from './gui/LoadingGui';
+import GuiScreen from './gui/screen/GuiScreen';
 import IngameMenuScreen from './gui/screen/IngameMenuScreen';
 import MainMenuScreen from './gui/screen/MainMenuScreen';
 import MultiplayerScreen from './gui/screen/MultiplayerScreen';
-import Timer from './util/Timer';
-import Util from './util/Util';
-import MouseHelper from './util/MouseHelper';
 import IWindowEventListener from './interface/IWindowEventListener';
 import MainCanvas from './MainCanvas';
-import FontRenderer from './gui/FontRenderer';
+import ResourceLocation from './new/ResourceLocation';
+import TextureBuffer from './new/TextureBuffer';
+import TextureManager from './new/TextureManager';
+import LanguageManager from './new/LanguageManager';
 import KeyboardListener from './util/KeyboardListener';
-import { getResourceLocation } from './util/Resources';
+import MouseHelper from './util/MouseHelper';
 import Splashes from './util/Splashes';
-import TextureBuffer from './util/TextureBuffer';
-import LoadingGui from './gui/LoadingGui';
-import LanguageManager from './resources/LanguageManager';
+import Timer from './util/Timer';
+import Util from './util/Util';
+import ResourceLoadingGui from './new/ResourceLoadingGui';
+import JSONUtils from './util/JSONUtils';
+
+var stop = false;
+var frameCount = 0;
+var fps: any, fpsInterval: any, startTime: any, now: any, then: any, elapsed: any;
 
 export default class Minecraft implements IWindowEventListener {
   private static instance: Minecraft;
@@ -26,15 +34,10 @@ export default class Minecraft implements IWindowEventListener {
   public fontRenderer: FontRenderer;
   public gameRenderer: GameRenderer;
   public gameSettings: GameSettings;
+  private soundHandler: SoundHandler;
   private splashes: Splashes;
-  public loadingGui: LoadingGui | null = null;
   public ingameGUI: IngameGui;
-  private isDemo: boolean;
-  private launchedVersion: string;
-  private versionType: string;
-  private enableMultiplayer: boolean;
-  private enableChat: boolean;
-  private languageManager: LanguageManager;
+ 
   public mouseHelper: MouseHelper;
   public keyboardListener: KeyboardListener;
   public running: boolean = true;
@@ -43,63 +46,123 @@ export default class Minecraft implements IWindowEventListener {
   public skipRenderWorld!: boolean;
   private renderPartialTicksPaused!: number;
   public world: any = null;
-  public context = <CanvasRenderingContext2D>(<HTMLCanvasElement>document.getElementById('root')).getContext('2d');
+  public context: CanvasRenderingContext2D;
+  public textureBuffer: TextureBuffer;
+
   private fps: number = 0;
   private times: Array<number> = [];
-  public textureBuffer: TextureBuffer;
+
+  private deviceRefreshRate: any;
+  private maxFPS: number;
+  private timeNow: any;
+  private timeThen: any;
+  private timeElapsed: any;
 
   private testPlayerName: string = 'Steve';
 
+  private isDemo: boolean;
+  private launchedVersion: string;
+  private versionType: string;
+  private enableMultiplayer: boolean;
+  private enableChat: boolean;
+
+  private textureManager: TextureManager;
+  private languageManager: LanguageManager;
+
+  public loadingGui: ResourceLoadingGui | null = null;
+  public isReloading: boolean = false;
+
   constructor(gameConfig: GameConfiguration) {
     Minecraft.instance = this;
-    this.textureBuffer = new TextureBuffer();
+
     this.launchedVersion = gameConfig.gameInfo.version;
     this.versionType = gameConfig.gameInfo.versionType;
     this.isDemo = gameConfig.gameInfo.isDemo;
     this.enableMultiplayer = !gameConfig.gameInfo.disableMultiplayer;
     this.enableChat = !gameConfig.gameInfo.disableChat;
     this.testPlayerName = gameConfig.userInfo.userName;
-    this.splashes = new Splashes();
+
     this.gameSettings = new GameSettings(this);
+
+    this.textureManager = new TextureManager();
+    this.textureBuffer = this.textureManager.textureBuffer;
+    this.splashes = new Splashes();
     this.languageManager = new LanguageManager(this.gameSettings.language);
+
+    this.soundHandler = new SoundHandler(this, this.gameSettings);
     this.mainCanvas = new MainCanvas(this);
+    this.context = this.mainCanvas.getCanvas().getContext('2d')!;
     this.mouseHelper = new MouseHelper(this);
     this.mouseHelper.registerCallbacks();
     this.keyboardListener = new KeyboardListener(this);
     this.keyboardListener.setupCallbacks();
     this.fontRenderer = new FontRenderer();
+    this.forceUnicodeFont(this.getForceUnicodeFont());
     this.gameRenderer = new GameRenderer(this);
     this.ingameGUI = new IngameGui(this);
-    this.displayGuiScreen(new MainMenuScreen(true));
+    this.maxFPS = this.gameSettings.framerateLimit;
     this.updateWindowSize();
+
+    this.displayGuiScreen(new MainMenuScreen(true));
+    this.loadResources();
+  }
+
+  public async loadResources() {
+    this.setLoadingGui(new ResourceLoadingGui(this));
+    this.isReloading = true;
+
+    await this.textureManager.load();
+    await this.fontRenderer.load();
+    await this.languageManager.load();
+    await this.splashes.load();
+
+    this.isReloading = false;
+    this.setLoadingGui(null);
+    return this.currentScreen?.initScreen(this, this.getMainCanvas().getScaledWidth(), this.getMainCanvas().getScaledHeight());;
   }
 
   public run(): void {
+    this.timeThen = Date.now();
+
     try {
-      let flag: boolean = false;
-      let loopFunc;
-      
-      const loop = () => {
-        (<any>window)['setRunning'] = (flag: boolean) => {
-          if(flag) {
-            this.running = true;
+      this.getRefreshRate().then(fps => {
+        this.deviceRefreshRate = fps;
+
+        if(this.deviceRefreshRate !== null || this.deviceRefreshRate !== undefined) {
+          let flag: boolean = false;
+          let loopFunc;
+          
+          const loop = () => {
+            (<any>window)['setRunning'] = (flag: boolean) => {
+              if(flag) {
+                this.running = true;
+                loopFunc = requestAnimationFrame(loop);
+                return true;
+              }
+  
+              this.running = false;
+              return false;
+            }
+  
             loopFunc = requestAnimationFrame(loop);
-            return true;
+            
+            this.timeNow = Date.now();
+            this.timeElapsed = this.timeNow - this.timeThen;
+  
+            let fpsMS = 1000 / (this.gameSettings.vsync ? this.deviceRefreshRate : this.maxFPS);
+  
+            if(this.timeElapsed > fpsMS) {
+              this.timeThen = this.timeNow - (this.timeElapsed % fpsMS);
+              if(this.running) {
+                this.runGameLoop(!flag);
+              } else {
+                cancelAnimationFrame(loopFunc);
+              }
+            }
           }
-
-          this.running = false;
-          return false;
-        }
-
-        loopFunc = requestAnimationFrame(loop);
-        
-        if(this.running) {
-          this.runGameLoop(!flag);
-        } else {
-          cancelAnimationFrame(loopFunc);
-        }
-      }
-      loop()
+          loop()
+       }
+      });
 
     } catch(e) {
       Util.createLog(
@@ -111,6 +174,7 @@ export default class Minecraft implements IWindowEventListener {
   }
 
   public getFPS(): number {
+
     var now = performance.now();
     while (this.times.length > 0 && this.times[0] <= now - 1000) this.times.shift();
     this.times.push(now);
@@ -139,10 +203,11 @@ export default class Minecraft implements IWindowEventListener {
   }
 
   public updateWindowSize(): void {
-    this.mainCanvas.setGuiScale(this.mainCanvas.getGuiScaleFactor());
+    let i = this.mainCanvas.calcGuiScale(this.gameSettings.guiScale, this.getForceUnicodeFont());
+    this.mainCanvas.setGuiScale(i);
     this.context.canvas.width = window.innerWidth;
     this.context.canvas.height = window.innerHeight;
-    this.context.scale(this.mainCanvas.getGuiScaleFactor(), this.mainCanvas.getGuiScaleFactor());
+    this.context.scale(i, i);
     this.context.imageSmoothingEnabled = false;
 
     if(this.currentScreen != null) {
@@ -198,6 +263,21 @@ export default class Minecraft implements IWindowEventListener {
     if(guiScreenIn != null) {
       guiScreenIn.initScreen(this, this.mainCanvas.getScaledWidth(), this.mainCanvas.getScaledHeight());
     }
+  }
+
+  public forceUnicodeFont(forced: boolean) {
+    this.fontRenderer.changeForceUnicodeFont(forced);
+    if(forced) {
+      this.getMainCanvas().setGuiScale(4);
+      this.updateWindowSize();
+    } else {
+      this.getMainCanvas().setGuiScale(3);
+      this.updateWindowSize();
+    }
+  }
+
+  public setLoadingGui(loadingGuiIn: ResourceLoadingGui | null): void {
+    this.loadingGui = loadingGuiIn;
   }
 
   public static getInstance(): Minecraft {
@@ -262,5 +342,35 @@ export default class Minecraft implements IWindowEventListener {
 
   public getLanguageManager(): LanguageManager {
     return this.languageManager;
+  }
+
+  public getSoundHandler(): SoundHandler {
+    return this.soundHandler;
+  }
+
+  public getTextureManager(): TextureManager {
+    return this.textureManager;
+  }
+
+  public getRefreshRate() {
+    return new Promise(resolve =>
+      requestAnimationFrame(t1 =>
+        requestAnimationFrame(t2 => resolve(1000 / (t2 - t1)))
+      )
+    )
+  }
+
+  public setFramerateLimit(limit: number): void {
+    if(this.gameSettings.vsync) {
+      this.maxFPS = this.deviceRefreshRate;
+      return;
+    }
+    this.maxFPS = limit;
+  }
+
+  public testSwitchLang() {
+    this.gameSettings.language == 'pt_pt' ? this.gameSettings.language = 'en_us' : this.gameSettings.language = 'pt_pt';
+    this.gameSettings.saveOptions();
+    this.updateWindowSize();
   }
 }

@@ -1,23 +1,17 @@
-import { getResourceLocation } from '@km.mcts/util/Resources';
+import ResourceLocation from '@mcsrc/new/ResourceLocation';
 
 export default class Splashes {
-  private static SPLASHES = getResourceLocation('texts', 'splashes');
+  private static SPLASHES: any;
   private possibleSplashes: Array<string> = new Array();
 
   constructor() {
-    this.reload();
   }
 
-  public reload(): void {
-    this.apply(this.prepare());
-  }
-
-  protected prepare(): Array<string> {
-    try {
-      return getResourceLocation('texts', 'splashes').split(/\r?\n/);
-    } catch {
-      return []
-    }
+  public async load(): Promise<void> {
+    const res = await fetch(new ResourceLocation('font/default.json').getFullPath());
+    const data = await res.json();
+    Splashes.SPLASHES = data;
+    this.apply(await this.prepare());
   }
 
   protected apply(objectIn: Array<string>): void {
@@ -25,20 +19,19 @@ export default class Splashes {
     this.possibleSplashes = objectIn;
   }
 
+  protected async prepare(): Promise<string[]> {
+    try {
+      const promise = await fetch('./resources/assets/minecraft/texts/splashes.txt').then(res => res.text()).then(data => data.split(/\r?\n/));
+      return await Promise.all(promise);
+    } catch {
+      return []
+    }
+  }
+
   public getSplashText() {
     const date = new Date(),
           month = date.getMonth(),
           day = date.getDate();
-
-      // const getRandomSplashText = () => {
-      //   return allSplashes[~~(Math.random() * (allSplashes.length - 1))]
-      // }
-  
-    // let randSplash = String(getRandomSplashText());
-
-    // if(month + 1 === 12 && day === 24) randSplash = 'Merry X-mas!';
-    // else if (month + 1 === 1 && day === 1) randSplash = 'Happy new year!';
-    // else if(month + 1 === 10 && day === 31) randSplash = 'OOoooOOOoooo! Spooky!';
 
     if(month + 1 === 12 && day === 24) {
       return 'Merry X-mas!'

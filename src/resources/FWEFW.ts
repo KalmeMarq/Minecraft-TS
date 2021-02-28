@@ -1,4 +1,4 @@
-import Util from "@km.mcts/util/Util";
+import Util from "@mcsrc/util/Util";
 
 export default class Language {
   private languageCode: string;

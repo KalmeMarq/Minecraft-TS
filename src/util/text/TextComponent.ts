@@ -1,3 +1,3 @@
-export default abstract class TextComponent {
-  protected siblings: any[] = new Array();
+export default class TextComponent {
+  constructor() {}
 }

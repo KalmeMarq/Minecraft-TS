@@ -38,7 +38,7 @@ export default class GameConfiguration {
   })();
 }
 
-namespace GameConfiguration {
+module GameConfiguration {
   export type GameInformation = typeof GameConfiguration.GameInformation.prototype;
   export type UserInformation = typeof GameConfiguration.UserInformation.prototype;
 }

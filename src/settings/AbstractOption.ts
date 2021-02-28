@@ -1,4 +1,4 @@
-import Util from '@km.mcts/util/Util';
+import Util from '@mcsrc/util/Util';
 import GameSettings from '../GameSettings';
 import Widget from '../gui/widgets/Widget';
 

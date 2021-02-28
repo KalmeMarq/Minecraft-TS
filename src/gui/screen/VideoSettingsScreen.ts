@@ -1,6 +1,6 @@
-import GameOption from '@km.mcts/GameOption';
-import AbstractOption from '@km.mcts/settings/AbstractOption';
-import Util from '@km.mcts/util/Util';
+import GameOption from '@mcsrc/GameOption';
+import AbstractOption from '@mcsrc/settings/AbstractOption';
+import Util from '@mcsrc/util/Util';
 import GameSettings from '../../GameSettings';
 import Button from '../widgets/button/Button';
 import TestList from '../widgets/list/TestList';
@@ -34,17 +34,41 @@ export default class VideoSettingsScreen extends SettingsScreen {
   }
 
   protected init(): void {
-    this.optionsRowList = new TestList(this.minecraft, this.width, this.height, 32, this.height - 32, 25);
+    let index = 0;
+    for (const iterator of this.OPTIONS) {
+      let x = this.width / 2 - 155 + (index % 2) * 160;
+      let y = this.height / 6 - 12 + 24 * (index >> 1);
+      this.addButton((iterator as AbstractOption).createWidget(this.minecraft.gameSettings, x, y, 150));
+      index++;
+    }
+
+   /*  this.optionsRowList = new TestList(this.minecraft, this.width, this.height, 32, this.height - 32, 25);
     this.optionsRowList.addOptions(this.OPTIONS);
     this.children.push(this.optionsRowList);
-
+ */
     this.addButton(new Button(this.width / 2 - 100, this.height - 27, 200, 20, Util.getTranslation('gui.done'), (button) => {
       this.minecraft.displayGuiScreen(this.parentScreen);
     }));
   }
 
+  // Minecraft.getInstance().updateWindowSize();
+
+  public mouseClicked(mouseX: number, mouseY: number, button: number): boolean {
+    let guiScale = this.gameSettings.guiScale;
+
+    if(super.mouseClicked(mouseX, mouseY, button)) {
+      if(this.gameSettings.guiScale != guiScale) {
+        this.minecraft.updateWindowSize();
+      }
+      return true;
+    }
+
+    return false;
+  }
+
   public render(context: CanvasRenderingContext2D, mouseX: number, mouseY: number, partialTicks: number): void {
-    this.optionsRowList.render(context, mouseX, mouseY, partialTicks);
+    this.renderDirtBackground(context, 0);
+/*     this.optionsRowList.render(context, mouseX, mouseY, partialTicks); */
     this.drawCenteredString(context, this.font, this.title, this.width / 2, 5, 16777215);
     super.render(context, mouseX, mouseY, partialTicks);
   }

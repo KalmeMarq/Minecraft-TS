@@ -1,13 +1,7 @@
 const path = require('path')
 
 module.exports = {
-  context: __dirname,
   entry: './src/index.ts',
-  output: {
-    path: path.resolve(__dirname, 'dist'),
-    filename: 'bundle.js',
-    publicPath: '/dist/'
-  },
   module: {
     rules: [
       {
@@ -22,7 +16,11 @@ module.exports = {
   resolve: {
     extensions: ['.ts'],
     alias: {
-      '@km.mcts': path.resolve(__dirname, 'src/')
+      '@mcsrc': path.resolve(__dirname, 'src/')
     }
+  },
+  output: {
+    path: path.resolve(__dirname, 'dist'),
+    filename: 'bundle.js'
   }
 }

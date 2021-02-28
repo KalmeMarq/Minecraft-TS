@@ -51,7 +51,7 @@ export default class TextFormatting {
   }
 
   private static lowercaseAlpha(string: string): string {
-    return string.toLowerCase().replaceAll("[^a-z]", "");
+    return string.toLowerCase().replace(/[^a-z]/g, "");
   }
 
   public getColorIndex(): number {
@@ -79,7 +79,7 @@ export default class TextFormatting {
   }
 
   public static getTextWithoutFormattingCodes(text: string | null): string | null {
-    return text == null ? null : (text).replaceAll(TextFormatting.FORMATTING_CODE_PATTERN, '');
+    return text == null ? null : (text).replace(/TextFormatting.FORMATTING_CODE_PATTERN/g, '');
   }
 
   public static getValueByName(friendlyName: string | null): TextFormatting | null {

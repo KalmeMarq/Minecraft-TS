@@ -1,22 +1,22 @@
-import GameOption from '@km.mcts/GameOption';
-import Minecraft from '@km.mcts/Minecraft';
-import AmbientOcclusionStatus from '@km.mcts/settings/AmbientOcclusionStatus';
-import AttackIndicatorStatus from '@km.mcts/settings/AttackIndicatorStatus';
-import ChatVisibility from '@km.mcts/settings/ChatVisibility';
-import CloudOption from '@km.mcts/settings/CloudOption';
-import GraphicsFanciness from '@km.mcts/settings/GraphicsFanciness';
-import HandSide from '@km.mcts/settings/HandSide';
-import KeyBinding from '@km.mcts/settings/KeyBinding';
-import NarratorStatus from '@km.mcts/settings/NarratorStatus';
-import ParticleStatus from '@km.mcts/settings/ParticleStatus';
-import PlayerModelPart from '@km.mcts/settings/PlayerModelPart';
-import PointOfView from '@km.mcts/settings/PointOfView';
-import LSStore from '@km.mcts/util/LSStore';
-import SoundCategory from '@km.mcts/util/SoundCategory';
+import GameOption from '@mcsrc/GameOption';
+import Minecraft from '@mcsrc/Minecraft';
+import AmbientOcclusionStatus from '@mcsrc/settings/AmbientOcclusionStatus';
+import AttackIndicatorStatus from '@mcsrc/settings/AttackIndicatorStatus';
+import ChatVisibility from '@mcsrc/settings/ChatVisibility';
+import CloudOption from '@mcsrc/settings/CloudOption';
+import GraphicsFanciness from '@mcsrc/settings/GraphicsFanciness';
+import HandSide from '@mcsrc/settings/HandSide';
+import KeyBinding from '@mcsrc/settings/KeyBinding';
+import NarratorStatus from '@mcsrc/settings/NarratorStatus';
+import ParticleStatus from '@mcsrc/settings/ParticleStatus';
+import PlayerModelPart from '@mcsrc/settings/PlayerModelPart';
+import PointOfView from '@mcsrc/settings/PointOfView';
+import LSStore from '@mcsrc/util/LSStore';
+import SoundCategory from '@mcsrc/util/SoundCategory';
 
 export default class GameSettings {
   protected mc;
-  private soundLevels: Map<SoundCategory, Number> = new Map((Object.entries(SoundCategory).slice(0, -1)).map(i => [i[1], 1]));
+  private soundLevels: Map<SoundCategory, number> = new Map((Object.entries(SoundCategory).slice(0, -1)).map(i => [i[1], 1]));
   private setModelParts: Set<PlayerModelPart> = new Set(Object.values(PlayerModelPart));
   public graphicFanciness = GraphicsFanciness.FANCY;
   public cloudOption = CloudOption.FANCY;
@@ -103,7 +103,7 @@ export default class GameSettings {
   constructor(mcIn: Minecraft) {
     this.mc = mcIn;
     this.loadOptions();
-    console.log('Game settings loaded!')
+    console.log('Game settings loaded!');
   }
 
   public loadOptions(): void {
@@ -159,7 +159,7 @@ export default class GameSettings {
           if('chatHeightFocused'.equals(s)) this.chatHeightFocused = parseFloat(s1);
           if('chatDelay'.equals(s)) this.chatDelay = parseFloat(s1);
           if('textBackgroundOpacity'.equals(s)) this.accessibilityTextBackgroundOpacity = parseFloat(s1);
-          if('framerateLimit'.equals(s)) this.framerateLimit = parseInt(s1)
+          if('framerateLimit'.equals(s)) this.framerateLimit = parseInt(s1);
           if('language'.equals(s)) this.language = s1;
           if('graphicsMode'.equals(s)) this.graphicFanciness = GraphicsFanciness.byId(parseInt(s1));
           if('renderClouds'.equals(s)) {
@@ -240,7 +240,7 @@ export default class GameSettings {
       lsoptions.addLine('snooper:' + GameOption.SNOOPER.get(this));
       lsoptions.addLine('backgroundForChatOnly:' + this.accessibilityTextBackground);
       lsoptions.addLine('touchscreen:' + GameOption.TOUCHSCREEN.get(this));
-      lsoptions.addLine('fullscreen:' + GameOption.FULLSCREEN.get(this));
+      lsoptions.addLine('fullscreen:' + 'false');
       lsoptions.addLine('viewBobbing:' + GameOption.VIEW_BOBBING.get(this));
       lsoptions.addLine('showDebugInfo:' + this.showDebugInfo);
       lsoptions.addLine('fov:' + (this.fov - 70) / 40);
@@ -270,7 +270,7 @@ export default class GameSettings {
   }
 
   public getSoundLevel(category: SoundCategory) {
-    return this.soundLevels.has(category) ? this.soundLevels.get(category) : 1.0;
+    return this.soundLevels.get(category);
   }
 
   public setSoundLevel(category: SoundCategory, volume: number) {
@@ -282,11 +282,10 @@ export default class GameSettings {
   }
 
   public getModelParts(): Set<PlayerModelPart> {
-    const copy: Set<PlayerModelPart> = new Set()
-    for (const item of this.setModelParts) copy.add(item)
+    const copy: Set<PlayerModelPart> = new Set();
+    for (const item of this.setModelParts) copy.add(item);
     return copy;
   }
-
 
   public switchModelPartEnabled(modelPart: PlayerModelPart) {
     if (this.getModelParts().has(modelPart)) {

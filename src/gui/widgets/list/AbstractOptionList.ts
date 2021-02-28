@@ -1,5 +1,5 @@
-// import IGuiEventListener from "@km.mcts/interface/IGuiEventListener";
-// import INestedGuiEventHandler from "@km.mcts/interface/INestedGuiEventHandler";
+// import IGuiEventListener from "@mcsrc/interface/IGuiEventListener";
+// import INestedGuiEventHandler from "@mcsrc/interface/INestedGuiEventHandler";
 // import AbstractList from "./AbstractList";
 
 // export default class AbstractOptionList<E extends Entry<E>> extends AbstractList<E> {

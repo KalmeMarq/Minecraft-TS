@@ -1,4 +1,4 @@
-import IRenderable from "@km.mcts/interface/IRenderable";
+import IRenderable from "@mcsrc/interface/IRenderable";
 import AbstractGui from "./AbstractGui";
 
 export default abstract class LoadingGui extends AbstractGui implements IRenderable {

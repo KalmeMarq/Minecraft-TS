@@ -1,5 +1,5 @@
 export default interface IGuiEventListener {
-  mouseMoved(xPos: number, mouseY: number): boolean;
+  mouseMoved: (xPos: number, mouseY: number) => boolean;
   mouseClicked(mouseX: number, mouseY: number, button: number): boolean;
   mouseReleased(mouseX: number, mouseY: number, button: number): boolean;
   mouseDragged(mouseX: number, mouseY: number, button: number, dragX: number, dragY: number): boolean;

@@ -1,6 +1,7 @@
-import MathHelper from "@km.mcts/util/MathHelper";
-import playSound from "@km.mcts/util/PlaySound";
+import SoundHandler from "@mcsrc/audio/SoundHandler";
+import MathHelper from "@mcsrc/util/MathHelper";
 import Minecraft from "../../Minecraft";
+import AbstractGui from "../AbstractGui";
 import Widget from "./Widget";
 
 export default abstract class AbstractSlider extends Widget {
@@ -17,8 +18,9 @@ export default abstract class AbstractSlider extends Widget {
 
   protected renderBg(context: CanvasRenderingContext2D, minecraft: Minecraft, mouseX: number, mouseY: number) {
     let i = (this.getIsHovered() ? 2 : 1) * 20;
-    this.blit(context, this.WIDGETS,this.x + (this.sliderValue * (this.width - 8)), this.y, 0, 46 + i, 4, 20);
-    this.blit(context, this.WIDGETS,this.x + (this.sliderValue * (this.width - 8)) + 4, this.y, 196, 46 + i, 4, 20);
+    const widgetsTexture = minecraft.getTextureManager().getTexture(Widget.WIDGETS_LOCATION);
+    AbstractGui.blit(context, widgetsTexture, this.x + (this.sliderValue * (this.width - 8)), this.y, 0, 46 + i, 4, 20);
+    AbstractGui.blit(context, widgetsTexture, this.x + (this.sliderValue * (this.width - 8)) + 4, this.y, 196, 46 + i, 4, 20);
   }
 
   public onClick(mouseX: number, mouseY: number) {
@@ -27,9 +29,9 @@ export default abstract class AbstractSlider extends Widget {
 
   public keyDown(keyName: string, modifiers: any): boolean {
     if(this.isFocused()) {
-      let flag = keyName == 'ArrowLeft';
-      if (flag || keyName == 'ArrowRight') {
-        let f = flag ? -1.0 : 1.0;
+      let isLeftArrow = keyName == 'ArrowLeft';
+      if (isLeftArrow || keyName == 'ArrowRight') {
+        let f = isLeftArrow ? -1.0 : 1.0;
         this.setSliderValue(this.sliderValue + (f / (this.width - 8)));
       }
     }
@@ -41,9 +43,9 @@ export default abstract class AbstractSlider extends Widget {
   }
 
   protected setSliderValue(value: number) {
-    let d0 = this.sliderValue;
+    let decimalValue = this.sliderValue;
     this.sliderValue = MathHelper.clamp(value, 0.0, 1.0);
-    if (d0 != this.sliderValue) {
+    if (decimalValue != this.sliderValue) {
       this.setSaveOptionValue();
     }
 
@@ -55,14 +57,11 @@ export default abstract class AbstractSlider extends Widget {
     super.onDrag(mouseX, mouseY, dragX, dragY);
   }
 
-  public playClickSound() {
-    return false
+  public playDownSound(handler: SoundHandler) {
   }
 
   public onRelease(mouseX: number, mouseY: number) {
-    if(this.clicked(mouseX, mouseY)) {
-      playSound('click_stereo', 0.5);
-    }
+    super.playDownSound(Minecraft.getInstance().getSoundHandler());
   }
 
   protected abstract setName(): void;

@@ -1,9 +1,14 @@
-import { getResourceLocation } from "./Resources";
+import Minecraft from "@mcsrc/Minecraft";
 
 export default class Util {
   public static milliTime() {
     return new Date().getMilliseconds();
   }
+
+  public static formatString(str: string, ...args: any) {
+    for(let i = 0; i < args.length; i++) str = str.replace(/%[a-zA-Z]/, args[i]);
+    return str;
+  } 
 
   public static nanoTime() {
     return this.milliTime() * 1000000;
@@ -26,10 +31,15 @@ export default class Util {
   }
 
   public static getTranslation(key: string): string {
-    if(getResourceLocation('langs', 'en_us')[key]) {
-      return getResourceLocation('langs', 'en_us')[key]
+    // if(getResourceLocation('langs', Minecraft.getInstance().gameSettings.language)[key]) {
+    //   return getResourceLocation('langs', Minecraft.getInstance().gameSettings.language)[key]
+    // }
+    const langs = Minecraft.getInstance().getLanguageManager();
+
+    if(langs.getLanguageData(Minecraft.getInstance().gameSettings.language)[key]) {
+      return langs.getLanguageData(Minecraft.getInstance().gameSettings.language)[key]
     }
-    
+  
     return key;
   }
 

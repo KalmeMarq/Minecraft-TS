@@ -1,5 +1,5 @@
-import MathHelper from '@km.mcts/util/MathHelper';
-import Util from '@km.mcts/util/Util';
+import MathHelper from '@mcsrc/util/MathHelper';
+import Util from '@mcsrc/util/Util';
 
 export default class HandSide {
   static readonly LEFT = new HandSide(0, 'options.mainHand.left');

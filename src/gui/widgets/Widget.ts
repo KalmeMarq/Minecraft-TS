@@ -1,18 +1,23 @@
+// import SimpleSound from '@mcsrc/audio/SimpleSound'
+// import SoundHandler from '@mcsrc/audio/SoundHandler'
+// import SoundEvents from '@mcsrc/util/SoundEvents'
+import Sounds from '@mcsrc/audio/Sound'
+import ResourceLocation from '@mcsrc/new/ResourceLocation'
+import SoundCategory from '@mcsrc/util/SoundCategory'
+import TranslationTextComponent from '@mcsrc/util/text/TranslationTextComponent'
 import IGuiEventListener from '../../interface/IGuiEventListener'
 import IRenderable from '../../interface/IRenderable'
 import Minecraft from '../../Minecraft'
-import playSound from '../../util/PlaySound'
-import { getResourceLocation, MCResources } from '../../util/Resources'
 import AbstractGui from '../AbstractGui'
 import FontRenderer from '../FontRenderer'
 
 export default class Widget extends AbstractGui implements IRenderable, IGuiEventListener {
-  protected WIDGETS = getResourceLocation('textures', 'gui/widgets')
+  public static WIDGETS_LOCATION: ResourceLocation = new ResourceLocation('textures/gui/widgets.png');
   protected width: number
   protected height: number
   public x: number
   public y: number
-  private message: string
+  private message: string | TranslationTextComponent
   private wasHovered: boolean = false
   protected isHovered: boolean = false
   public active: boolean = true
@@ -20,10 +25,10 @@ export default class Widget extends AbstractGui implements IRenderable, IGuiEven
   protected alpha: number = 1.0
   private focused: boolean = false
 
-  constructor(x: number, y: number, width: number, height: number, title: string) {
+  constructor(x: number, y: number, width: number, height: number, title: string | TranslationTextComponent) {
     super()
-    this.x = ~~x
-    this.y = ~~y
+    this.x = x
+    this.y = y
     this.width = width
     this.height = height
     this.message = title
@@ -44,10 +49,11 @@ export default class Widget extends AbstractGui implements IRenderable, IGuiEven
   public renderButton(context: CanvasRenderingContext2D, mouseX: number, mouseY: number, partialTicks: number): void {
     const minecraft: Minecraft = Minecraft.getInstance();
     const fontrenderer: FontRenderer  = minecraft.fontRenderer;
+    const widgetsTexture = minecraft.getTextureManager().getTexture(Widget.WIDGETS_LOCATION);
     let yUV = this.getYImage(this.getIsHovered());
     context.globalAlpha = this.alpha;
-    this.blit(context, this.WIDGETS, this.x, this.y, 0, 46 + yUV * 20, this.width / 2, this.height);
-    this.blit(context, this.WIDGETS, this.x + this.width / 2, this.y, 200 - this.width / 2, 46 + yUV * 20, this.width / 2, this.height);
+    AbstractGui.blit(context, widgetsTexture, this.x, this.y, 0, 46 + yUV * 20, this.width / 2, this.height);
+    AbstractGui.blit(context, widgetsTexture, this.x + this.width / 2, this.y, 200 - this.width / 2, 46 + yUV * 20, this.width / 2, this.height);
     this.renderBg(context, minecraft, mouseX, mouseY);
     let textColor = this.active ? 16777215 : 10526880;
     this.drawCenteredString(context, fontrenderer, this.getMessage(), this.x + this.width / 2, this.y + (this.height - 8) / 2, textColor);
@@ -81,7 +87,7 @@ export default class Widget extends AbstractGui implements IRenderable, IGuiEven
       if(this.isValidClickButton(button)) {
         const flag = this.clicked(mouseX, mouseY)
         if(flag) {
-          this.playClickSound();
+          this.playDownSound(Minecraft.getInstance().getSoundHandler());
           this.onClick(mouseX, mouseY)
           return true
         }
@@ -90,8 +96,8 @@ export default class Widget extends AbstractGui implements IRenderable, IGuiEven
     } else return false
   }
 
-  public playClickSound() {
-    playSound('click_stereo', 0.5);
+  public playDownSound(handler: any) {
+    handler.play(Sounds.clickStereo, SoundCategory.MASTER, 0.5);
   }
 
   public mouseReleased(mouseX: number, mouseY: number, button: number): boolean {
@@ -147,7 +153,7 @@ export default class Widget extends AbstractGui implements IRenderable, IGuiEven
     this.message = message;
   }
 
-  public getMessage = (): string => this.message
+  public getMessage = (): string | TranslationTextComponent => this.message
 
   public isFocused = (): boolean => this.focused
 

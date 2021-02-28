@@ -1,21 +1,34 @@
-import ColorHelper from "@km.mcts/util/ColorHelper";
-import { getResourceLocation } from "@km.mcts/util/Resources";
-import Util from "@km.mcts/util/Util";
-import { type } from "os";
-import { stringify } from "querystring";
+import Minecraft from "@mcsrc/Minecraft";
+import ResourceLocation from "@mcsrc/new/ResourceLocation";
+import ColorHelper from "@mcsrc/util/ColorHelper";
+import TranslationTextComponent from "@mcsrc/util/text/TranslationTextComponent";
+import Util from "@mcsrc/util/Util";
 
 export default class FontRenderer {
   public static hasCatchedError = false; 
-  public ref = getResourceLocation('fonts', 'default');
-  public fonts = { ascii: getResourceLocation('textures', 'font/ascii'), accented: getResourceLocation('textures', 'font/accented')};
+  public ref: any;
+  public ascii: any;
+  public accented: any;
+  public fonts: any;
   public asciiChars: any[] = [];
   public accentedChars: any[] = [];
   public asciiCharsStore: { [key: string]: CharacterInfo } = {};
   public accentedCharsStore: { [key: string]: CharacterInfo } = {};
   public allCharsStore: { [key: string]: CharacterInfo } = {};
   public characterBuffer: CharacterBuffer = new CharacterBuffer();
+  private useDefaultFont: boolean = false;
 
   constructor() {
+  }
+
+  public async load() {
+    const res = await fetch(new ResourceLocation('font/default.json').getFullPath());
+    const data = await res.json();
+    this.ref = data;
+
+    let minecraft: Minecraft = Minecraft.getInstance();
+    this.fonts = { ascii: minecraft.getTextureManager().getTexture(new ResourceLocation('textures/font/ascii.png')), accented: minecraft.getTextureManager().getTexture(new ResourceLocation('textures/font/accented.png'))};
+    
     this.ref.providers[2].chars.forEach((line: any) => {
       line.split('').forEach((char: any) => {
         this.asciiChars.push(char)
@@ -50,12 +63,26 @@ export default class FontRenderer {
     })
   }
 
-  public drawStringWithShadow(context: CanvasRenderingContext2D, text: string, x: number, y: number, color: number | string) {
+  public drawStringWithShadow(context: CanvasRenderingContext2D, text: string | TranslationTextComponent, x: number, y: number, color: number | string) {
     const c = typeof color === 'number' ? ColorHelper.getColor(color) : color;
     const cS = typeof color === 'number' ? ColorHelper.getDarkerColor(color) : 'black';
 
-    for(let i = 0, k = x; i < text.length; i++) {
-      let char = text[i];
+    const textString = text instanceof TranslationTextComponent ? text.getTranslatedKey() : text;
+
+    if(this.useDefaultFont) {
+      context.font = '10px Arial';
+
+      context.fillStyle = cS;
+      context.fillText(textString, x + 0.8, y + 7.8);
+
+      context.fillStyle = c;
+      context.fillText(textString, x, y + 7);
+
+      return;
+    }
+
+    for(let i = 0, k = x; i < textString.length; i++) {
+      let char = textString[i];
       let charInfo = this.allCharsStore[char];
 
       if(this.characterBuffer.get(char, c).src === null) {
@@ -76,11 +103,22 @@ export default class FontRenderer {
     }
   }
 
-  public getTextWidth(text: string): number {
+  public getTextWidth(text: string | TranslationTextComponent): number {
+    const textString = text instanceof TranslationTextComponent ? text.getTranslatedKey() : text;
+
+    if(this.useDefaultFont) {
+      let minecraft: Minecraft = Minecraft.getInstance();
+      let ctx = minecraft.context;
+      ctx.font = '10px';
+      let w = ctx.measureText(textString).width;
+      
+      return w;
+    }
+
     let j = 0;
-    for(let i = 0; i < text.length; i++) {
+    for(let i = 0; i < textString.length; i++) {
       try {
-        let charInfo = this.allCharsStore[text[i]];
+        let charInfo = this.allCharsStore[textString[i]];
         j += charInfo.width - 1;
       } catch(e) {
         if(!FontRenderer.hasCatchedError) {
@@ -92,6 +130,10 @@ export default class FontRenderer {
     
 
     return j;
+  }
+
+  public changeForceUnicodeFont(forced: boolean) {
+    this.useDefaultFont = forced;
   }
 }
 
@@ -175,13 +217,14 @@ export class CharacterInfo {
     const specialChars = {
       'i': 3,
       'ì': 3,
+      'í': 3,
       '.': 3,
       '\'': 3,
       ':': 3,
       ',': 2,
       'f': 6,
       'k': 6,
-      '(': 6,
+      '(': 5,
       ' ': 4,
       'l': 4,
       '`': 5,

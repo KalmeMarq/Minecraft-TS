@@ -1,5 +1,5 @@
-import Minecraft from '@km.mcts/Minecraft';
-import Util from '@km.mcts/util/Util';
+import Minecraft from '@mcsrc/Minecraft';
+import Util from '@mcsrc/util/Util';
 import MainMenuScreen from './gui/screen/MainMenuScreen';
 
 export default class GameRenderer {
@@ -11,8 +11,8 @@ export default class GameRenderer {
 
   public updateCameraAndRender(partialTicks: number, nanoTime: number, renderWorldIn: boolean) {
     if(!this.mc.skipRenderWorld) {
-      const i = ~~(this.mc.mouseHelper.getMouseX() / this.mc.getMainCanvas().getGuiScaleFactor());
-      const j = ~~(this.mc.mouseHelper.getMouseY() / this.mc.getMainCanvas().getGuiScaleFactor());
+      const i = (this.mc.mouseHelper.getMouseX() / this.mc.getMainCanvas().getGuiScaleFactor());
+      const j = (this.mc.mouseHelper.getMouseY() / this.mc.getMainCanvas().getGuiScaleFactor());
 
       const context: CanvasRenderingContext2D = this.mc.context;
     
@@ -23,8 +23,12 @@ export default class GameRenderer {
       }
 
       context.clearRect(0, 0, window.innerWidth, window.innerHeight);
-      
-      if(this.mc.currentScreen !== null) {
+      if(this.mc.loadingGui != null) {
+        try {
+           this.mc.loadingGui.render(context, i, j, this.mc.getTickLength());
+        } catch (e) {
+        }
+     } else if(this.mc.currentScreen !== null) {
         try {
            this.mc.currentScreen.render(context!, i, j, this.mc.getTickLength());
         } catch(e) {

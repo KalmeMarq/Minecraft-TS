@@ -1,8 +1,9 @@
-import playSound from "../../../util/PlaySound";
+import Minecraft from "@mcsrc/Minecraft";
+import TranslationTextComponent from "@mcsrc/util/text/TranslationTextComponent";
 import Widget from "../Widget";
 
 export default abstract class AbstractButton extends Widget {
-  constructor(x: number, y: number, width: number, height: number, title: string) {
+  constructor(x: number, y: number, width: number, height: number, title: string | TranslationTextComponent) {
     super(x, y, width, height, title);
   }
 
@@ -17,7 +18,7 @@ export default abstract class AbstractButton extends Widget {
       if(keyName != 'Enter' && keyName != ' ') {
         return false;
       } else {
-        playSound('sounds/click_stereo', 0.2);
+        this.playDownSound(Minecraft.getInstance().getSoundHandler())
         this.onPress();
         return true;
       }

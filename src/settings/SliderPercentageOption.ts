@@ -1,4 +1,4 @@
-import MathHelper from "@km.mcts/util/MathHelper";
+import MathHelper from "@mcsrc/util/MathHelper";
 import GameSettings from "../GameSettings";
 import OptionSlider from "../gui/widgets/OptionSlider";
 import Widget from "../gui/widgets/Widget";

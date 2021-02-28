@@ -1,11 +1,11 @@
-import GameSettings from "@km.mcts/GameSettings";
-import FocusableGui from "@km.mcts/gui/FocusableGui";
-import GuiScreen from "@km.mcts/gui/screen/GuiScreen";
-import IGuiEventListener from "@km.mcts/interface/IGuiEventListener";
-import IRenderable from "@km.mcts/interface/IRenderable";
-import Minecraft from "@km.mcts/Minecraft";
-import AbstractOption from "@km.mcts/settings/AbstractOption";
-import { getResourceLocation } from "@km.mcts/util/Resources";
+import GameSettings from "@mcsrc/GameSettings";
+import AbstractGui from "@mcsrc/gui/AbstractGui";
+import FocusableGui from "@mcsrc/gui/FocusableGui";
+import GuiScreen from "@mcsrc/gui/screen/GuiScreen";
+import IGuiEventListener from "@mcsrc/interface/IGuiEventListener";
+import IRenderable from "@mcsrc/interface/IRenderable";
+import Minecraft from "@mcsrc/Minecraft";
+import AbstractOption from "@mcsrc/settings/AbstractOption";
 import { settings } from "cluster";
 import { create } from "domain";
 import Widget from "../Widget";
@@ -44,42 +44,43 @@ export default class TestList extends FocusableGui implements IGuiEventListener,
     }
   }
 
-  public mouseMoved(xPos: number, mouseY: number): boolean {
-    return false;
-  }
+  /* protected getEntryAtPosition(mouseX: number, mouseY: number) {
+     let i = this.getRowWidth() / 2;
+     let j = 0 + this.width / 2;
+     let k = j - i;
+     let l = j + i;
+     let i1 = Math.floor(mouseY - this.yTop) - 32 + 0 - 4;
+     let j1 = i1 / this.itemHeight;
+     return (mouseX < 0 && mouseX >= k && mouseX <= l && j1 >= 0 && i1 >= 0 && j1 < this.children.length ? this.getEventListeners().get(j1) : null);
+  } */
 
   public mouseClicked(mouseX: number, mouseY: number, button: number): boolean {
-    return false;
+    if(!this.isMouseOver(mouseX, mouseY)) {
+      return false;
+    } else {
+     /*  let e: any = this.getEntryAtPosition(mouseX, mouseY);
+      if (e != null) {
+        if(e.mouseClicked(mouseX, mouseY, button)) {
+          this.setListener(e);
+          this.setDragging(true);
+          return true;
+        }
+      } */
+
+      this.children[0].widgets[0].mouseClicked(mouseX, mouseY)
+      console.log(this.children[0].widgets[0]);
+      
+
+      return false;
+    }
   }
 
-  public mouseReleased(mouseX: number, mouseY: number, button: number): boolean {
-    return false;
-  }
-
-  public mouseDragged(mouseX: number, mouseY: number, button: number, dragX: number, dragY: number): boolean {
-    return false;
-  }
-
-  public mouseScrolled(mouseX: number, mouseY: number, delta: number): boolean {
-    console.log("ss");
-    
-    return false;
-  }
-
-  public keyPressed(key: string, modifiers: any): boolean {
-    return false;
-  }
-
-  public keyReleased(key: string, modifiers: any): boolean {
-    return false;
-  }
-
-  public changeFocus(focus: any): boolean {
+  public mouseReleased(mouseX: number, mouseY: number, button: number) {
     return false;
   }
 
   public isMouseOver(mouseX: number, mouseY: number): boolean {
-    return false;
+    return mouseY >= this.yTop && mouseY <= this.yBottom && mouseX >= 0 && mouseX <= this.width;
   }
 
   protected getRowTop(p_230962_1_: number) {
@@ -117,23 +118,13 @@ export default class TestList extends FocusableGui implements IGuiEventListener,
   }
 
   public render(context: CanvasRenderingContext2D, mouseX: number, mouseY: number, partialTicks: number): void {
-    if(!this.minecraft.textureBuffer.has('options_bg_1')) {
-      this.minecraft.textureBuffer.add('options_bg_0', this.createBuffer(16, 16, (ctx) => {
-        ctx.filter = 'brightness(25%)';
-        this.blit(ctx, getResourceLocation('textures', 'gui/options_background'), 0, 0, 0, 0, 16, 16);
-      }));
-      this.minecraft.textureBuffer.add('options_bg_1', this.createBuffer(16, 16, (ctx) => {
-        ctx.filter = 'brightness(12%)';
-        this.blit(ctx, getResourceLocation('textures', 'gui/options_background'), 0, 0, 0, 0, 16, 16);
-      }));
-    } else {
       const src = this.minecraft.textureBuffer.get('options_bg_0');
       const src1 = this.minecraft.textureBuffer.get('options_bg_1');
 
       context.setTransform(this.minecraft.getMainCanvas().getGuiScaleFactor() + 3 - (3 - this.minecraft.getMainCanvas().getGuiScaleFactor()), 0, 0, this.minecraft.getMainCanvas().getGuiScaleFactor() + 3 - (3 - this.minecraft.getMainCanvas().getGuiScaleFactor()), 0, 0);
       for(let i = 0; i < this.width / 32; i++) {
         for(let j = 0; j < this.height / 32; j++) {
-          this.blit(context, src, 0 + i * 16, 0 + j * 16, 0, 0, 16, 16);
+          AbstractGui.blit(context, src, 0 + i * 16, 0 + j * 16, 0, 0, 16, 16);
         }
       }
 
@@ -141,15 +132,14 @@ export default class TestList extends FocusableGui implements IGuiEventListener,
         let h = (this.yBottom - this.yTop) / 32;
         for(let j = 0; j < h; j++) {
           if(j < h - 1) {
-            this.blit(context, src1, 0 + i * 16, (this.yTop / 2) + j * 16, 0, 0, 16, 16);
+            AbstractGui.blit(context, src1, 0 + i * 16, (this.yTop / 2) + j * 16, 0, 0, 16, 16);
           } else {
-            this.blit(context, src1, 0 + i * 16, (this.yTop / 2) + j * 16, 0, 0, 16, 12);
+            AbstractGui.blit(context, src1, 0 + i * 16, (this.yTop / 2) + j * 16, 0, 0, 16, 12);
           } 
         }
       }
 
       context.setTransform(this.minecraft.getMainCanvas().getGuiScaleFactor(), 0, 0, this.minecraft.getMainCanvas().getGuiScaleFactor(), 0, 0);
-    }
     
     this.renderList(context, 0, 0, mouseX, mouseY, partialTicks);
   }

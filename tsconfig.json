@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
-    "target": "ESNext",
-    "module": "ESNext",
+    "target": "es6",
+    "module": "esnext",
     "allowJs": true,
     "sourceMap": true,
     "outDir": "./dist/",
@@ -13,8 +13,9 @@
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
+    "downlevelIteration": true,
     "paths": {
-      "@km.mcts/*": ["./*"]
+      "@mcsrc/*": ["./*"]
     }
   },
   "include": ["./src/**/*"],

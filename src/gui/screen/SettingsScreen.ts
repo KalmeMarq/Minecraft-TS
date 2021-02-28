@@ -1,4 +1,4 @@
-import GameSettings from "@km.mcts/GameSettings";
+import GameSettings from "@mcsrc/GameSettings";
 import GuiScreen from "./GuiScreen";
 
 export default class SettingsScreen extends GuiScreen {

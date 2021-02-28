@@ -1,5 +1,5 @@
-import GameSettings from '@km.mcts/GameSettings';
-import Util from '@km.mcts/util/Util';
+import GameSettings from '@mcsrc/GameSettings';
+import Util from '@mcsrc/util/Util';
 import Button from '../widgets/button/Button';
 import SettingsScreen from './SettingsScreen';
 

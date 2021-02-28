@@ -31,37 +31,39 @@ export default class MouseHelper {
   }
 
   private mouseButtonCallback(button: number, action: number) {
-    const flag = action === 1;
+    if(this.minecraft.loadingGui == null) {
+      const flag = action === 1;
 
-    const btn = button;
-
-    if(flag) {
-      this.activeButton = btn;
-    } else if(this.activeButton != -1) {
-      this.activeButton = -1;
-    }
-
-    let aboolean: boolean[] = new Array(false)
-    if(this.minecraft.currentScreen !== null) {
-      let x = this.mouseX / this.minecraft.getMainCanvas().getGuiScaleFactor();
-      let y = this.mouseY / this.minecraft.getMainCanvas().getGuiScaleFactor();
-      
-      if(flag) {
-        GuiScreen.wrapScreenError(() => {
-          aboolean[0] = this.minecraft.currentScreen!.mouseClicked(x, y, btn);
-       }, 'mouseClicked event handler', this.minecraft.currentScreen.getClassName());
+      const btn = button;
   
-      } else {
-        GuiScreen.wrapScreenError(() => {
-          aboolean[0] = this.minecraft.currentScreen!.mouseReleased(x, y, btn);
-        }, 'mouseReleased event handler', this.minecraft.currentScreen.getClassName());
+      if(flag) {
+        this.activeButton = btn;
+      } else if(this.activeButton != -1) {
+        this.activeButton = -1;
       }
-    }
-
-    if (!aboolean[0] && (this.minecraft.currentScreen == null || this.minecraft.currentScreen.passEvents)) {
-      if(btn == 0) this.leftDown = flag;
-      else if (btn == 2) this.middleDown = flag;
-      else if (btn == 1) this.rightDown = flag;
+  
+      let aboolean: boolean[] = new Array(false)
+      if(this.minecraft.currentScreen !== null) {
+        let x = this.mouseX / this.minecraft.getMainCanvas().getGuiScaleFactor();
+        let y = this.mouseY / this.minecraft.getMainCanvas().getGuiScaleFactor();
+        
+        if(flag) {
+          GuiScreen.wrapScreenError(() => {
+            aboolean[0] = this.minecraft.currentScreen!.mouseClicked(x, y, btn);
+         }, 'mouseClicked event handler', this.minecraft.currentScreen.getClassName());
+    
+        } else {
+          GuiScreen.wrapScreenError(() => {
+            aboolean[0] = this.minecraft.currentScreen!.mouseReleased(x, y, btn);
+          }, 'mouseReleased event handler', this.minecraft.currentScreen.getClassName());
+        }
+      }
+  
+      if (!aboolean[0] && (this.minecraft.currentScreen == null || this.minecraft.currentScreen.passEvents)) {
+        if(btn == 0) this.leftDown = flag;
+        else if (btn == 2) this.middleDown = flag;
+        else if (btn == 1) this.rightDown = flag;
+      }
     }
   }
 

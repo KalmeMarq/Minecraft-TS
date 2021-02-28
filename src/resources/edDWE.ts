@@ -1,4 +1,4 @@
-import Language from "./Language";
+import Language from "./FWEFW";
 
 export default class LanguageManager {
   private static currentLang: Language = new Language("en_us", "US", "English", false);

@@ -24,8 +24,7 @@ export default abstract class FocusableGui extends AbstractGui implements INeste
     this.listener = listener
   }
 
-  /* @ts-ignore */
-  public getEventListeners(): newArrayList<E> {
+  public getEventListeners(): any {
   }
 
   public setFocusedDefault(eventListener: IGuiEventListener | null): void {
@@ -57,7 +56,16 @@ export default abstract class FocusableGui extends AbstractGui implements INeste
 
   public mouseReleased(mouseX: number, mouseY: number, button: number): boolean {
     this.setDragging(false)
-    this.getListener() && this.getListener().mouseReleased(mouseX, mouseY, button);
+    
+    for(let i = 0; i < this.getEventListeners().length; i++) {
+      const iguieventlistener: IGuiEventListener = this.getEventListeners()[i];
+
+      if(iguieventlistener.isMouseOver(mouseX, mouseY)) {
+        iguieventlistener.mouseReleased(mouseX, mouseY, button);
+        return true;
+      }
+    }
+
     return false;
   }
 
@@ -91,7 +99,6 @@ export default abstract class FocusableGui extends AbstractGui implements INeste
         if(a.isFocused()) {
           // this.setListener(this.getEventListeners()[i + 1])
           // this.changeFocus(true);
-          console.log("ss");
           
         }
       }

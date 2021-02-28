@@ -1,8 +1,8 @@
-// import FocusableGui from "@km.mcts/gui/FocusableGui";
-// import IGuiEventListener from "@km.mcts/interface/IGuiEventListener";
-// import IRenderable from "@km.mcts/interface/IRenderable";
-// import Minecraft from "@km.mcts/Minecraft";
-// import MathHelper from "@km.mcts/util/MathHelper";
+// import FocusableGui from "@mcsrc/gui/FocusableGui";
+// import IGuiEventListener from "@mcsrc/interface/IGuiEventListener";
+// import IRenderable from "@mcsrc/interface/IRenderable";
+// import Minecraft from "@mcsrc/Minecraft";
+// import MathHelper from "@mcsrc/util/MathHelper";
 
 // export default class AbstractList<E extends AbstractListEntry<E>> extends FocusableGui implements IRenderable {
 //   protected minecraft: Minecraft;

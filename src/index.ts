@@ -1,15 +1,14 @@
-import GameConfiguration from './GameConfiguration';
+import GameConfiguration from '@mcsrc/GameConfiguration';
 import Minecraft from './Minecraft'
-import { getAllResources } from './util/Resources';
+import ResourceLocation from './new/ResourceLocation';
+import TextureManager from './new/TextureManager';
 import './util/String';
 import Util from './util/Util';
 
 (async() => {
-  await getAllResources();
-
   const gameconfigs = new GameConfiguration(
     new GameConfiguration.UserInformation('KalmeMarq'),
-    new GameConfiguration.GameInformation(false, '1.42.0', 'release', false, false)
+    new GameConfiguration.GameInformation(false, '1.17.0', 'release', false, false)
   );
   let minecraft: Minecraft;
   try {
@@ -25,6 +24,3 @@ import Util from './util/Util';
     );
   }
 })()
-
-
-
