@@ -85,8 +85,8 @@ export default class MouseHelper {
     const iguieventlistener: IGuiEventListener = this.minecraft.currentScreen!;
 
     if(iguieventlistener !== null) {
-      let x: number = xpos / 3
-      let y: number = ypos / 3
+      let x: number = xpos / this.minecraft.getMainCanvas().getGuiScaleFactor();
+      let y: number = ypos / this.minecraft.getMainCanvas().getGuiScaleFactor();
 
       GuiScreen.wrapScreenError(() => {
         iguieventlistener.mouseMoved(x, y);

@@ -13,7 +13,7 @@ import PointOfView from '@mcsrc/settings/PointOfView';
 import Util from '@mcsrc/util/Util';
 import SliderMultiplierOption from './settings/SliderMultiplierOption';
 import SliderPercentageOption from './settings/SliderPercentageOption';
-import MathHelper from './util/MathHelper';
+import MathHelper from './new/util/MathHelper';
 import Minecraft from './Minecraft';
 
 export default abstract class GameOption {
@@ -196,7 +196,7 @@ export default abstract class GameOption {
   });
 
   public static MAIN_HAND: IteratableOption = new IteratableOption('options.mainHand', (settings: GameSettings, optionValues: any) => {
-    settings.mainHand = HandSide.byId(settings.narrator.getId() + optionValues);
+    settings.mainHand = HandSide.byId(settings.mainHand.getId() + optionValues);
   }, (settings: GameSettings, optionValues: any) => {
     return optionValues.getGenericValueComponent(settings.mainHand.getKey());
   });
@@ -284,7 +284,7 @@ export default abstract class GameOption {
   public static FOV_EFFECT_SCALE_SLIDER: SliderPercentageOption = new SliderPercentageOption('options.fovEffectScale', 0.0, 1.0, 0.0, (settings: GameSettings) => {
     return Math.pow(settings.fovScaleEffect, 2.0);
   }, (settings: GameSettings, optionValues: any) => {
-    settings.fovScaleEffect = MathHelper.sqrt(optionValues);
+    settings.fovScaleEffect = Math.sqrt(optionValues);
   }, (settings: GameSettings, optionValues: any) => {
     let value = optionValues.normalizeValue(optionValues.get(settings));
     return value == 0.0 ? optionValues.getGenericValueComponent(Util.getTranslation('options.fovEffectScale.off')) : optionValues.getPercentValueComponent(value);

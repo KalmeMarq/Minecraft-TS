@@ -17,11 +17,14 @@ import TextureManager from './new/TextureManager';
 import LanguageManager from './new/LanguageManager';
 import KeyboardListener from './util/KeyboardListener';
 import MouseHelper from './util/MouseHelper';
-import Splashes from './util/Splashes';
+import Splashes from './new/Splashes';
 import Timer from './util/Timer';
 import Util from './util/Util';
 import ResourceLoadingGui from './new/ResourceLoadingGui';
 import JSONUtils from './util/JSONUtils';
+import Session from './new/util/Session';
+import SoundManager from './new/audio/SoundManager';
+import SoundEvents from './new/util/SoundEvents';
 
 var stop = false;
 var frameCount = 0;
@@ -35,7 +38,6 @@ export default class Minecraft implements IWindowEventListener {
   public gameRenderer: GameRenderer;
   public gameSettings: GameSettings;
   private soundHandler: SoundHandler;
-  private splashes: Splashes;
   public ingameGUI: IngameGui;
  
   public mouseHelper: MouseHelper;
@@ -65,9 +67,12 @@ export default class Minecraft implements IWindowEventListener {
   private versionType: string;
   private enableMultiplayer: boolean;
   private enableChat: boolean;
+  private session: Session;
 
   private textureManager: TextureManager;
   private languageManager: LanguageManager;
+  private soundManager: SoundManager;
+  private splashes: Splashes;
 
   public loadingGui: ResourceLoadingGui | null = null;
   public isReloading: boolean = false;
@@ -80,14 +85,15 @@ export default class Minecraft implements IWindowEventListener {
     this.isDemo = gameConfig.gameInfo.isDemo;
     this.enableMultiplayer = !gameConfig.gameInfo.disableMultiplayer;
     this.enableChat = !gameConfig.gameInfo.disableChat;
-    this.testPlayerName = gameConfig.userInfo.userName;
-
+    this.session = gameConfig.userInfo.session;
+    ResourceLocation.assetsDir  = gameConfig.folderInfo.assetsDir;
     this.gameSettings = new GameSettings(this);
 
     this.textureManager = new TextureManager();
     this.textureBuffer = this.textureManager.textureBuffer;
-    this.splashes = new Splashes();
-    this.languageManager = new LanguageManager(this.gameSettings.language);
+    this.splashes = new Splashes(this.session);
+    this.languageManager = new LanguageManager();
+    this.soundManager = new SoundManager(this.gameSettings);
 
     this.soundHandler = new SoundHandler(this, this.gameSettings);
     this.mainCanvas = new MainCanvas(this);
@@ -113,8 +119,9 @@ export default class Minecraft implements IWindowEventListener {
 
     await this.textureManager.load();
     await this.fontRenderer.load();
-    await this.languageManager.load();
-    await this.splashes.load();
+    await this.languageManager.reload();
+    await this.soundManager.reload();
+    await this.splashes.reload();
 
     this.isReloading = false;
     this.setLoadingGui(null);
@@ -305,7 +312,7 @@ export default class Minecraft implements IWindowEventListener {
   } 
 
   public getPlayerName(): string {
-    return this.testPlayerName;
+    return '';
   }
 
   public isMultiplayerEnabled(): boolean {
@@ -317,7 +324,7 @@ export default class Minecraft implements IWindowEventListener {
   }
 
   public isModdedClient(): boolean {
-    return false;
+    return true;
   }
 
   public getIsGamePaused(): boolean {
@@ -361,7 +368,7 @@ export default class Minecraft implements IWindowEventListener {
   }
 
   public setFramerateLimit(limit: number): void {
-    if(this.gameSettings.vsync) {
+    if(this.gameSettings.vsync || true) {
       this.maxFPS = this.deviceRefreshRate;
       return;
     }

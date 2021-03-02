@@ -1,8 +1,10 @@
 import GameOption from '@mcsrc/GameOption';
 import GameSettings from '@mcsrc/GameSettings';
 import AbstractOption from '@mcsrc/settings/AbstractOption';
+import TranslationTextComponent from '@mcsrc/util/text/TranslationTextComponent';
 import Util from '@mcsrc/util/Util';
 import Button from '../widgets/button/Button';
+import { ConfirmOpenLinkScreen } from './ConfirmOpenLinkScreen';
 import GuiScreen from './GuiScreen';
 import SettingsScreen from './SettingsScreen';
 
@@ -29,7 +31,17 @@ export default class AccessibilityScreen extends SettingsScreen {
   protected init(): void {
     this.tempAddOptions(this.SCREEN_OPTIONS)
 
-    this.addButton(new Button(this.width / 2 - 100, this.height - 27, 200, 20, Util.getTranslation('gui.done'), (button) => {
+    this.addButton(new Button(this.width / 2 - 155, this.height - 27, 150, 20, new TranslationTextComponent("options.accessibility.link"), (button) => {
+      this.minecraft.displayGuiScreen(new ConfirmOpenLinkScreen((b) => {
+         if(b) {
+            window.open("https://aka.ms/MinecraftJavaAccessibility");
+         }
+
+         this.minecraft.displayGuiScreen(this);
+      }, "https://aka.ms/MinecraftJavaAccessibility", true));
+   }));
+
+    this.addButton(new Button(this.width / 2 + 5, this.height - 27, 150, 20, Util.getTranslation('gui.done'), (button) => {
       this.minecraft.displayGuiScreen(this.parentScreen);
     }));
   }

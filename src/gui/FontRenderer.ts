@@ -1,17 +1,16 @@
 import Minecraft from "@mcsrc/Minecraft";
 import ResourceLocation from "@mcsrc/new/ResourceLocation";
 import ColorHelper from "@mcsrc/util/ColorHelper";
+import JSONUtils from "@mcsrc/util/JSONUtils";
 import TranslationTextComponent from "@mcsrc/util/text/TranslationTextComponent";
 import Util from "@mcsrc/util/Util";
 
 export default class FontRenderer {
   public static hasCatchedError = false; 
-  public ref: any;
-  public ascii: any;
-  public accented: any;
-  public fonts: any;
-  public asciiChars: any[] = [];
-  public accentedChars: any[] = [];
+  public ref!: { providers: any[] };
+  public fonts!: { ascii: HTMLImageElement, accented: HTMLImageElement };
+  public asciiChars: string[] = [];
+  public accentedChars: string[] = [];
   public asciiCharsStore: { [key: string]: CharacterInfo } = {};
   public accentedCharsStore: { [key: string]: CharacterInfo } = {};
   public allCharsStore: { [key: string]: CharacterInfo } = {};
@@ -22,9 +21,9 @@ export default class FontRenderer {
   }
 
   public async load() {
-    const res = await fetch(new ResourceLocation('font/default.json').getFullPath());
-    const data = await res.json();
-    this.ref = data;
+    await JSONUtils.getJSONFile(new ResourceLocation('font/default.json').getFullPath(), (data: { providers: any[] }) => {
+      this.ref = data;
+    });
 
     let minecraft: Minecraft = Minecraft.getInstance();
     this.fonts = { ascii: minecraft.getTextureManager().getTexture(new ResourceLocation('textures/font/ascii.png')), accented: minecraft.getTextureManager().getTexture(new ResourceLocation('textures/font/accented.png'))};

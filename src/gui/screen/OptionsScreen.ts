@@ -19,7 +19,7 @@ import PackScreen from "./PackScreen";
 import VideoSettingsScreen from "./VideoSettingsScreen";
 
 export default class OptionsScreen extends GuiScreen {
-  private static SCREEN_OPTIONS: AbstractOption[] = [GameOption.FOV];
+  private static SCREEN_OPTIONS: AbstractOption[] = new Array<AbstractOption>(GameOption.FOV);
   public parentScreen: GuiScreen;
   private settings: GameSettings;
 

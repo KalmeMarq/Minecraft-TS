@@ -1,4 +1,4 @@
-import MathHelper from '@mcsrc/util/MathHelper';
+import MathHelper from '@mcsrc/new/util/MathHelper';
 import Util from '@mcsrc/util/Util';
 
 export default class ChatVisibility {

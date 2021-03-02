@@ -1,4 +1,5 @@
 export default class ResourceLocation {
+  public static assetsDir: string = '';
   protected namespace: string;
   protected path: string;
 
@@ -16,7 +17,11 @@ export default class ResourceLocation {
   }
 
   public getFullPath(): string {
-    return './resources/assets/' + this.namespace + '/' + this.path;
+    return `${ResourceLocation.assetsDir}${this.namespace}/${this.path}`;
+  }
+
+  public equals(resourceLocation: ResourceLocation) {
+    return resourceLocation.getFullPath() == this.getFullPath()
   }
 
   public toString(): string {
@@ -24,13 +29,11 @@ export default class ResourceLocation {
   }
 
   protected static decompose(resourceName: string, splitOn: string) {
-    let astring = ["minecraft", resourceName];
+    let astring = ['minecraft', resourceName];
     let i = resourceName.indexOf(splitOn);
     if(i >= 0) {
       astring[1] = resourceName.substring(i + 1, resourceName.length);
-      if(i >= 1) {
-        astring[0] = resourceName.substring(0, i);
-      }
+      if(i >= 1) astring[0] = resourceName.substring(0, i);
     }
 
     return astring;

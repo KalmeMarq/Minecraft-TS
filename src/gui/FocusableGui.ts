@@ -48,6 +48,11 @@ export default abstract class FocusableGui extends AbstractGui implements INeste
         this.setListener(iguieventlistener);
         if(button == 0) this.setDragging(true);
         return true;
+      } else {
+        this.setListener(null)
+        for(let listeners of this.getEventListeners()) {
+          listeners.isFocused() && listeners.changeFocus(false)
+        }
       }
     }
 
@@ -93,38 +98,27 @@ export default abstract class FocusableGui extends AbstractGui implements INeste
     if (flag && iguieventlistener.changeFocus(focus)) {
       return true;
    } else {
-      for (let i = 0; i < this.getEventListeners().length; i++) {
-        const a: Widget = this.getEventListeners()[i];
-
-        if(a.isFocused()) {
-          // this.setListener(this.getEventListeners()[i + 1])
-          // this.changeFocus(true);
-          
-        }
-      }
-     /*  let list = this.getEventListeners()
+      let list: IGuiEventListener[] = this.getEventListeners();
       let j = list.indexOf(iguieventlistener);
       let i;
-      if (flag && j >= 0) {
-         i = j + (focus ? 1 : 0);
-      } else if (focus) {
-         i = 0;
+      if(flag && j >= 0) {
+        i = j + (focus ? 1 : 0);
+      } else if(focus) {
+        i = 0;
       } else {
-         i = list.size();
-      } */
-
-     /*  ListIterator<? extends IGuiEventListener> listiterator = list.listIterator(i);
-      BooleanSupplier booleansupplier = focus ? listiterator::hasNext : listiterator::hasPrevious;
-      Supplier<? extends IGuiEventListener> supplier = focus ? listiterator::next : listiterator::previous;
-
-      while(booleansupplier.getAsBoolean()) {
-         IGuiEventListener iguieventlistener1 = supplier.get();
-         if (iguieventlistener1.changeFocus(focus)) {
-            this.setListener(iguieventlistener1);
-            return true;
-         }
+        i = list.length;
       }
- */
+
+      if(i >= list.length) {
+        i = 0;
+      }
+
+      let iguieventlistener1 = list[i];
+      if(iguieventlistener1.changeFocus(focus)) {
+        this.setListener(iguieventlistener1);
+        return true;
+      }
+
       this.setListener(null)
       return false
     }

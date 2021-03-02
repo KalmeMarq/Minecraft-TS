@@ -1,6 +1,6 @@
 import AbstractGui from '@mcsrc/gui/AbstractGui';
 import Minecraft from '@mcsrc/Minecraft';
-import MathHelper from '@mcsrc/util/MathHelper';
+import MathHelper from '@mcsrc/new/util/MathHelper';
 import Util from '@mcsrc/util/Util';
 import ResourceLocation from './ResourceLocation';
 

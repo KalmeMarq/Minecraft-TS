@@ -1,49 +1,54 @@
-import GameSettings from "@mcsrc/GameSettings";
-import Util from "@mcsrc/util/Util";
-import ResourceLocation from "./ResourceLocation";
-
-interface IC {
-  filename: string
-  data: any
-}
+import Language from '@mcsrc/resources/FWEFW';
+import Util from '@mcsrc/util/Util';
+import ResourceLocation from './ResourceLocation';
 
 export default class LanguageManager {
-  private LANGFILES = ['en_us', 'pt_pt'];
-  private languageFiles = new Map<string, { [key: string]: string }>();
-  private currentLanguage: string;
+  private static defaultLanguage: Language = new Language('en_us', 'US', 'English', false);
+  private languageMap = new Map<string, Language>([['en_us', LanguageManager.defaultLanguage]]);
+  private clientLanguageMap = new Map<string, { [key: string]: string }>();
 
-  constructor(currLang: string) {
-    this.currentLanguage = currLang;
+  constructor() {
   }
 
-  public async load(): Promise<void> {
-    this.apply(await this.prepare());
-  }
-
-  protected apply(objectIn: IC[]): void {
-    this.languageFiles.clear();
-
-    objectIn.forEach((file: IC) => {
-      this.languageFiles.set(file.filename, file.data);      
+  public async reload(): Promise<void> {
+    let map = new Map<string, Language>();
+    const languageSection = await fetch('./resources/assets/pack.mcmeta')
+      .then(res => res.json())
+      .then(data => data.language)
+  
+    Object.entries(languageSection).map(async(language: any) => {
+      map.set(language[0], new Language(language[0], language[1].region, language[1].name, language[1].bidirectional));
     })
+
+    this.languageMap = map;
+
+    let clientMap = new Map<string, { [key: string]: string }>();
+    this.languageMap.forEach(async(language) => {
+      const loc = new ResourceLocation(Util.formatString('lang/%s.json', language.getCode()));
+      return await fetch(loc.getFullPath())
+        .then(res => res.json())
+        .then(data => {
+          clientMap.set(language.getCode(), data);
+        })
+    })
+
+    this.clientLanguageMap = clientMap;
   }
 
-  protected async prepare(): Promise<IC[]> {
-    try {
-      const promises = this.LANGFILES.map(async(file: string) => {
-        const filePath = Util.formatString("lang/%s.json", file);
-        const res = await fetch(new ResourceLocation(filePath).getFullPath());
-        const data = await res.json();
-        return { filename: file, data: data };
-      });
-      
-      return await Promise.all(promises);
-    } catch {
-      return []
-    }
+  public getTranslation(translationKey: string) {
+    return this.clientLanguageMap.get('en_us')![translationKey];
   }
 
+  public getLanguages(): Set<Language> {
+    return new Set(this.languageMap.values());
+  }
+
+  public getLanguage(language: string): Language {
+    return this.languageMap.get(language)!;
+  }
+
+  /** @Deprecated */
   public getLanguageData(name: string) {
-    return this.languageFiles.get(name)!;
+    return this.clientLanguageMap.get(name)!;
   }
 }

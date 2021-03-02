@@ -2,9 +2,12 @@
 // import SoundHandler from '@mcsrc/audio/SoundHandler'
 // import SoundEvents from '@mcsrc/util/SoundEvents'
 import Sounds from '@mcsrc/audio/Sound'
+import NarratorChatListener from '@mcsrc/new/NarratorChatListener'
 import ResourceLocation from '@mcsrc/new/ResourceLocation'
+import NarratorStatus from '@mcsrc/settings/NarratorStatus'
 import SoundCategory from '@mcsrc/util/SoundCategory'
 import TranslationTextComponent from '@mcsrc/util/text/TranslationTextComponent'
+import Util from '@mcsrc/util/Util'
 import IGuiEventListener from '../../interface/IGuiEventListener'
 import IRenderable from '../../interface/IRenderable'
 import Minecraft from '../../Minecraft'
@@ -42,8 +45,29 @@ export default class Widget extends AbstractGui implements IRenderable, IGuiEven
         this.renderButton(context, mouseX, mouseY, partialTicks);
       }
 
+      this.narrate();
       this.wasHovered = this.getIsHovered();
     }
+  }
+
+  protected narrate(): void {
+    if(this.active && this.getIsHovered()) {
+      let s = this.getNarrationMessage();
+      if(!s.isEmpty()) {
+        NarratorChatListener.INSTANCE.say(s);
+      }
+    }
+  }
+
+  protected getNarrationMessage() {
+    let msg: string;
+    if(this.message instanceof TranslationTextComponent) {
+      msg = this.message.getTranslatedKey();
+    } else {
+      msg = this.message;
+    }
+
+    return msg;
   }
 
   public renderButton(context: CanvasRenderingContext2D, mouseX: number, mouseY: number, partialTicks: number): void {
@@ -78,14 +102,14 @@ export default class Widget extends AbstractGui implements IRenderable, IGuiEven
   protected onDrag(mouseX: number, mouseY: number, dragX: number, dragY: number): void {
   }
 
-  public mouseMoved(xPos: number, mouseY: number): boolean {
+  public mouseMoved(mouseX: number, mouseY: number): boolean {
     return false
   }
 
   public mouseClicked(mouseX: number, mouseY: number, button: number): boolean {
     if(this.active && this.visible) {
       if(this.isValidClickButton(button)) {
-        const flag = this.clicked(mouseX, mouseY)
+        let flag = this.clicked(mouseX, mouseY);
         if(flag) {
           this.playDownSound(Minecraft.getInstance().getSoundHandler());
           this.onClick(mouseX, mouseY)

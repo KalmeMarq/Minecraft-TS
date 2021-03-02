@@ -28,6 +28,10 @@ export default class SoundHandler {
     source.connect(this.gainNode);
     this.gainNode.gain.setValueAtTime(volumeWithCat, this.audioCtx.currentTime);
     source.start(0);
+
+    source.onended = function() {
+      source.disconnect()
+    }
   }
 
   public async add(sound: Sounds) {

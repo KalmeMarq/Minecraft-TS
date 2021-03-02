@@ -17,6 +17,7 @@ export default class GuiScreen extends FocusableGui implements IGuiScreen, IGuiE
   protected buttons: Array<Widget> = new Array();
   public passEvents: boolean = false;
   protected font!: FontRenderer;
+  private clickedLink!: string;
 
   constructor(...params: any[]) {
     super()

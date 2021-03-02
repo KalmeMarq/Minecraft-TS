@@ -1,10 +1,12 @@
 import IGuiEventListener from "@mcsrc/interface/IGuiEventListener";
+import { ClipboardHelper } from "@mcsrc/new/util/ClipboardHelper";
+import ScreenShotHelper from "@mcsrc/new/util/ScreenShotHelper";
 import Minecraft from "../Minecraft";
 import InputMappings from "./InputMappings";
 
 export default class KeyboardListener {
   private mc: Minecraft;
-  public i = 0
+  private clipboardHelper: ClipboardHelper = new ClipboardHelper();
   
   constructor(minecraftIn: Minecraft) {
     this.mc = minecraftIn;
@@ -18,18 +20,29 @@ export default class KeyboardListener {
       iguieventlistener?.keyPressed(key, modifiers);
     }
 
-    if(key == 'F11') {
-     /*  if()
+    if(key == 'F11' && action == 1) {
+      this.mc.gameSettings.fullscreen = !this.mc.gameSettings.fullscreen;
+
       if(this.mc.gameSettings.fullscreen) {
-        if(!document.fullscreenElement) document.documentElement.requestFullscreen();
-        this.mc.gameSettings.fullscreen = false;
-        this.mc.gameSettings.saveOptions();
+        if(document.fullscreenElement) document.documentElement.requestFullscreen();
       } else {
         if(document.fullscreenElement) document.exitFullscreen();
-        this.mc.gameSettings.fullscreen = true;
-        this.mc.gameSettings.saveOptions();
-      } */
+      }
+
+      this.mc.gameSettings.saveOptions();
     }
+
+    if(key == 'F2' && action == 0) {
+      ScreenShotHelper.saveScreenshot(this.mc.getMainCanvas().getCanvas())
+    }
+  }
+
+  public getClipboardString(): Promise<string> {
+    return this.clipboardHelper.getClipboardString();
+  }
+
+  public setClipboardString(string: string): void {
+    this.clipboardHelper.setClipboardString(string);
   }
 
   public setupCallbacks(): void {

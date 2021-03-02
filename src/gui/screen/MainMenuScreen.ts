@@ -2,7 +2,7 @@ import Sounds from '@mcsrc/audio/Sound';
 import ResourceLocation from '@mcsrc/new/ResourceLocation';
 import ColorHelper from '@mcsrc/util/ColorHelper';
 import ContextUtils from '@mcsrc/util/ContextUtils';
-import MathHelper from '@mcsrc/util/MathHelper';
+import MathHelper from '@mcsrc/new/util/MathHelper';
 import SoundCategory from '@mcsrc/util/SoundCategory';
 import TranslationTextComponent from '@mcsrc/util/text/TranslationTextComponent';
 import Util from '@mcsrc/util/Util';
@@ -14,6 +14,9 @@ import GuiScreen from './GuiScreen';
 import LanguageScreen from './LanguageScreen';
 import MultiplayerScreenScreen from './MultiplayerScreen';
 import OptionsScreen from './OptionsScreen';
+import AccessibilityScreen from './AccessibilityScreen';
+import I18n from '@mcsrc/new/util/I18n';
+import ScreenShotHelper from '@mcsrc/new/util/ScreenShotHelper';
 
 export default class MainMenuScreen extends GuiScreen {
   private static ACCESSIBILITY_TEXTURES: ResourceLocation = new ResourceLocation("textures/gui/accessibility.png");
@@ -27,9 +30,9 @@ export default class MainMenuScreen extends GuiScreen {
   private widthCopyright: number = 0;
   private widthCopyrightRest: number = 0;
   
-  constructor(fadeIn?: boolean) {
+  constructor(fadeIn: boolean = false) {
     super('')
-    if(fadeIn) this.showFadeInAnimation = fadeIn;
+    this.showFadeInAnimation = fadeIn;
     this.showTitleWronglySpelled = Number(Math.random().toFixed(1)) < 1.0E-1;
   }
 
@@ -69,12 +72,12 @@ export default class MainMenuScreen extends GuiScreen {
     }));
 
     this.addButton(new ImageButton(this.width / 2 + 104, baseY + 72 + 12, 20, 20, 0, 0, 20, MainMenuScreen.ACCESSIBILITY_TEXTURES, 32, 64, (button) => {
+      this.minecraft.displayGuiScreen(new AccessibilityScreen(this, this.minecraft.gameSettings));
     }, ''));
   }
 
   private addSingleplayerMultiplayerButtons(yIn: number, rowHeightIn: number): void {
     this.addButton(new Button(this.width / 2 - 100, yIn, 200, 20, new TranslationTextComponent('menu.singleplayer'), (button) => {
-      this.minecraft.testSwitchLang();
     }));
 
     const flag = this.minecraft.isMultiplayerEnabled();
@@ -83,21 +86,18 @@ export default class MainMenuScreen extends GuiScreen {
       this.minecraft.displayGuiScreen(new MultiplayerScreenScreen(this))
     }))).active = flag;
 
-    (this.addButton(new Button(this.width / 2 - 100, yIn + rowHeightIn * 2, 200, 20, new TranslationTextComponent('Reload Resources'), (button) => {
-      this.minecraft.loadResources();
+    (this.addButton(new Button(this.width / 2 - 100, yIn + rowHeightIn * 2, 200, 20, new TranslationTextComponent('menu.online'), (button) => {
     }))).active = flag;
   }
 
   private addDemoButtons(yIn: number, rowHeightIn: number): void {
-    const flag = false;
-
     this.addButton(new Button(this.width / 2 - 100, yIn, 200, 20, new TranslationTextComponent('menu.playdemo'), (button) => {
     }));
 
     this.buttonResetDemo = this.addButton(new Button(this.width / 2 - 100, yIn + rowHeightIn * 1, 200, 20, new TranslationTextComponent('menu.resetdemo'), (button) => {
     }));
 
-    this.buttonResetDemo.active = flag;
+    this.buttonResetDemo.active = false;
   }
 
   public render(context: CanvasRenderingContext2D, mouseX: number, mouseY: number, partialTicks: number): void {
@@ -212,8 +212,7 @@ export default class MainMenuScreen extends GuiScreen {
     let mc = 'Minecraft TS ' + this.minecraft.getVersion();
     if(this.minecraft.getIsDemo()) mc += ' Demo';
     else mc += (this.minecraft.getVersionType() === 'release' ? '' : '/' + this.minecraft.getVersionType());
-    mc += `/${this.minecraft.getPlayerName()}`;
-    if(this.minecraft.isModdedClient()) mc += new TranslationTextComponent('menu.modded');
+    if(this.minecraft.isModdedClient()) mc += I18n.format('menu.modded');
 
     this.drawString(context, this.font, mc, 2, this.height - 10, 16777215)
     this.drawString(context, this.font, 'Copyright Mojang AB. Do not distribute!', this.widthCopyrightRest, this.height - 10, 16777215);

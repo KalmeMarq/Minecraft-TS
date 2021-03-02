@@ -1,11 +1,11 @@
 import SoundHandler from "@mcsrc/audio/SoundHandler";
-import MathHelper from "@mcsrc/util/MathHelper";
+import MathHelper from "@mcsrc/new/util/MathHelper";
 import Minecraft from "../../Minecraft";
 import AbstractGui from "../AbstractGui";
 import Widget from "./Widget";
 
 export default abstract class AbstractSlider extends Widget {
-   protected sliderValue: number;
+  protected sliderValue: number;
 
   constructor(x: number, y: number, width: number, height: number, message: string, defaultValue: number) {
     super(x, y, width, height, message);
@@ -27,7 +27,7 @@ export default abstract class AbstractSlider extends Widget {
     this.changeSliderValue(mouseX);
   }
 
-  public keyDown(keyName: string, modifiers: any): boolean {
+  public keyPressed(keyName: string, modifiers: any): boolean {
     if(this.isFocused()) {
       let isLeftArrow = keyName == 'ArrowLeft';
       if (isLeftArrow || keyName == 'ArrowRight') {

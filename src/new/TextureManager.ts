@@ -18,6 +18,17 @@ export default class TextureManager {
     'textures/gui/checkbox.png',
     'textures/gui/accessibility.png',
     'textures/gui/icons.png',
+    'textures/gui/bars.png',
+    'textures/gui/book.png',
+    'textures/gui/mojang.png',
+    'textures/gui/recipe_book.png',
+    'textures/gui/recipe_button.png',
+    'textures/gui/resource_packs.png',
+    'textures/gui/server_selection.png',
+    'textures/gui/social_interactions.png',
+    'textures/gui/spectator_widgets.png',
+    'textures/gui/toasts.png',
+    'textures/gui/world_selection.png',
     'textures/item/acacia_boat.png',
     'textures/item/acacia_door.png',
     'textures/item/acacia_sign.png',
@@ -331,7 +342,65 @@ export default class TextureManager {
     'textures/item/wooden_sword.png',
     'textures/item/writable_book.png',
     'textures/item/written_book.png',
-    'textures/item/yellow_dye.png'
+    'textures/item/yellow_dye.png',
+    'textures/mob_effect/absorption.png',
+    'textures/mob_effect/bad_omen.png',
+    'textures/mob_effect/blindness.png',
+    'textures/mob_effect/conduit_power.png',
+    'textures/mob_effect/dolphins_grace.png',
+    'textures/mob_effect/fire_resistance.png',
+    'textures/mob_effect/glowing.png',
+    'textures/mob_effect/haste.png',
+    'textures/mob_effect/health_boost.png',
+    'textures/mob_effect/hero_of_the_village.png',
+    'textures/mob_effect/hunger.png',
+    'textures/mob_effect/instant_damage.png',
+    'textures/mob_effect/instant_health.png',
+    'textures/mob_effect/invisibility.png',
+    'textures/mob_effect/jump_boost.png',
+    'textures/mob_effect/levitation.png',
+    'textures/mob_effect/luck.png',
+    'textures/mob_effect/mining_fatigue.png',
+    'textures/mob_effect/nausea.png',
+    'textures/mob_effect/night_vision.png',
+    'textures/mob_effect/poison.png',
+    'textures/mob_effect/regeneration.png',
+    'textures/mob_effect/resistance.png',
+    'textures/mob_effect/saturation.png',
+    'textures/mob_effect/slowness.png',
+    'textures/mob_effect/slow_falling.png',
+    'textures/mob_effect/speed.png',
+    'textures/mob_effect/strength.png',
+    'textures/mob_effect/unluck.png',
+    'textures/mob_effect/water_breathing.png',
+    'textures/mob_effect/weakness.png',
+    'textures/mob_effect/wither.png',
+    'textures/gui/container/anvil.png',
+    'textures/gui/container/beacon.png',
+    'textures/gui/container/blast_furnace.png',
+    'textures/gui/container/brewing_stand.png',
+    'textures/gui/container/cartography_table.png',
+    'textures/gui/container/crafting_table.png',
+    'textures/gui/container/creative_inventory',
+    'textures/gui/container/enchanting_table.png',
+    'textures/gui/container/furnace.png',
+    'textures/gui/container/gamemode_switcher.png',
+    'textures/gui/container/generic_54.png',
+    'textures/gui/container/grindstone.png',
+    'textures/gui/container/hopper.png',
+    'textures/gui/container/horse.png',
+    'textures/gui/container/inventory.png',
+    'textures/gui/container/loom.png',
+    'textures/gui/container/shulker_box.png',
+    'textures/gui/container/smithing.png',
+    'textures/gui/container/smoker.png',
+    'textures/gui/container/stats_icons.png',
+    'textures/gui/container/stonecutter.png',
+    'textures/gui/container/villager2.png',
+    'textures/gui/container/creative_inventory/tabs.png',
+    'textures/gui/container/creative_inventory/tab_inventory.png',
+    'textures/gui/container/creative_inventory/tab_items.png',
+    'textures/gui/container/creative_inventory/tab_item_search.png'
   ];
   private textures = new Map<string, HTMLImageElement>();
   public textureBuffer = new TextureBuffer();
@@ -347,7 +416,7 @@ export default class TextureManager {
     this.textures.clear();
 
     objectIn.forEach((file: any) => {
-      this.textures.set(file.resourceLocation.getFullPath(), file.data);      
+      this.textures.set(JSON.stringify(file.resourceLocation), file.data);      
     })
   }
 
@@ -370,13 +439,13 @@ export default class TextureManager {
   }
 
   public getTexture(textureLocation: ResourceLocation) {
-    return this.textures.get(textureLocation.getFullPath())!;
+    return this.textures.get(JSON.stringify(textureLocation))!;
   }
 
   public async addTexture(textureLocation: ResourceLocation) {
     let image = new Image();
     image.src = await this.loadTexture(textureLocation);
-    this.textures.set(textureLocation.getFullPath(), image);
+    this.textures.set(JSON.stringify(textureLocation), image);
   }
 
   public async loadTexture(textureLocation: ResourceLocation) {

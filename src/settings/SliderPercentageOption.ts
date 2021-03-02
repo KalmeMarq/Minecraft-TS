@@ -1,4 +1,4 @@
-import MathHelper from "@mcsrc/util/MathHelper";
+import MathHelper from "@mcsrc/new/util/MathHelper";
 import GameSettings from "../GameSettings";
 import OptionSlider from "../gui/widgets/OptionSlider";
 import Widget from "../gui/widgets/Widget";

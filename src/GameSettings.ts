@@ -102,6 +102,7 @@ export default class GameSettings {
 
   constructor(mcIn: Minecraft) {
     this.mc = mcIn;
+    this.renderDistanceChunks = 12;
     this.loadOptions();
     console.log('Game settings loaded!');
   }
