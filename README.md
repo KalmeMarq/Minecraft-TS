@@ -1,2 +1,2 @@
 # Minecraft-TS
-Just recreating Minecraft in TS for fun.
+Just recreating Minecraft GUI with TS for fun.

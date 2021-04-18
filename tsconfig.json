@@ -4,21 +4,17 @@
     "module": "esnext",
     "allowJs": true,
     "sourceMap": true,
-    "outDir": "./dist/",
+    "outDir": "./public/",
     "removeComments": true,
     "strict": true,
     "noImplicitAny": true,
     "moduleResolution": "node",
-    "baseUrl": "./src",
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "downlevelIteration": true,
-    "experimentalDecorators": true,
-    "paths": {
-      "@mcsrc/*": ["./*"]
-    }
+    "experimentalDecorators": true
   },
-  "include": ["./src/**/*"],
-  "exclude": ["node_modules/**/*", "dist/**/*"]
+  "include": ["./src/**/*", "src/index.tsx.ts"],
+  "exclude": ["node_modules/**/*", "dist/**/*", "public/**/*"]
 }
