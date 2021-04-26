@@ -1,17 +1,19 @@
+@font-face {
+  font-family: minecraft;
+  src: url(./assets/minecraftia.woff);
+  font-weight: 100;
+  font-size: 10px;
+}
+
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
-@font-face {
-  font-family: minecraft;
-  src: url(./assets/minecraftia.woff);
-}
-
 html {
-  height: 100%;
   overflow: hidden;
+  height: 100%;
 }
 
 body {
@@ -30,5 +32,10 @@ body {
 }
 
 canvas {
+  top: 0;
+  left: 0;
   position: absolute;
+  image-rendering: crisp-edges;
+  image-rendering: pixelated;
+  text-rendering: geometricPrecision;
 }

@@ -1,7 +1,6 @@
 {
   "compilerOptions": {
     "target": "es6",
-    "module": "esnext",
     "allowJs": true,
     "sourceMap": true,
     "outDir": "./public/",
@@ -10,10 +9,9 @@
     "noImplicitAny": true,
     "moduleResolution": "node",
     "esModuleInterop": true,
-    "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true,
-    "downlevelIteration": true,
-    "experimentalDecorators": true
+    "experimentalDecorators": true,
+    "skipLibCheck": true, 
+    "forceConsistentCasingInFileNames": true
   },
   "include": ["./src/**/*", "src/index.tsx.ts"],
   "exclude": ["node_modules/**/*", "dist/**/*", "public/**/*"]

@@ -1,38 +1,60 @@
 {
-  "name": "mcts",
+  "name": "test",
   "version": "1.0.0",
   "description": "",
-  "main": "server.js",
+  "main": "server.ts",
   "scripts": {
-    "prod-build": "webpack --config webpack.prod.js",
-    "dev-build": "webpack --config webpack.dev.js",
-    "prod-start": "node server.js",
-    "dev-start": "node server.js 8000 dev"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev-start": "ts-node server.ts 8000 dev",
+    "s-dev-start": "nodemon server.ts 8000 dev",
+    "fix-check": "ts-standard",
+    "fix": "ts-standard --fix",
+    "fix-eslint-check": "eslint . --ext .js,.jsx,.ts,.tsx",
+    "fix-eslint": "eslint . --ext .js,.jsx,.ts,.tsx --fix"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "devDependencies": {
-    "@types/dateformat": "^3.0.1",
-    "clean-webpack-plugin": "^4.0.0-alpha.0",
-    "copy-webpack-plugin": "^8.1.1",
-    "html-webpack-plugin": "^5.3.1",
-    "ts-loader": "^8.1.0",
-    "tsconfig-paths": "^3.9.0",
-    "typescript": "^4.2.4",
-    "webpack": "^5.31.2",
-    "webpack-cli": "^4.6.0",
-    "webpack-merge": "^5.7.3"
-  },
   "dependencies": {
     "axios": "^0.21.1",
-    "buffer": "^6.0.3",
-    "cors": "^2.8.5",
-    "dateformat": "^4.5.1",
+    "compression": "^1.7.4",
     "express": "^4.17.1",
     "jszip": "^3.6.0",
-    "net-browserify": "^0.2.4",
+    "reload": "^3.1.1"
+  },
+  "ts-standard": {
+    "project": "./tsconfig.json"
+  },
+  "devDependencies": {
+    "@types/compression": "^1.7.0",
+    "@types/copy-webpack-plugin": "^8.0.0",
+    "@types/express": "^4.17.11",
+    "@types/webpack-dev-middleware": "^4.1.2",
+    "@types/webpack-merge": "^5.0.0",
+    "@typescript-eslint/eslint-plugin": "^4.22.0",
+    "@typescript-eslint/parser": "^4.22.0",
+    "buffer": "^6.0.3",
+    "clean-webpack-plugin": "^4.0.0-alpha.0",
+    "copy-webpack-plugin": "^8.1.1",
+    "fibers": "^5.0.0",
+    "file-loader": "^6.2.0",
+    "html-webpack-plugin": "^5.3.1",
+    "lit-element": "^2.4.0",
+    "lit-html": "^1.3.0",
+    "node-sass": "^5.0.0",
     "nodemon": "^2.0.7",
-    "webpack-dev-middleware": "^4.1.0"
+    "sass": "^1.32.11",
+    "sass-loader": "^11.0.1",
+    "standard": "^16.0.3",
+    "ts-loader": "^9.1.1",
+    "ts-node": "^9.1.1",
+    "ts-standard": "^10.0.0",
+    "typescript": "^4.2.4",
+    "typescript-eslint": "0.0.1-alpha.0",
+    "webpack": "^5.35.1",
+    "webpack-cli": "^4.6.0",
+    "webpack-dev-middleware": "^4.1.0",
+    "webpack-merge": "^5.7.3",
+    "worker-loader": "^3.0.8"
   }
 }

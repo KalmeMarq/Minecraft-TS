@@ -1,3 +1,6 @@
 node_modules/
 package-lock.json
 .vscode
+assets/client.jar
+assets/objects/
+assets/indexes/
