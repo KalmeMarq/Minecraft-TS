@@ -18,7 +18,7 @@ export default class VanillaPack {
       }
     })
 
-    const res = await fetch('assets/client.jar')
+    const res = await fetch('public/assets/client.jar')
     const data = await res.blob()
     this.clientFile = new File([data], 'idk')
   }
@@ -26,13 +26,12 @@ export default class VanillaPack {
   public async getResource (path: string): Promise<Blob> {
     if (this.objects.has(path)) {
       const hash: string = this.objects.get(path)
-
-      return await fetch(`assets/objects/${hash.slice(0, 2)}/${hash}`).then(async ress => await ress.blob()).then(daata => {
+      return await fetch(`public/assets/objects/${hash.slice(0, 2)}/${hash}`).then(async ress => await ress.blob()).then(daata => {
         return daata
       })
     } else {
       return await JSZip.loadAsync(await (this.clientFile as Blob).arrayBuffer() as ArrayBuffer).then(async (zip) => {
-        const a: any = await zip.file('assets/' + path)?.async('arraybuffer')
+        const a: any = await zip.file('public/assets/' + path)?.async('arraybuffer')
         const b = new Blob([a])
         return b
       })

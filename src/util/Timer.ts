@@ -1,7 +1,7 @@
 export default class Timer {
-  public partialTick = 0
-  public tickDelta = 0
-  private lastMs = 0
+  public partialTick: number = 0
+  public tickDelta: number = 0
+  private lastMs: number = 0
   private readonly msPerTick: number = 0
 
   constructor (ticks: number, lastMs: number) {

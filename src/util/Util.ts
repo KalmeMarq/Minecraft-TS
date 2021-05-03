@@ -1,3 +1,4 @@
+import ResourceLocation from '../resources/ResourceLocation'
 import CustomMap from './CustomMap'
 
 export default class Util {
@@ -75,6 +76,20 @@ export default class Util {
   }
 
   public static int (v: number): number {
-    return Math.floor(v)
+    return v < 0 ? Math.ceil(v) : v < 0.00000005 && v > -0.00000005 ? 0 : Math.floor(v);
+  }
+
+  public static makeDescriptionId(base: string, location: ResourceLocation | undefined): string {
+    return location === undefined ? base + ".unregistered_sadface" : base + '.' + location.getNamespace() + '.' + location.getPath().replace('/', '.');
+  }
+
+  public static hashCode(text: string): number {
+    let hash = 0;
+    for(let i = 0; i < text.length; i++) {
+      let textChar = text.charCodeAt(i);
+      hash = ((hash << 5) - hash) + textChar;
+      hash = hash & hash;
+    }
+    return hash;
   }
 }

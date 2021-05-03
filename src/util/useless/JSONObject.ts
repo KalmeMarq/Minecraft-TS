@@ -1,7 +1,13 @@
 export default class JSONObject {
   private obj: any = {}
-  public constructor (obj?: any) {
-    this.obj = obj ?? {}
+  public constructor (obj?: Object | JSONObject | string) {
+    if(obj instanceof JSONObject) {
+      this.obj = obj.toJSONString()
+    } else if(typeof obj === 'string') {
+      this.obj = JSON.parse(obj);
+    } else {
+      this.obj = obj ?? {}
+    }
   }
 
   put (key: string, value: any): void {

@@ -111,4 +111,15 @@ export default class Style {
 
     return new Style(color, bold, italic, underline, strikethrough)
   }
+
+  public equals(compareTo: Object): boolean {
+    if(this === compareTo) {
+      return true;
+    } else if(!(compareTo instanceof Style)) {
+      return false;
+    } else {
+      let style: Style = compareTo as Style;
+      return this.getColor() === style.getColor() && this.isBold() === style.isBold();
+    }
+  }
 }

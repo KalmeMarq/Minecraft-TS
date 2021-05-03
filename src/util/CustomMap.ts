@@ -1,9 +1,9 @@
 class CustomMap<T, Y> {
-  public map: Map<any, any>
+  public map: Map<T, Y>
   constructor ();
-  constructor (iterable: Iterable<readonly [T, Y]>);
-  constructor (iterable?: Iterable<readonly [T, Y]>) {
-    this.map = (iterable != null) ? new Map(iterable) : new Map()
+  constructor (iterable: Iterable<readonly [T, Y]> | any[]);
+  constructor (iterable?: Iterable<readonly [T, Y]> | any[]) {
+    this.map = (iterable !== undefined) ? new Map(iterable) : new Map()
   }
 
   get (key: any): Y | undefined {
@@ -11,7 +11,7 @@ class CustomMap<T, Y> {
 
     let y: any
     this.map.forEach((v, k) => {
-      if (k.equals(key) as boolean) {
+      if ((k as any).equals(key) as boolean) {
         y = this.map.get(k)
       }
     })
@@ -28,7 +28,7 @@ class CustomMap<T, Y> {
 
     let y = false
     this.map.forEach((v, k) => {
-      if (k.equals(key) as boolean) {
+      if ((k as any).equals(key) as boolean) {
         y = true
       }
     })
@@ -36,7 +36,7 @@ class CustomMap<T, Y> {
     return y
   }
 
-  set<T, Y> (key: T, value: Y): Y {
+  set(key: T, value: Y): Y {
     this.map.set(key, value)
     return value
   }
@@ -66,7 +66,7 @@ class CustomMap<T, Y> {
 
     let d = false
     this.map.forEach((v, k) => {
-      if (k.equals(key) as boolean) {
+      if ((k as any).equals(key) as boolean) {
         d = this.map.delete(k)
       }
     })
@@ -82,12 +82,21 @@ class CustomMap<T, Y> {
     this.map.clear()
   }
 
-  getMap (): Map<T, Y> {
+  toMap (): Map<T, Y> {
     return this.map
   }
 
   entrySet (): Set<[T, Y]> {
     return new Set(this.map)
+  }
+
+  computeIfAbsent(key: T, callback: (key: T) => Y) {
+    if(!this.has(key)) {
+      this.map.set(key, callback(key))
+      return (this.get(key) as unknown) as Y;
+    } else {
+      return (this.get(key) as unknown) as Y;
+    }
   }
 }
 

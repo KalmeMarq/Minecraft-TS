@@ -4,7 +4,7 @@ import TextFormatting from './TextFormatting'
 
 export default class Color {
   public static LEGACY_FORMAT_TO_COLOR: CustomMap<TextFormatting, Color> = Util.arrayToMap(Object.values(TextFormatting), (value) => {
-    return new Color(value.newcolor, value.name)
+    return new Color(value.color, value.name)
   })
 
   private static readonly NAMED_COLORS: CustomMap<string, Color> = Util.arrayToMap(Array.from(Color.LEGACY_FORMAT_TO_COLOR.values()), (value) => {

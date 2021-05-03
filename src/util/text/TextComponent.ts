@@ -14,13 +14,13 @@ export class TextComponent {
   }
 
   decompose (): void {
+    this.parts = [];
     const s = /* lang[this.key] ??  */this.key
     this.decomposeTemplate(s)
   }
 
   decomposeTemplate (s: string): void {
     const matches = s.match(TextComponent.pattern)
-
     if (matches !== null) {
       let j = 0
       for (let i = 0; i < matches.length; i++) {
@@ -55,6 +55,15 @@ export class TextComponent {
     })
 
     return s
+  }
+
+  append(component: TextComponent | string) {
+    this.args.push(component)
+    return this;
+  }
+
+  getString() {
+    return this.get();
   }
 
 /*   accept(consumer: CharacterRenderer) {

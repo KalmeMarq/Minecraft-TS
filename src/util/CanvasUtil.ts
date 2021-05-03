@@ -4,11 +4,21 @@ export default class CanvasUtil {
   private static ctx: CanvasRenderingContext2D
   private static buffer: CanvasRenderingContext2D
   private static readonly layerTasks: Map<number, Function> = new Map()
+  private static cT: DOMMatrix = new DOMMatrix();
+  private static lT: DOMMatrix = new DOMMatrix();
+  private static cA: number = 0;
+  private static lA: number = 0;
+  private static ca: number = 1;
+  private static la: number = 1;
+  private static ct: number[] = [0, 0];
+  private static lt: number[] = [0, 0];
+  private static cS: number = 1;
+  private static lS: number = 1;
 
   public static clear (preserveTransform = false): void {
     if (preserveTransform) {
       this.buffer.save()
-      this.buffer.setTransform(1, 0, 0, 1, 0, 0)
+      this.buffer.setTransform(this.cT)
     }
     this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height)
     this.buffer.clearRect(0, 0, this.buffer.canvas.width, this.buffer.canvas.height)
@@ -22,13 +32,35 @@ export default class CanvasUtil {
     this.buffer = buffer
   }
 
+  public static saveT(): void {
+    this.lT = this.buffer.getTransform();
+    this.la = this.ca;
+    this.lA = this.cA;
+    this.lt = this.ct;
+    this.lS = this.cS;
+  }
+
+  public static restoreT(): void {
+    this.cT = this.lT;
+    this.ca = this.la;
+    this.cA = this.lA;
+    this.ct = this.lt;
+    this.cS = this.lS;
+    this.buffer.setTransform(this.cS, 0, 0, this.cS, 0, 0);
+    this.buffer.globalAlpha = this.ca;
+    this.buffer.translate(this.ct[0], this.ct[1]);
+    this.buffer.rotate(this.cA);
+  }
+
   public static render (): void {
     this.ctx.drawImage(this.buffercanvas as any, 0, 0)
   }
 
   public static resetSetup (scale: number, pixelated = true): void {
+    this.cS = scale
     this.buffer.setTransform(scale, 0, 0, scale, 0, 0)
     this.buffer.imageSmoothingEnabled = !pixelated
+    this.cT = this.buffer.getTransform()
   }
 
   public static fillRect (minX: number, minY: number, maxX: number, maxY: number, r = 255, g = 255, b = 255, a = 1): void {
@@ -38,6 +70,7 @@ export default class CanvasUtil {
 
   /* New */
   public static translateXY (x: number, y: number): void {
+    this.ct = [x, y];
     this.buffer.translate(x, y)
   }
 
@@ -50,7 +83,7 @@ export default class CanvasUtil {
   public static fillText (text: string, x: number, y: number, r: number, g: number, b: number, a?: number): void {
     this.buffer.font = '10px minecraft'
     this.buffer.fillStyle = `${a ? 'rgba' : 'rgb'}(${r},${g},${b}${a ? `,${a}` : ''})`
-    this.buffer.fillText(text, x, y)
+    this.buffer.fillText(text, x, y + 8)
   }
 
   public static fontWidth (text: string): number {

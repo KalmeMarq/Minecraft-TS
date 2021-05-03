@@ -9,7 +9,6 @@ module.exports = merge(common, {
   devServer: {
     contentBase: path.resolve(__dirname, './public'),
     compress: true,
-    inline: true,
-    hot: true
+    inline: true
   }
 })

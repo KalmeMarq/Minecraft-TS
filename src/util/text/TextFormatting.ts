@@ -30,29 +30,29 @@ export default class TextFormatting {
 
   private readonly id: number
   private readonly name: string
-  private readonly color: string
-  private readonly newcolor: number | null
+  private readonly oldcolor: string
+  private readonly color: number | null
   private readonly isFormat: boolean
   private readonly toString: string
 
   private constructor (name: string, key: string, idOrIsFormat: number | boolean);
   private constructor (name: string, key: string, idOrIsFormat: number | boolean, newcolor?: number | null);
   private constructor (name: string, key: string, idOrIsFormat: number | boolean, newcolor?: number | null, color?: string);
-  private constructor (name: string, key: string, idOrIsFormat: number | boolean, newcolor?: number | null, color?: string) {
+  private constructor (name: string, key: string, idOrIsFormat: number | boolean, color?: number | null, oldcolor?: string) {
     this.name = name
     this.id = idOrIsFormat as number
-    this.color = color ?? ''
-    this.newcolor = newcolor ?? null
+    this.oldcolor = oldcolor ?? ''
+    this.color = color ?? null
     this.isFormat = typeof idOrIsFormat === 'number' ? false : idOrIsFormat
     this.toString = `\u00a7${key}`
   }
 
-  public getColor (): string {
-    return this.color
+  public getOldColor (): string {
+    return this.oldcolor
   }
 
-  public getNewColor (): number | null {
-    return this.newcolor
+  public getColor (): number | null {
+    return this.color
   }
 
   public getName (): string {

@@ -1,5 +1,5 @@
-import { IMetadataSectionSerializer } from '../interfaces/IMetadataSectionSerializer'
-import IResource from '../interfaces/IResource'
+import { IMetadataSectionSerializer } from '../util/interfaces/IMetadataSectionSerializer'
+import IResource from '../util/interfaces/IResource'
 import Util from '../util/Util'
 import ResourceLocation from './ResourceLocation'
 

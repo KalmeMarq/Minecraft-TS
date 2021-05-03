@@ -1,3 +1,4 @@
+import ResourceLocationException from '../util/exceptions/ResourceLocationException'
 import Util from '../util/Util'
 
 class ResourceLocation {
@@ -10,9 +11,9 @@ class ResourceLocation {
     this.path = ResourceLocation.decompose(location, ':')[1]
 
     if (!ResourceLocation.isValidNamespace(this.namespace)) {
-      throw new Error('Non [a-z0-9_.-] character in namespace of location: ' + this.namespace + ':' + this.path)
+      throw new ResourceLocationException('Non [a-z0-9_.-] character in namespace of location: ' + this.namespace + ':' + this.path)
     } else if (!ResourceLocation.isValidPath(this.path)) {
-      throw new Error('Non [a-z0-9/._-] character in path of location: ' + this.namespace + ':' + this.path)
+      throw new ResourceLocationException('Non [a-z0-9/._-] character in path of location: ' + this.namespace + ':' + this.path)
     }
   }
 

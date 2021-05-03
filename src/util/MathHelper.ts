@@ -13,7 +13,7 @@ export default class MathHelper {
   }
 
   public static ceil (value: number): number {
-    const i = Math.ceil(value)
+    const i: number = Math.ceil(value)
     return value > i ? i + 1 : i
   }
 

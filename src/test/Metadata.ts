@@ -1,6 +1,6 @@
 /* eslint-disable */
 import axios from 'axios'
-import { IMetadataSectionSerializer } from '../interfaces/IMetadataSectionSerializer'
+import { IMetadataSectionSerializer } from '../util/interfaces/IMetadataSectionSerializer';
 import ResourceLocation from '../resources/ResourceLocation'
 import SimpleResource from '../resources/SimpleResource';
 
