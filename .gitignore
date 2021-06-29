@@ -1,9 +1,8 @@
-node_modules/
-package-lock.json
-.vscode
-public
 .DS_Store
-src/nbt/*
-src/audio/*
-src/test/NBTs.ts
-src/client/gui/ScreenManager.ts
+node_modules
+dist
+build/*
+!build/icons
+.vs
+.vscode
+package-lock.json

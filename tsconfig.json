@@ -1,19 +1,17 @@
 {
   "compilerOptions": {
-    "target": "ESNext",
+    "target": "esnext",
     "allowJs": true,
-    "sourceMap": true,
-    "outDir": "./public/",
+    "outDir": "./dist/",
     "removeComments": true,
     "strict": true,
+    "module": "commonjs",
     "noImplicitAny": true,
-    "moduleResolution": "node",
     "esModuleInterop": true,
     "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true,
     "skipLibCheck": true, 
     "forceConsistentCasingInFileNames": true
   },
-  "include": ["./src/**/*", "src/index.tsx.ts"],
-  "exclude": ["node_modules/**/*", "dist/**/*", "public/**/*"]
+  "exclude": ["node_modules/**/*", "dist/**/*", "helpers/**/*"]
 }

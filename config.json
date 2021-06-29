@@ -1,9 +1,0 @@
-{
-  "id": "1.16.5",
-  "type": "release",
-  "is_demo": false,
-  "versions_url": "https://launchermeta.mojang.com/mc/game/version_manifest.json",
-  "base_resources_url": "http://resources.download.minecraft.net/%s/%s",
-  "base_version_json_url": "http://s3.amazonaws.com/Minecraft.Download/versions/%s/%s.json",
-  "base_assets_index_url": "https://s3.amazonaws.com/Minecraft.Download/indexes/%s.json"
-}
